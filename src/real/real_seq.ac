@@ -1397,7 +1397,11 @@ theorem converges_imp_bounded(a: Nat -> Rat) {
             n <= i implies lift_seq(a)(i) <= eventual
         }
     }
-    finite_seq_abs_bounded(a, n)
+    exists(abs_bound: Rat) {
+        forall(i: Nat) {
+            i <= n implies a(i).abs < abs_bound
+        }
+    }
     exists(finite: Rat) {
         forall(i: Nat) {
             i <= n implies a(i) < finite

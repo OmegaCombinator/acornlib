@@ -874,7 +874,6 @@ theorem rectangular_sum_split_cols(f: (Nat, Nat) -> Real, m: Nat, n1: Nat, n2: N
         =
         rectangular_sum_col_first(f, m, n1) + rectangular_sum_col_first(shift_cols(f, n1), m, k)
     }
-    Nat.induction(p)
 
     rectangular_sum_col_first(shift_cols(f, n1), m, Nat.0) = Real.0
     rectangular_sum_col_first(f, m, n1 + Nat.0) = rectangular_sum_col_first(f, m, n1) + Real.0
