@@ -202,52 +202,71 @@ theorem unique_length[T](list: List[T]) {
     }
 }
 
-theorem unique_preserves_contains[T](list: List[T], item: T) {
-    list.unique.contains(item) = list.contains(item)
+theorem contains_imp_unique_contains[T](list: List[T], item: T) {
+    list.contains(item) implies list.unique.contains(item)
 } by {
-    define p(l: List[T], x: T) -> Bool {
-        l.unique.contains(x) = l.contains(x)
+    define p(l: List[T]) -> Bool {
+        l.contains(item) implies l.unique.contains(item)
     }
 
-    // Base case: empty list
-    p(List.nil[T], item)
+    p(List.nil[T])
 
-    // Induction
     forall(head: T, tail: List[T]) {
-        if p(tail, item) {
-            if tail.contains(head) {
-                // If the tail contains the head, then the unique list is just the tail's unique list.
-
-                // Obviously if the tail contains the item, so does the cons list.
-                tail.contains(item) implies List.cons(head, tail).contains(item)
-                List.cons(head, tail).contains(item) = tail.contains(item)
-
-                // Proves proposition
-            } else {
-                // If the tail doesn't contain the item, then have to append head
-
-                // Trick to help prover here (tail.unique.contains = tail.contains, rest is defns)
-                List.cons(head, tail).contains(item) implies List.cons(head, tail.unique).contains(item)
-                List.cons(head, tail).contains(item) = List.cons(head, tail.unique).contains(item)
-
-                p(List.cons(head, tail), item)
+        if p(tail) {
+            if List.cons(head, tail).contains(item) {
+                if tail.contains(head) {
+                    List.cons(head, tail).unique.contains(item)
+                } else {
+                    List.cons(head, tail).unique.contains(item)
+                }
+                List.cons(head, tail).unique.contains(item)
             }
-            p(List.cons(head, tail), item)
+            p(List.cons(head, tail))
         }
     }
 
-    List.induction(function (l: List[T]) {
-        p(l, item)
-    })
-
-    // Prover help
-    forall(l: List[T]) {
-        p(l, item)
-    }
-    p(list, item)
+    p(list)
 }
 
-theorem unique_indemp[T](list: List[T]) {
+theorem unique_contains_imp_contains[T](list: List[T], item: T) {
+    list.unique.contains(item) implies list.contains(item)
+} by {
+    define p(l: List[T]) -> Bool {
+        l.unique.contains(item) implies l.contains(item)
+    }
+
+    p(List.nil[T])
+
+    forall(head: T, tail: List[T]) {
+        if p(tail) {
+            if List.cons(head, tail).unique.contains(item) {
+                if tail.contains(head) {
+                    List.cons(head, tail).contains(item)
+                } else {
+                    List.cons(head, tail).contains(item)
+                }
+                List.cons(head, tail).contains(item)
+            }
+            p(List.cons(head, tail))
+        }
+    }
+
+    p(list)
+}
+
+theorem unique_preserves_contains[T](list: List[T], item: T) {
+    list.unique.contains(item) = list.contains(item)
+} by {
+    if list.unique.contains(item) != list.contains(item) {
+        if list.unique.contains(item) {
+            false
+        } else {
+            false
+        }
+    }
+}
+
+theorem unique_idemp[T](list: List[T]) {
     list.unique.unique = list.unique
 } by {
     let list_unique = list.unique
