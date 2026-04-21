@@ -26,6 +26,21 @@ define is_lower(f: Rat -> Bool) -> Bool {
     }
 }
 
+theorem lower_contains_smaller(f: Rat -> Bool, x: Rat, y: Rat) {
+    is_lower(f) and f(y) and x < y implies f(x)
+} by {
+    is_lower(f) = forall(u: Rat, v: Rat) {
+        f(v) and u < v implies f(u)
+    }
+    if f(y) and x < y {
+        forall(u: Rat, v: Rat) {
+            f(v) and u < v implies f(u)
+        }
+        f(y) and x < y implies f(x)
+        f(x)
+    }
+}
+
 /// True if x is the greatest element in the set defined by f.
 define is_greatest(f: Rat -> Bool, x: Rat) -> Bool {
     f(x) and forall(y: Rat) {
@@ -163,6 +178,7 @@ theorem gt_rat_sorts(z: Real, r1: Rat, r2: Rat) {
 } by {
     if r2 < r1 {
         is_lower(z.gt_rat)
+        z.gt_rat(r2)
         false
     }
 }

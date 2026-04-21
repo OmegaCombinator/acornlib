@@ -1262,6 +1262,16 @@ theorem inverse_inverts(a: Rat) {
     a * a.inverse = Rat.1 or Rat.0 = a
     a * a.inverse / a.inverse = a or a.inverse = Rat.0
     a * a.inverse * a.inverse.inverse = a * a.inverse / a.inverse
+    a.inverse * a = Rat.1
+    if a.inverse = Rat.0 {
+        Rat.0 * a = Rat.0
+        a.inverse * a = Rat.0 * a
+        a.inverse * a = Rat.0
+        false
+    }
+    a.inverse * a / a.inverse = a
+    Rat.1 / a.inverse = a
+    Rat.1 / a.inverse = Rat.1 * a.inverse.inverse
     Rat.1 * a.inverse.inverse = a
 }
 

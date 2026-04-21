@@ -604,6 +604,21 @@ define tail_bound(q: Nat -> Real, a: Real, n: Nat, eps: Real) -> Bool {
     }
 }
 
+theorem tail_bound_implies_is_close(q: Nat -> Real, a: Real, n: Nat, eps: Real, i: Nat) {
+    tail_bound(q, a, n, eps) and n <= i implies q(i).is_close(a, eps)
+} by {
+    tail_bound(q, a, n, eps) = forall(j: Nat) {
+        n <= j implies q(j).is_close(a, eps)
+    }
+    if n <= i {
+        forall(j: Nat) {
+            n <= j implies q(j).is_close(a, eps)
+        }
+        n <= i implies q(i).is_close(a, eps)
+        q(i).is_close(a, eps)
+    }
+}
+
 // converges_to is the Weierstrass definition.
 define converges_to(q: Nat -> Real, a: Real) -> Bool {
     forall(eps: Real) {

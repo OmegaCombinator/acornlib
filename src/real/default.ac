@@ -236,6 +236,7 @@ theorem limit_compose_rat_uniform(f: Rat -> Real, a: Nat -> Rat, r: Rat) {
                     compose(f, a, i) = fa(i)
                     compose(f, a, i) = f(a(i))
                     Real.from_rat(a(i)) = lift_seq(a, i)
+                    lift_seq(a, i).is_close(Real.from_rat(r), Real.from_rat(delta))
                     not tail_bound(lift_seq(a), Real.from_rat(r), n, Real.from_rat(delta)) or not n <= i or lift_seq(a, i).is_close(Real.from_rat(r), Real.from_rat(delta))
                     not Real.from_rat(a(i)).is_close(Real.from_rat(r), Real.from_rat(delta)) or a(i).is_close(r, delta)
                     not a(i).is_close(r, delta) or not rat_condition(f, delta, eps) or f(a(i)).is_close(f(r), eps)
