@@ -1,9 +1,8 @@
 from comm_ring.base import CommRing
 from nat import Nat
-from nat.nat_combo import binom, pascal
+from nat.nat_combo import binom
 from semiring.from_nat import from_nat
 from list import partial
-from list.list_sum import partial_add, partial_pointwise_eq, partial_scalar_mul
 from add_semigroup import add_fn
 from semigroup import mul_fn
 from util import compose

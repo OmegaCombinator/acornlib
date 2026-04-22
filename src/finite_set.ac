@@ -1,5 +1,5 @@
 from nat import Nat
-from set import Set, finite_constraint, functional_insert, functional_remove, functional_insert_satisfies_finite_constraint, functional_remove_satisfies_finite_constraint
+from set import Set, finite_constraint, functional_insert, functional_remove
 
 numerals Nat
 

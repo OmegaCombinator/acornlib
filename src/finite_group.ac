@@ -1,10 +1,8 @@
 from list import List, map
-from list.list_base import contains_imp_unique_contains, unique_contains_imp_contains, range_contains_all_leq
+from list.list_base import contains_imp_unique_contains, unique_contains_imp_contains
 from list.list_sum import map_contains
-from monoid import pow_add, pow_pow, pow_one, one_pow
-from group import Group, has_finite_order, right_cancel, pow_inverse
+from group import Group, has_finite_order
 from nat import Nat
-from nat.nat_base import add_sub
 numerals Nat
 
 /// A group is finite if its elements can be placed in a (finite) list
@@ -27,7 +25,7 @@ attributes G: FiniteGroup {
     let order: Nat = G.elements.length
 }
 
-from subgroup import Subgroup, subgroup_constraint, identity_constraint, inverse_constraint, closure_constraint, identity_subgroup, is_identity
+from subgroup import Subgroup, subgroup_constraint, identity_constraint, inverse_constraint, closure_constraint
 from set import finite_constraint
 
 theorem subgroup_of_finite_group_is_finite[G: FiniteGroup](s: Subgroup[G]) {

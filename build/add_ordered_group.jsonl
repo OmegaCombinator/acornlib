@@ -1,6 +1,6 @@
-{"goal":"is_transitive[G](G.lte)","proof":["function[T0: PartialOrder] { is_transitive[T0](T0.lte) }[G]"]}
-{"goal":"a < b implies a <= b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { not T0.lt(x0, x1) or T0.lte(x0, x1) }[G](a, b)"]}
-{"goal":"b < c implies b <= c","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { not T0.lt(x0, x1) or T0.lte(x0, x1) }[G](b, c)"]}
+{"goal":"is_transitive[G](G.lte)","proof":["function[T0: lib(order).PartialOrder] { is_transitive[T0](T0.lte) }[G]"]}
+{"goal":"a < b implies a <= b","proof":["function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { (x0 <= x1 and x0 != x1) = x0 < x1 }[G](a, b)"]}
+{"goal":"b < c implies b <= c","proof":["function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { (x0 <= x1 and x0 != x1) = x0 < x1 }[G](b, c)"]}
 {"goal":"a.min(c) <= a","proof":["function[T0: LinearOrder](x0: T0, x1: T0) { T0.min(x0, x1) <= x0 }[G](a, c)"]}
 {"goal":"a < c or a.min(c) = c","proof":["function[T0: LinearOrder](x0: T0, x1: T0) { T0.min(x0, x1) = x0 or T0.min(x0, x1) = x1 }[G](a, c)","a.min(c) = a","c != a","function[T0: LinearOrder](x0: T0, x1: T0) { T0.max(x0, x1) = x1 or T0.gte(x0, x1) }[G](a, c)","function[T0: LinearOrder](x0: T0, x1: T0) { T0.max(x0, x1) = x0 or T0.lt(x0, x1) }[G](a, c)","a.max(c) = a","function[T0: LinearOrder](x0: T0, x1: T0) { not T0.gte(x0, x1) or T0.min(x0, x1) = x1 }[G](a, c)"]}
 {"goal":"lt_trans","proof":["c <= a","function[T0](x0: (T0, T0) -> Bool, x1: T0, x2: T0, x3: T0) { not is_transitive[T0](x0) or not x0(x1, x2) or not x0(x2, x3) or x0(x1, x3) }[G](G.lte, b, c, a)","function[T0](x0: (T0, T0) -> Bool, x1: T0, x2: T0) { not lib(util).is_antisymmetric[T0](x0) or not x0(x1, x2) or not x0(x2, x1) or x1 = x2 }[G](G.lte, b, a)","function[T0: PartialOrder](x0: T0, x1: T0) { not T0.lt(x0, x1) or x0 != x1 }[G](a, b)","b != a","function[T0: PartialOrder] { lib(util).is_antisymmetric[T0](T0.lte) }[G]"]}

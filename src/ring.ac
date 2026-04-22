@@ -1,5 +1,5 @@
 from nat import Nat
-from list import List, sum, map
+from list import sum, map
 from add_comm_group import AddCommGroup
 from semiring import Semiring
 

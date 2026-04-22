@@ -1,4 +1,4 @@
-from nat.nat_base import strong_induction, true_below
+from nat.nat_base import true_below
 from nat.basic_addition import Nat
 from pair import Pair
 numerals Nat

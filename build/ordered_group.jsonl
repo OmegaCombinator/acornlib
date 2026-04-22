@@ -6,7 +6,7 @@
 {"goal":"c <= b","proof":[]}
 {"goal":"a <= b","proof":[]}
 {"goal":"b <= a","proof":[]}
-{"goal":"a != c","proof":["b != a","function[T0: PartialOrder](x0: T0, x1: T0) { not T0.lte(x0, x1) or T0.lt(x0, x1) or x0 = x1 }[G](a, b)","function[T0: LinearOrder](x0: T0, x1: T0) { not T0.lt(x0, x1) or T0.max(x0, x1) = x1 }[G](a, b)","function[T0: LinearOrder](x0: T0, x1: T0) { not T0.lte(x0, x1) or T0.max(x1, x0) = x1 }[G](b, a)"]}
+{"goal":"a != c","proof":["function[T0: LinearOrder](x0: T0, x1: T0) { (if x0 <= x1 { x0 } else { x1 }) = x0.min(x1) }[G](a, b)","function[T0: LinearOrder](x0: T0, x1: T0) { not x0 >= x1 or x0.min(x1) = x1 }[G](a, b)","function[T0: lib(order).PartialOrder](x0: T0, x1: T0) { x0 >= x1 = x1 <= x0 }[G](a, b)"]}
 {"goal":"lt(a, c)","proof":["function[T0: LeftOrderedGroup](x0: T0, x1: T0) { not T0.lte(x0, x1) or lt[T0](x0, x1) or x0 = x1 }[G](a, c)"]}
 {"goal":"lt_trans","proof":[]}
 {"goal":"f(Nat.0)","proof":["function(x0: Nat) { lt(G.1, a.pow(x0.suc)) = f(x0) }(Nat.0)","function[T0: lib(monoid).Monoid](x0: T0) { T0.pow(x0, Nat.1) = x0 }[G](a)"]}

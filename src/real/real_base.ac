@@ -1,7 +1,6 @@
 from add import Add
 from lte import LTE
 from nat import Nat
-from nat.nat_base import alt_induction
 from neg import Neg
 from int import Int
 from int.lattice import abs

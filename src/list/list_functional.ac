@@ -1,7 +1,5 @@
 from nat.lattice import Nat
-from nat.nat_base import sub_one_sub_lt
-from list.list_sum import List, list_extensionality, map, map_length, partial, sum
-from list.list_sum import range_idx_eq_idx, map_range
+from list.list_sum import List, map, sum
 from add_comm_monoid import AddCommMonoid
 
 numerals Nat
