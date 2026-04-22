@@ -3,7 +3,7 @@ from real.real_field import mul_left_cancel, div_le_of_mul_le, mul_le_mul_pos_le
 from real.real_set import ub_imp_lub
 from real.real_series import is_increasing, image, is_upper_bound, monotone_convergence_principle
 from real.real_seq import converges, limit, eventual_ub, ub_imp_limit_lte
-from set import Set
+from set import Set, image_contains, set_image, maps_into_set_image, universal_set_contains_eq
 from nat import Nat
 
 // This file defines supremum-related concepts for sets of real numbers.
@@ -670,7 +670,30 @@ theorem supremum_scalar_mult_neg(alpha: Real, s: Set[Real], inf_s: Real) {
 
 /// Convert the image of a sequence to a set.
 define seq_image(a: Nat -> Real) -> Set[Real] {
-    Set[Real].new(image(a))
+    set_image(Set[Nat].universal_set, a)
+}
+
+/// Membership in `seq_image(a)` is equivalent to being a value of the sequence.
+theorem seq_image_contains_iff(a: Nat -> Real, x: Real) {
+    seq_image(a).contains(x) = image(a, x)
+} by {
+    if seq_image(a).contains(x) {
+        let n: Nat satisfy {
+            Set[Nat].universal_set.contains(n) and x = a(n)
+        }
+        image(a, x)
+    }
+    if image(a, x) {
+        let n: Nat satisfy {
+            a(n) = x
+        }
+        universal_set_contains_eq[Nat](n)
+        Set[Nat].universal_set.contains(n)
+        maps_into_set_image(Set[Nat].universal_set, a, n)
+        seq_image(a).contains(a(n))
+        seq_image(a).contains(x)
+    }
+    seq_image(a).contains(x) = image(a, x)
 }
 
 /// If an increasing sequence is bounded above, then it converges to the
@@ -690,6 +713,7 @@ theorem monotone_convergence_seq(a: Nat -> Real, b: Real) {
     forall(x: Real) {
         if img.contains(x) {
             // x is in the image, so x = a(n) for some n
+            seq_image_contains_iff(a, x)
             image(a, x)
             let n: Nat satisfy {
                 a(n) = x
@@ -712,9 +736,7 @@ theorem monotone_convergence_seq(a: Nat -> Real, b: Real) {
             // Since ub is an upper bound for img, we have a(n) <= ub for all n
             forall(n: Nat) {
                 image(a, a(n))
-                a(n) ∈ Set.new(image(a))
-                seq_image(a) = Set.new(image(a))
-                a(n) ∈ seq_image(a)
+                seq_image_contains_iff(a, a(n))
                 img.contains(a(n))
                 a(n) <= ub
             }
@@ -754,14 +776,12 @@ define is_nondecreasing(f: Real -> Real) -> Bool {
 
 /// True if y is in the image of set s under function f.
 define function_image_contains(f: Real -> Real, s: Set[Real], y: Real) -> Bool {
-    exists(x: Real) {
-        s.contains(x) and y = f(x)
-    }
+    image_contains(f, s, y)
 }
 
 /// The image of a set s under function f.
 define function_image(f: Real -> Real, s: Set[Real]) -> Set[Real] {
-    Set[Real].new(function_image_contains(f, s))
+    set_image(s, f)
 }
 
 /// Membership in function_image is equivalent to function_image_contains.

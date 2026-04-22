@@ -1,5 +1,6 @@
 from list import List
 from nat import Nat
+from util import compose
 
 /// Sets with elements of type `K` are defined as Boolean functions over `K`
 structure Set[K] {
@@ -409,6 +410,114 @@ theorem set_image_contains_eq[T, U](s: Set[T], f: T -> U, y: U) {
     set_image(s, f).contains(y) = image_contains(f, s, y)
 }
 
+/// True if `x` lies in the preimage of the set `s` under the function `f`.
+define preimage_contains[T, U](f: T -> U, s: Set[U], x: T) -> Bool {
+    s.contains(f(x))
+}
+
+/// The preimage of the set `s` under the function `f`.
+define set_preimage[T, U](f: T -> U, s: Set[U]) -> Set[T] {
+    Set[T].new(preimage_contains(f, s))
+}
+
+/// Membership in the preimage set is equivalent to the preimage predicate.
+theorem set_preimage_contains_eq[T, U](f: T -> U, s: Set[U], x: T) {
+    set_preimage(f, s).contains(x) = preimage_contains(f, s, x)
+}
+
+/// The preimage of the empty set is empty.
+theorem set_preimage_empty[T, U](f: T -> U) {
+    set_preimage(f, Set[U].empty_set) = Set[T].empty_set
+} by {
+    let s = set_preimage(f, Set[U].empty_set)
+    let e = Set[T].empty_set
+    forall(x: T) {
+        set_preimage_contains_eq(f, Set[U].empty_set, x)
+        empty_set_contains_eq[U](f(x))
+        empty_set_contains_eq[T](x)
+        s.contains(x) = e.contains(x)
+    }
+    set_ext(s, e)
+}
+
+/// The preimage of the universal set is universal.
+theorem set_preimage_universal[T, U](f: T -> U) {
+    set_preimage(f, Set[U].universal_set) = Set[T].universal_set
+} by {
+    let s = set_preimage(f, Set[U].universal_set)
+    let u = Set[T].universal_set
+    forall(x: T) {
+        set_preimage_contains_eq(f, Set[U].universal_set, x)
+        universal_set_contains_eq[U](f(x))
+        universal_set_contains_eq[T](x)
+        s.contains(x) = u.contains(x)
+    }
+    set_ext(s, u)
+}
+
+/// Preimage is monotone with respect to subset.
+theorem set_preimage_monotone[T, U](f: T -> U, a: Set[U], b: Set[U]) {
+    a.subset(b) implies set_preimage(f, a).subset(set_preimage(f, b))
+} by {
+    if a.subset(b) {
+        forall(x: T) {
+            if set_preimage(f, a).contains(x) {
+                set_preimage_contains_eq(f, a, x)
+                a.contains(f(x))
+                b.contains(f(x))
+                set_preimage_contains_eq(f, b, x)
+                set_preimage(f, b).contains(x)
+            }
+        }
+    }
+}
+
+/// Preimage commutes with complement.
+theorem set_preimage_compl[T, U](f: T -> U, s: Set[U]) {
+    set_preimage(f, s.c) = set_preimage(f, s).c
+} by {
+    let u = set_preimage(f, s.c)
+    let v = set_preimage(f, s).c
+    forall(x: T) {
+        if u.contains(x) {
+            set_preimage_contains_eq(f, s.c, x)
+            compl_contains_eq(s, f(x))
+            not s.contains(f(x))
+            set_preimage_contains_eq(f, s, x)
+            not set_preimage(f, s).contains(x)
+            compl_contains_eq(set_preimage(f, s), x)
+            v.contains(x)
+        }
+        if v.contains(x) {
+            compl_contains_eq(set_preimage(f, s), x)
+            not set_preimage(f, s).contains(x)
+            set_preimage_contains_eq(f, s, x)
+            not s.contains(f(x))
+            compl_contains_eq(s, f(x))
+            set_preimage_contains_eq(f, s.c, x)
+            u.contains(x)
+        }
+        u.contains(x) = v.contains(x)
+    }
+    set_ext(u, v)
+}
+
+/// Preimage under a composition is iterated preimage.
+theorem set_preimage_compose[A, B, C](f: B -> C, g: A -> B, s: Set[C]) {
+    set_preimage(compose(f, g), s) = set_preimage(g, set_preimage(f, s))
+} by {
+    let u = set_preimage(compose(f, g), s)
+    let v = set_preimage(g, set_preimage(f, s))
+    forall(x: A) {
+        set_preimage_contains_eq(compose(f, g), s, x)
+        compose(f, g, x) = f(g(x))
+        set_preimage_contains_eq(f, s, g(x))
+        set_preimage_contains_eq(g, set_preimage(f, s), x)
+        u.contains(x) = v.contains(x)
+    }
+    set_ext(u, v)
+}
+
 /// An element of a set maps to an element of its image.
 theorem maps_into_set_image[T, U](s: Set[T], f: T -> U, x: T) {
     s.contains(x) implies set_image(s, f).contains(f(x))
@@ -418,6 +527,89 @@ theorem maps_into_set_image[T, U](s: Set[T], f: T -> U, x: T) {
             z = x and s.contains(z) and f(x) = f(z)
         }
         image_contains(f, s, f(x))
+    }
+}
+
+/// Membership in an image yields a witness in the source set.
+theorem set_image_contains_witness[T, U](s: Set[T], f: T -> U, y: U) {
+    set_image(s, f).contains(y) implies exists(x: T) {
+        s.contains(x) and y = f(x)
+    }
+} by {
+    if set_image(s, f).contains(y) {
+        set_image_contains_eq(s, f, y)
+        image_contains(f, s, y)
+    }
+}
+
+/// The image of the empty set is empty.
+theorem set_image_empty[T, U](f: T -> U) {
+    set_image(Set[T].empty_set, f) = Set[U].empty_set
+} by {
+    let s = set_image(Set[T].empty_set, f)
+    let e = Set[U].empty_set
+    forall(y: U) {
+        if s.contains(y) {
+            let x: T satisfy {
+                Set[T].empty_set.contains(x) and y = f(x)
+            }
+            empty_set_contains_eq[T](x)
+            false
+        }
+        empty_set_contains_eq[U](y)
+        s.contains(y) = e.contains(y)
+    }
+    set_ext(s, e)
+}
+
+/// The image of a singleton is the singleton of the image.
+theorem set_image_singleton[T, U](a: T, f: T -> U) {
+    set_image(Set[T].singleton(a), f) = Set[U].singleton(f(a))
+} by {
+    let s = set_image(Set[T].singleton(a), f)
+    let t = Set[U].singleton(f(a))
+    forall(y: U) {
+        if s.contains(y) {
+            let x: T satisfy {
+                Set[T].singleton(a).contains(x) and y = f(x)
+            }
+            singleton_contains_eq[T](a, x)
+            x = a
+            y = f(a)
+            singleton_contains_eq[U](f(a), y)
+            t.contains(y)
+        }
+        if t.contains(y) {
+            singleton_contains_eq[U](f(a), y)
+            y = f(a)
+            singleton_contains_eq[T](a, a)
+            Set[T].singleton(a).contains(a)
+            maps_into_set_image(Set[T].singleton(a), f, a)
+            s.contains(f(a))
+            s.contains(y)
+        }
+        s.contains(y) = t.contains(y)
+    }
+    set_ext(s, t)
+}
+
+/// Image is monotone with respect to subset.
+theorem set_image_monotone[T, U](a: Set[T], b: Set[T], f: T -> U) {
+    a.subset(b) implies set_image(a, f).subset(set_image(b, f))
+} by {
+    if a.subset(b) {
+        forall(y: U) {
+            if set_image(a, f).contains(y) {
+                let x: T satisfy {
+                    a.contains(x) and y = f(x)
+                }
+                b.contains(x)
+                exists(z: T) {
+                    z = x and b.contains(z) and y = f(z)
+                }
+                image_contains(f, b, y)
+            }
+        }
     }
 }
 
@@ -705,6 +897,114 @@ theorem union_contains_eq[K](a: Set[K], b: Set[K], x: K) {
 /// Membership in an intersection is Boolean conjunction of membership.
 theorem intersection_contains_eq[K](a: Set[K], b: Set[K], x: K) {
     a.intersection(b).contains(x) = (a.contains(x) and b.contains(x))
+}
+
+/// Image distributes over union.
+theorem set_image_union[T, U](a: Set[T], b: Set[T], f: T -> U) {
+    set_image(a.union(b), f) = set_image(a, f).union(set_image(b, f))
+} by {
+    let u = set_image(a.union(b), f)
+    let v = set_image(a, f).union(set_image(b, f))
+    forall(y: U) {
+        if u.contains(y) {
+            let x: T satisfy {
+                a.union(b).contains(x) and y = f(x)
+            }
+            union_contains_eq(a, b, x)
+            if a.contains(x) {
+                maps_into_set_image(a, f, x)
+                set_image(a, f).contains(f(x))
+                set_image(a, f).contains(y)
+            } else {
+                b.contains(x)
+                maps_into_set_image(b, f, x)
+                set_image(b, f).contains(f(x))
+                set_image(b, f).contains(y)
+            }
+            union_contains_eq(set_image(a, f), set_image(b, f), y)
+            v.contains(y)
+        }
+        if v.contains(y) {
+            union_contains_eq(set_image(a, f), set_image(b, f), y)
+            if set_image(a, f).contains(y) {
+                let x: T satisfy {
+                    a.contains(x) and y = f(x)
+                }
+                union_contains_eq(a, b, x)
+                a.union(b).contains(x)
+                image_contains(f, a.union(b), y)
+                u.contains(y)
+            } else {
+                let x: T satisfy {
+                    b.contains(x) and y = f(x)
+                }
+                union_contains_eq(a, b, x)
+                a.union(b).contains(x)
+                image_contains(f, a.union(b), y)
+                u.contains(y)
+            }
+        }
+        u.contains(y) = v.contains(y)
+    }
+    set_ext(u, v)
+}
+
+/// The image of an intersection is contained in the intersection of the images.
+theorem set_image_intersection_subset[T, U](a: Set[T], b: Set[T], f: T -> U) {
+    set_image(a.intersection(b), f).subset(set_image(a, f).intersection(set_image(b, f)))
+} by {
+    forall(y: U) {
+        if set_image(a.intersection(b), f).contains(y) {
+            let x: T satisfy {
+                a.intersection(b).contains(x) and y = f(x)
+            }
+            intersection_contains_eq(a, b, x)
+            a.contains(x)
+            b.contains(x)
+            maps_into_set_image(a, f, x)
+            set_image(a, f).contains(f(x))
+            set_image(a, f).contains(y)
+            maps_into_set_image(b, f, x)
+            set_image(b, f).contains(f(x))
+            set_image(b, f).contains(y)
+            intersection_contains_eq(set_image(a, f), set_image(b, f), y)
+            set_image(a, f).intersection(set_image(b, f)).contains(y)
+        }
+    }
+}
+
+/// Preimage distributes over union.
+theorem set_preimage_union[T, U](f: T -> U, a: Set[U], b: Set[U]) {
+    set_preimage(f, a.union(b)) = set_preimage(f, a).union(set_preimage(f, b))
+} by {
+    let u = set_preimage(f, a.union(b))
+    let v = set_preimage(f, a).union(set_preimage(f, b))
+    forall(x: T) {
+        set_preimage_contains_eq(f, a.union(b), x)
+        union_contains_eq(a, b, f(x))
+        set_preimage_contains_eq(f, a, x)
+        set_preimage_contains_eq(f, b, x)
+        union_contains_eq(set_preimage(f, a), set_preimage(f, b), x)
+        u.contains(x) = v.contains(x)
+    }
+    set_ext(u, v)
+}
+
+/// Preimage distributes over intersection.
+theorem set_preimage_intersection[T, U](f: T -> U, a: Set[U], b: Set[U]) {
+    set_preimage(f, a.intersection(b)) = set_preimage(f, a).intersection(set_preimage(f, b))
+} by {
+    let u = set_preimage(f, a.intersection(b))
+    let v = set_preimage(f, a).intersection(set_preimage(f, b))
+    forall(x: T) {
+        set_preimage_contains_eq(f, a.intersection(b), x)
+        intersection_contains_eq(a, b, f(x))
+        set_preimage_contains_eq(f, a, x)
+        set_preimage_contains_eq(f, b, x)
+        intersection_contains_eq(set_preimage(f, a), set_preimage(f, b), x)
+        u.contains(x) = v.contains(x)
+    }
+    set_ext(u, v)
 }
 
 theorem sets_subset_union[K](a: Set[K], b: Set[K]) {

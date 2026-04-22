@@ -164,18 +164,23 @@
 {"goal":"scaled_sup <= ub","proof":[]}
 {"goal":"is_set_supremum(scaled_set, scaled_sup)","proof":["function(x0: Set[Real], x1: Real) { (is_set_upper_bound(x0, x1) and forall(x2: Real) { not is_set_upper_bound(x0, x2) or lib(lte).LTE.lte[Real](x1, x2) }) = is_set_supremum(x0, x1) }(scaled_set, scaled_sup)","not (is_set_upper_bound(scaled_set, scaled_sup) and forall(x0: Real) { not is_set_upper_bound(scaled_set, x0) or lib(lte).LTE.lte[Real](scaled_sup, x0) })","exists(k0: Real) { is_set_upper_bound(scaled_set, k0) and not lib(lte).LTE.lte[Real](scaled_sup, k0) }","let w30: Real satisfy { is_set_upper_bound(scaled_set, w30) and not lib(lte).LTE.lte[Real](scaled_sup, w30) }","function(x0: Real) { not is_set_upper_bound(scaled_set, x0) or lib(lte).LTE.lte[Real](scaled_sup, x0) }(w30)"]}
 {"goal":"supremum_scalar_mult_neg","proof":[]}
-{"goal":"converges(a)","proof":["function(x0: Nat -> Real, x1: Real) { not is_upper_bound(x0, x1) or not is_increasing(x0) or converges(x0) }(a, b)"]}
-{"goal":"image(a, x)","proof":["function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Real](image(a), x)","function(x0: Nat -> Real) { Set.new[Real](image(x0)) = seq_image(x0) }(a)"]}
+{"goal":"exists(k0: Nat) { Set.universal_set[Nat].contains(k0) and x = a(k0) }","proof":["function[T0, T1](x0: Set[T1], x1: T1 -> T0, x2: T0) { not x2 ∈ set_image[T1, T0](x0, x1) or exists(k0: T1) { k0 ∈ x0 and x1(k0) = x2 } }[Real, Nat](Set.universal_set[Nat], a, x)"]}
+{"goal":"image(a, x)","proof":["function(x0: Nat -> Real, x1: Real) { exists(k0: Nat) { x0(k0) = x1 } = image(x0, x1) }(a, x)","a(n) = x","not exists(k0: Nat) { a(k0) = x }","function(x0: Nat) { x != a(x0) }(n)"]}
 {"goal":"exists(k0: Nat) { a(k0) = x }","proof":["function(x0: Nat -> Real, x1: Real) { not image(x0, x1) or exists(k0: Nat) { x0(k0) = x1 } }(a, x)"]}
+{"goal":"Set.universal_set[Nat].contains(n)","proof":[]}
+{"goal":"seq_image(a).contains(a(n))","proof":[]}
+{"goal":"seq_image(a).contains(x)","proof":[]}
+{"goal":"seq_image(a).contains(x) = image(a, x)","proof":[]}
+{"goal":"seq_image_contains_iff","proof":[]}
+{"goal":"converges(a)","proof":["function(x0: Nat -> Real, x1: Real) { not is_upper_bound(x0, x1) or not is_increasing(x0) or converges(x0) }(a, b)"]}
+{"goal":"image(a, x)","proof":[]}
+{"goal":"exists(k0: Nat) { a(k0) = x }","proof":["function(x0: Nat -> Real, x1: Real) { exists(k0: Nat) { x0(k0) = x1 } = image(x0, x1) }(a, x)"]}
 {"goal":"is_increasing(a)","proof":[]}
 {"goal":"converges(a)","proof":[]}
 {"goal":"a(n) <= lim","proof":["function(x0: Nat -> Real) { not is_increasing(x0) or not converges(x0) or is_upper_bound(x0, limit(x0)) }(a)","function(x0: Nat -> Real, x1: Real, x2: Nat) { not is_upper_bound(x0, x1) or x0(x2) <= x1 }(a, lim, n)"]}
 {"goal":"x <= lim","proof":[]}
 {"goal":"is_set_upper_bound(img, lim)","proof":["function(x0: Set[Real], x1: Real) { forall(x2: Real) { not x2 ∈ x0 or lib(lte).LTE.lte[Real](x2, x1) } = is_set_upper_bound(x0, x1) }(img, lim)","exists(k0: Real) { k0 ∈ img and not lib(lte).LTE.lte[Real](k0, lim) }","let w31: Real satisfy { w31 ∈ img and not lib(lte).LTE.lte[Real](w31, lim) }","function(x0: Real) { not x0 ∈ img or lib(lte).LTE.lte[Real](x0, lim) }(w31)"]}
 {"goal":"image(a, a(n))","proof":["function(x0: Real, x1: Nat -> Real, x2: Nat) { x0 != x1(x2) or image(x1, x0) }(a(n), a, n)"]}
-{"goal":"a(n) ∈ Set.new[Real](image(a))","proof":["function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Real](image(a), a(n))"]}
-{"goal":"seq_image(a) = Set.new[Real](image(a))","proof":["function(x0: Nat -> Real) { Set.new[Real](image(x0)) = seq_image(x0) }(a)"]}
-{"goal":"a(n) ∈ seq_image(a)","proof":[]}
 {"goal":"img.contains(a(n))","proof":[]}
 {"goal":"a(n) <= ub","proof":["function(x0: Set[Real], x1: Real, x2: Real) { not x1 ∈ x0 or not is_set_upper_bound(x0, x2) or x1 <= x2 }(img, a(n), ub)"]}
 {"goal":"is_upper_bound(a, ub)","proof":["function(x0: Nat -> Real, x1: Real) { exists(k0: Nat) { not lib(lte).LTE.lte[Real](x0(k0), x1) } or is_upper_bound(x0, x1) }(a, ub)","exists(k0: Nat) { not lib(lte).LTE.lte[Real](a(k0), ub) }","let w25: Nat satisfy { not lib(lte).LTE.lte[Real](a(w25), ub) }","function(x0: Nat) { lib(lte).LTE.lte[Real](a(x0), ub) }(w25)"]}
@@ -188,10 +193,10 @@
 {"goal":"lim <= ub","proof":[]}
 {"goal":"is_set_supremum(img, lim)","proof":["function(x0: Set[Real], x1: Real) { (is_set_upper_bound(x0, x1) and forall(x2: Real) { not is_set_upper_bound(x0, x2) or lib(lte).LTE.lte[Real](x1, x2) }) = is_set_supremum(x0, x1) }(img, lim)","not (is_set_upper_bound(img, lim) and forall(x0: Real) { not is_set_upper_bound(img, x0) or lib(lte).LTE.lte[Real](lim, x0) })","exists(k0: Real) { is_set_upper_bound(img, k0) and not lib(lte).LTE.lte[Real](lim, k0) }","let w33: Real satisfy { is_set_upper_bound(img, w33) and not lib(lte).LTE.lte[Real](lim, w33) }","function(x0: Real) { not is_set_upper_bound(img, x0) or lib(lte).LTE.lte[Real](lim, x0) }(w33)"]}
 {"goal":"monotone_convergence_seq","proof":[]}
-{"goal":"function_image_contains_iff","proof":["function(x0: Real -> Real, x1: Set[Real]) { Set.new[Real](function_image_contains(x0, x1)) = function_image(x0, x1) }(f, s)","function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Real](function_image_contains(f, s), y)"]}
+{"goal":"function_image_contains_iff","proof":["function(x0: Real -> Real, x1: Set[Real], x2: Real) { image_contains(x0, x1, x2) = function_image_contains(x0, x1, x2) }(f, s, y)","function(x0: Set[Real], x1: Real -> Real) { set_image[Real, Real](x0, x1) = function_image(x1, x0) }(s, f)","function[T0, T1](x0: Set[T1], x1: T1 -> T0) { set_image[T1, T0](x0, x1).contains = image_contains[T1, T0](x1, x0) }[Real, Real](s, f)"]}
 {"goal":"fs.contains(y) = function_image_contains(f, s, y)","proof":["function(x0: Real -> Real, x1: Set[Real], x2: Real) { x2 ∈ function_image(x0, x1) = function_image_contains(x0, x1, x2) }(f, s, y)"]}
 {"goal":"function_image_contains(f, s, y)","proof":[]}
-{"goal":"exists(k0: Real) { s.contains(k0) and y = f(k0) }","proof":["function(x0: Real -> Real, x1: Set[Real], x2: Real) { not function_image_contains(x0, x1, x2) or exists(k0: Real) { k0 ∈ x1 and x0(k0) = x2 } }(f, s, y)"]}
+{"goal":"exists(k0: Real) { s.contains(k0) and y = f(k0) }","proof":["function[T0, T2](x0: Set[T0], x1: T0 -> T2, x2: T2) { exists(k0: T0) { k0 ∈ x0 and x1(k0) = x2 } = image_contains[T0, T2](x1, x0, x2) }[Real, Real](s, f, y)"]}
 {"goal":"y <= f(sup_s)","proof":["function(x0: Real, x1: Real, x2: Real -> Real) { not x0 <= x1 or not is_nondecreasing(x2) or x2(x0) <= x2(x1) }(x, sup_s, f)","function(x0: Set[Real], x1: Real, x2: Real) { not x1 ∈ x0 or not is_set_upper_bound(x0, x2) or x1 <= x2 }(s, x, sup_s)","function(x0: Set[Real], x1: Real) { not is_set_supremum(x0, x1) or is_set_upper_bound(x0, x1) }(s, sup_s)"]}
 {"goal":"is_set_upper_bound(fs, f(sup_s))","proof":["function(x0: Set[Real], x1: Real) { forall(x2: Real) { not x2 ∈ x0 or lib(lte).LTE.lte[Real](x2, x1) } = is_set_upper_bound(x0, x1) }(fs, f(sup_s))","exists(k0: Real) { k0 ∈ fs and not lib(lte).LTE.lte[Real](k0, f(sup_s)) }","let w30: Real satisfy { w30 ∈ fs and not lib(lte).LTE.lte[Real](w30, f(sup_s)) }","function(x0: Real) { not x0 ∈ fs or lib(lte).LTE.lte[Real](x0, f(sup_s)) }(w30)"]}
 {"goal":"has_upper_bound(fs)","proof":["function(x0: Set[Real], x1: Real) { not is_set_upper_bound(x0, x1) or has_upper_bound(x0) }(fs, f(sup_s))"]}
