@@ -63,10 +63,24 @@ When the user says to "work off the notes", do not stop at note maintenance. Use
 3. If that item points to a lower `todo.md`, descend into it.
 4. If the current item is still too broad for one session, first split it into subfolders with narrower `todo.md` files.
 5. Repeat until you reach a concrete item that is narrow enough to plausibly complete in one session.
-6. Then switch from note-taking to implementation: read the relevant code, write Acorn code, and verify the change.
-7. Prefer actually finishing the todo item over discussing it abstractly.
-8. After the code verifies, update the notes immediately.
-9. If progress runs into what looks like an Acorn bug, prover limitation, or missing language feature that materially blocks the next step, tell the user explicitly instead of silently working around it.
+6. Before implementing, check whether the next step is really a code task or whether it hides a definition/design question.
+7. If the next step depends on how to define a foundational object, operator, or interface, stop and discuss that with the user before choosing the definition.
+8. Treat proof strategy as replaceable, but treat definitions as sticky: a messy proof can be cleaned up later, while a bad definition will create downstream trouble.
+9. If the design question is still too broad, narrow it into a dedicated notes leaf and keep the notes honest about the open choice.
+10. Only after the definition question is settled should you switch fully from note-taking to implementation: read the relevant code, write Acorn code, and verify the change.
+11. Prefer actually finishing the todo item over discussing it abstractly, except when the key blocker is a definition choice.
+12. After the code verifies, update the notes immediately.
+13. If progress runs into what looks like an Acorn bug, prover limitation, or missing language feature that materially blocks the next step, tell the user explicitly instead of silently working around it.
+
+## Design Questions
+
+When working off the notes, definition questions deserve special handling.
+
+- If the next task is "how should this be defined?", pause and discuss with the user instead of guessing.
+- This matters most for foundational definitions that later theorems and APIs will depend on.
+- It is acceptable to prove theorems using an ugly or temporary proof strategy, because those proofs can be replaced later.
+- It is not acceptable to quietly commit to a bad long-lived definition just to keep momentum.
+- If a design question appears, record the concrete options and open questions in the notes before continuing.
 
 ## Updating Notes After Work
 
