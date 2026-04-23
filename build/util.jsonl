@@ -4,13 +4,93 @@
 {"goal":"function_extensionality","proof":[]}
 {"goal":"f(x, y) = g(x, y)","proof":[]}
 {"goal":"binary_function_extensionality","proof":[]}
+{"goal":"compose[T, U, U](identity_fn[U], f, x) = identity_fn(f(x))","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[T, U, U](identity_fn[U], f, x)"]}
+{"goal":"identity_fn(f(x)) = f(x)","proof":["function[T0](x0: T0) { identity_fn[T0](x0) = x0 }[U](f(x))"]}
+{"goal":"compose_identity_left","proof":["let w0: T satisfy { f(w0) != compose[T, U, U](identity_fn[U], f, w0) }","function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[T, U, U](identity_fn[U], f, w0)","function[T0](x0: T0) { identity_fn[T0](x0) = x0 }[U](f(w0))"]}
+{"goal":"compose[T, T, U](f, identity_fn[T], x) = f(identity_fn(x))","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[T, T, U](f, identity_fn[T], x)"]}
+{"goal":"identity_fn(x) = x","proof":["function[T0](x0: T0) { identity_fn[T0](x0) = x0 }[T](x)"]}
+{"goal":"f(identity_fn(x)) = f(x)","proof":[]}
+{"goal":"compose_identity_right","proof":["let w0: T satisfy { f(w0) != compose[T, T, U](f, identity_fn[T], w0) }","function(x0: T) { f(identity_fn(x0)) = f(x0) }(w0)","function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[T, T, U](f, identity_fn[T], w0)"]}
+{"goal":"compose[A, C, D](f, compose[A, B, C](g, h), x) = f(compose[A, B, C](g, h)(x))","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[A, C, D](f, compose[A, B, C](g, h), x)"]}
+{"goal":"compose[A, B, C](g, h, x) = g(h(x))","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[A, B, C](g, h, x)"]}
+{"goal":"compose[A, C, D](f, compose[A, B, C](g, h), x) = f(g(h(x)))","proof":[]}
+{"goal":"compose[A, B, D](compose[B, C, D](f, g), h, x) = compose[B, C, D](f, g)(h(x))","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[A, B, D](compose[B, C, D](f, g), h, x)"]}
+{"goal":"compose[B, C, D](f, g, h(x)) = f(g(h(x)))","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[B, C, D](f, g, h(x))"]}
+{"goal":"compose[A, B, D](compose[B, C, D](f, g), h, x) = f(g(h(x)))","proof":[]}
+{"goal":"compose[A, C, D](f, compose[A, B, C](g, h), x) = compose[A, B, D](compose[B, C, D](f, g), h, x)","proof":[]}
+{"goal":"compose_assoc","proof":[]}
+{"goal":"compose[T, U, V](f, constant[T, U](u), x) = f(constant[T, U](u)(x))","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[T, U, V](f, constant[T, U](u), x)"]}
+{"goal":"constant[T, U](u)(x) = u","proof":["function[T0, T1](x0: T1, x1: T0) { constant[T0, T1](x0, x1) = x0 }[T, U](u, x)"]}
+{"goal":"f(constant[T, U](u)(x)) = f(u)","proof":[]}
+{"goal":"constant(f(u), x) = f(u)","proof":["function[T0, T1](x0: T1, x1: T0) { constant[T0, T1](x0, x1) = x0 }[T, V](f(u), x)"]}
+{"goal":"compose[T, U, V](f, constant[T, U](u), x) = constant(f(u), x)","proof":[]}
+{"goal":"compose_constant","proof":[]}
 {"goal":"constant_is_constant","proof":["function[T0, T1](x0: T1 -> T0) { not exists(k0: T0) { forall(x1: T1) { x0(x1) = k0 } } or is_constant[T1, T0](x0) }[U, T](constant[T, U](u))","function[T0, T1](x0: T0 -> T1, x1: T1) { exists(k0: T0) { x0(k0) != x1 } or is_constant[T0, T1](x0) }[T, U](constant[T, U](u), u)","function(x0: U) { exists(k0: T) { constant(u, k0) != x0 } }(u)","let w1: T satisfy { constant(u, w1) != u }","let w0(arg0: U) -> w0_result: T satisfy { constant(u, w0_result) != arg0 }","function(x0: U) { constant(u, w0(x0)) != x0 }(u)","function[T0, T1](x0: T1, x1: T0) { constant[T0, T1](x0, x1) = x0 }[T, U](u, w0(u))"]}
 {"goal":"exists(k0: T) { true }","proof":[]}
 {"goal":"constant[T, U](u)(x) = f(x)","proof":["function[T0, T1](x0: T0 -> T1) { not is_constant[T0, T1](x0) or exists(k0: T1) { forall(x1: T0) { x0(x1) = k0 } } }[T, U](f)","function[T0, T1](x0: T1, x1: T0) { constant[T0, T1](x0, x1) = x0 }[T, U](u, x)","f(x) != u","f(x) != f(t)","exists(k0: U) { forall(x0: T) { f(x0) = k0 } }","let w0: U satisfy { forall(x1: T) { f(x1) = w0 } }","function(x0: T) { w0 = f(x0) }(x)","function(x0: T) { w0 = f(x0) }(t)"]}
 {"goal":"is_constant_imp_eq_constant","proof":["function(x0: U) { not constant[T, U](x0) = f }(u)"]}
-{"goal":"bijection_fn_is_injective","proof":["function[T0, T1](x0: T0 -> T1) { (is_injective_fn[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_bijection_fn[T0, T1](x0) }[T, U](f)","function[T0, T1](x0: T0 -> T1) { not is_bijection_fn[T0, T1](x0) or (is_injective_fn[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) }[T, U](f)","function[T0, T1](x0: T0 -> T1) { not is_bijection_fn[T0, T1](x0) or is_injective_fn[T0, T1](x0) }[T, U](f)"]}
-{"goal":"bijection_fn_is_surjective","proof":["function[T0, T1](x0: T0 -> T1) { (is_injective_fn[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_bijection_fn[T0, T1](x0) }[T, U](f)","function[T0, T1](x0: T0 -> T1) { not is_bijection_fn[T0, T1](x0) or (is_injective_fn[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) }[T, U](f)","function[T0, T1](x0: T0 -> T1) { not is_bijection_fn[T0, T1](x0) or is_surjective_fn[T0, T1](x0) }[T, U](f)"]}
-{"goal":"x1 = x2","proof":["function[T0, T1](x0: T0 -> T1) { forall(x3: T0, x4: T0) { x0(x4) != x0(x3) or x4 = x3 } = is_injective_fn[T0, T1](x0) }[T, U](f)","f(x2) = f(x1)","(forall(x0: T, x3: T) { f(x3) != f(x0) or x3 = x0 } and f(x1) = f(x2))","function(x0: T) { forall(x3: T) { f(x0) != f(x3) or x0 = x3 } = true }(x1)","function(x0: T, x3: T) { not (f(x0) = f(x3) and x0 != x3) }(x1, x2)","function(x0: T, x3: T) { f(x0) != f(x3) or x0 = x3 }(x1, x2)"]}
-{"goal":"injective_fn_eq","proof":["not is_injective_fn[T, U](f) or f(x2) != f(x1)","f(x2) = f(x1)","is_injective_fn[T, U](f)","not is_injective_fn[T, U](f)"]}
+{"goal":"is_reflexive[T](f)","proof":["function[T0](x0: (T0, T0) -> Bool) { (is_reflexive[T0](x0) and is_symmetric[T0](x0) and is_transitive[T0](x0)) = is_equivalence[T0](x0) }[T](f)"]}
+{"goal":"equivalence_is_reflexive","proof":[]}
+{"goal":"is_symmetric[T](f)","proof":["function[T0](x0: (T0, T0) -> Bool) { (is_reflexive[T0](x0) and is_symmetric[T0](x0) and is_transitive[T0](x0)) = is_equivalence[T0](x0) }[T](f)"]}
+{"goal":"equivalence_is_symmetric","proof":[]}
+{"goal":"is_transitive[T](f)","proof":["function[T0](x0: (T0, T0) -> Bool) { (is_reflexive[T0](x0) and is_symmetric[T0](x0) and is_transitive[T0](x0)) = is_equivalence[T0](x0) }[T](f)"]}
+{"goal":"equivalence_is_transitive","proof":[]}
+{"goal":"f(x, x)","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0) { x0(x1, x1) } = is_reflexive[T0](x0) }[T](f)","function[T0](x0: (T0, T0) -> Bool) { not is_reflexive[T0](x0) or forall(x1: T0) { x0(x1, x1) } = true }[T](f)","function[T0](x0: (T0, T0) -> Bool, x1: T0) { not is_reflexive[T0](x0) or x0(x1, x1) }[T](f, x)"]}
+{"goal":"reflexive_self","proof":[]}
+{"goal":"f(y, x)","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0) { not x0(x1, x2) or x0(x2, x1) } = is_symmetric[T0](x0) }[T](f)","function[T0](x0: T0) { identity_fn[T0](x0) = x0 }[T](y)","f(x, y)","is_symmetric[T](f)","not f(identity_fn(y), x)","f(x, identity_fn(y))","(forall(x0: T, x1: T) { not f(x0, x1) or f(x1, x0) } = true)","function(x0: T) { forall(x1: T) { not f(x0, x1) or f(x1, x0) } = true }(x)","function(x0: T, x1: T) { not (f(x0, x1) and not f(x1, x0)) }(x, identity_fn(y))"]}
+{"goal":"symmetric_flip","proof":[]}
+{"goal":"f(x, z)","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0, x3: T0) { not x0(x1, x2) or not x0(x2, x3) or x0(x1, x3) } = is_transitive[T0](x0) }[T](f)","function[T0](x0: T0) { identity_fn[T0](x0) = x0 }[T](z)","not f(x, identity_fn(z))","f(x, y) and f(y, identity_fn(z))","(forall(x0: T, x1: T, x2: T) { not f(x0, x1) or not f(x1, x2) or f(x0, x2) } = true)","function(x0: T) { forall(x1: T, x2: T) { not f(x0, x1) or not f(x1, x2) or f(x0, x2) } = true }(x)","function(x0: T, x1: T) { forall(x2: T) { not f(x0, x1) or not f(x1, x2) or f(x0, x2) } = true }(x, y)","function(x0: T, x1: T, x2: T) { not (f(x0, x1) and f(x1, x2) and not f(x0, x2)) }(x, y, identity_fn(z))"]}
+{"goal":"transitive_step","proof":[]}
+{"goal":"x = y","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0) { not x0(x1, x2) or not x0(x2, x1) or x2 = x1 } = is_antisymmetric[T0](x0) }[T](f)","f(y, x)","is_antisymmetric[T](f) and f(x, y)","(forall(x0: T, x1: T) { not f(x0, x1) or not f(x1, x0) or x1 = x0 } and f(x, y) and f(y, x))","(forall(x2: T, x3: T) { not f(x2, x3) or not f(x3, x2) or x3 = x2 } = true)","function(x0: T) { forall(x1: T) { not f(x0, x1) or not f(x1, x0) or x0 = x1 } = true }(y)","function(x0: T, x1: T) { not (f(x0, x1) and f(x1, x0) and x0 != x1) }(y, x)"]}
+{"goal":"antisymmetric_eq","proof":[]}
+{"goal":"eq_relation(x, x)","proof":["function[T0](x0: T0, x1: T0) { eq_relation[T0](x0, x1) = (x0 = x1) }[T](x, x)"]}
+{"goal":"is_reflexive[T](eq_relation[T])","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0) { x0(x1, x1) } = is_reflexive[T0](x0) }[T](eq_relation[T])","let w0: T satisfy { not eq_relation(w0, w0) }","function(x0: T) { eq_relation(x0, x0) }(w0)"]}
+{"goal":"y = x","proof":["function[T0](x0: T0, x1: T0) { eq_relation[T0](x0, x1) = (x0 = x1) }[T](x, y)"]}
+{"goal":"eq_relation(y, x)","proof":[]}
+{"goal":"is_symmetric[T](eq_relation[T])","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0) { not x0(x1, x2) or x0(x2, x1) } = is_symmetric[T0](x0) }[T](eq_relation[T])","let w0: T satisfy { exists(k0: T) { eq_relation(w0, k0) and not eq_relation(k0, w0) } }","let w1: T satisfy { eq_relation(w0, w1) and not eq_relation(w1, w0) }","function(x0: T, x1: T) { not eq_relation(x0, x1) or eq_relation(x1, x0) }(w0, w1)"]}
+{"goal":"x = z","proof":["function[T0, T1, T2](x0: (T0, T1) -> T2, x1: T1, x2: T0) { flip[T0, T1, T2](x0, x1, x2) = x0(x2, x1) }[T, T, Bool](eq_relation[T], y, x)","function[T0, T1, T2](x0: (T0, T1) -> T2, x1: T1, x2: T0) { flip[T0, T1, T2](x0, x1, x2) = x0(x2, x1) }[T, T, Bool](eq_relation[T], z, x)","function[T0](x0: T0, x1: T0) { eq_relation[T0](x0, x1) = (x0 = x1) }[T](y, z)","function[T0](x0: T0, x1: T0) { eq_relation[T0](x0, x1) = (x0 = x1) }[T](x, z)"]}
+{"goal":"eq_relation(x, z)","proof":["function(x0: T) { eq_relation(x0, x0) }(x)"]}
+{"goal":"is_transitive[T](eq_relation[T])","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0, x3: T0) { not x0(x1, x2) or not x0(x2, x3) or x0(x1, x3) } = is_transitive[T0](x0) }[T](eq_relation[T])","let w0: T satisfy { exists(k0: T, k1: T) { eq_relation(w0, k0) and eq_relation(k0, k1) and not eq_relation(w0, k1) } }","let w1: T satisfy { exists(k2: T) { eq_relation(w0, w1) and eq_relation(w1, k2) and not eq_relation(w0, k2) } }","let w2: T satisfy { eq_relation(w0, w1) and eq_relation(w1, w2) and not eq_relation(w0, w2) }","function[T0, T1, T2](x0: (T0, T1) -> T2, x1: T1, x2: T0) { flip[T0, T1, T2](x0, x1, x2) = x0(x2, x1) }[T, T, Bool](eq_relation[T], w2, w0)","function[T0](x0: T0, x1: T0) { eq_relation[T0](x0, x1) = (x0 = x1) }[T](w0, w1)"]}
+{"goal":"is_equivalence[T](eq_relation[T])","proof":["function[T0](x0: (T0, T0) -> Bool) { (is_reflexive[T0](x0) and is_symmetric[T0](x0) and is_transitive[T0](x0)) = is_equivalence[T0](x0) }[T](eq_relation[T])"]}
+{"goal":"eq_relation_is_equivalence","proof":[]}
+{"goal":"is_reflexive[T](g)","proof":[]}
+{"goal":"relation_eq_imp_reflexive","proof":[]}
+{"goal":"is_symmetric[T](g)","proof":[]}
+{"goal":"relation_eq_imp_symmetric","proof":[]}
+{"goal":"is_transitive[T](g)","proof":[]}
+{"goal":"relation_eq_imp_transitive","proof":[]}
+{"goal":"is_antisymmetric[T](g)","proof":[]}
+{"goal":"relation_eq_imp_antisymmetric","proof":[]}
+{"goal":"is_equivalence[T](g)","proof":[]}
+{"goal":"relation_eq_imp_equivalence","proof":[]}
+{"goal":"is_equivalence[T](f)","proof":["function[T0](x0: (T0, T0) -> Bool) { (is_reflexive[T0](x0) and is_symmetric[T0](x0) and is_transitive[T0](x0)) = is_equivalence[T0](x0) }[T](f)"]}
+{"goal":"reflexive_symmetric_transitive_imp_equivalence","proof":[]}
+{"goal":"is_reflexive[T](f)","proof":["not is_equivalence[T](f)"]}
+{"goal":"f(x, x)","proof":["not is_reflexive[T](f)"]}
+{"goal":"equivalence_self","proof":["not is_equivalence[T](f)"]}
+{"goal":"is_symmetric[T](f)","proof":["not is_equivalence[T](f)"]}
+{"goal":"f(y, x)","proof":["not is_symmetric[T](f) or not f(x, y)","not f(x, y)"]}
+{"goal":"equivalence_flip","proof":["not is_equivalence[T](f) or not f(x, y)","f(x, y)","is_equivalence[T](f)","not is_equivalence[T](f)"]}
+{"goal":"is_transitive[T](f)","proof":["not is_equivalence[T](f)","is_equivalence[T](f) and f(x, y)"]}
+{"goal":"f(x, z)","proof":["not is_transitive[T](f) or not f(y, z) or not f(x, y)","f(y, z)","not f(x, y)","is_equivalence[T](f) and f(x, y)"]}
+{"goal":"equivalence_step","proof":["not is_equivalence[T](f) or not f(y, z) or not f(x, y)","f(y, z)","not is_equivalence[T](f) or not f(x, y)","is_equivalence[T](f) and f(x, y)","not is_equivalence[T](f)"]}
+{"goal":"bijection_fn_is_injective","proof":["function[T0, T1](x0: T0 -> T1) { (is_injective_fn[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_bijection_fn[T0, T1](x0) }[T, U](f)"]}
+{"goal":"bijection_fn_is_surjective","proof":["function[T0, T1](x0: T0 -> T1) { (is_injective_fn[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_bijection_fn[T0, T1](x0) }[T, U](f)"]}
+{"goal":"x1 = x2","proof":["function[T0, T1](x0: T0 -> T1) { forall(x3: T0, x4: T0) { x0(x4) != x0(x3) or x4 = x3 } = is_injective_fn[T0, T1](x0) }[T, U](f)","f(x2) = f(x1)","(forall(x0: T, x3: T) { f(x3) != f(x0) or x3 = x0 } and f(x1) = f(x2))","function(x0: T) { forall(x3: T) { f(x0) != f(x3) or x0 = x3 } = true }(x1)","function(x0: T, x3: T) { not (f(x0) = f(x3) and x0 != x3) }(x1, x2)"]}
+{"goal":"injective_fn_eq","proof":[]}
+{"goal":"compose[T, U, V](f, g, x1) = f(g(x1))","proof":["function[T0, T1, T2](x0: T1 -> T2, x3: T0 -> T1, x4: T0) { compose[T0, T1, T2](x0, x3, x4) = x0(x3(x4)) }[T, U, V](f, g, x1)"]}
+{"goal":"compose[T, U, V](f, g, x2) = f(g(x2))","proof":["function[T0, T1, T2](x0: T1 -> T2, x3: T0 -> T1, x4: T0) { compose[T0, T1, T2](x0, x3, x4) = x0(x3(x4)) }[T, U, V](f, g, x2)"]}
+{"goal":"f(g(x1)) = f(g(x2))","proof":[]}
+{"goal":"g(x1) = g(x2)","proof":[]}
+{"goal":"x1 = x2","proof":[]}
+{"goal":"compose_injective_fn","proof":["function[T0, T1](x0: T0 -> T1) { forall(x1: T0, x2: T0) { x0(x2) != x0(x1) or x2 = x1 } = is_injective_fn[T0, T1](x0) }[T, V](compose[T, U, V](f, g))"]}
 {"goal":"exists(k0: T) { f(k0) = y }","proof":["function[T0, T1](x0: T1 -> T0) { forall(x1: T0) { exists(k0: T1) { x0(k0) = x1 } } = is_surjective_fn[T1, T0](x0) }[U, T](f)","function[T0, T1](x0: T0 -> T1) { not is_surjective_fn[T0, T1](x0) or forall(x1: T1) { exists(k0: T0) { x0(k0) = x1 } } = true }[T, U](f)","function[T0, T1](x0: T0 -> T1, x1: T1) { not is_surjective_fn[T0, T1](x0) or exists(k0: T0) { x0(k0) = x1 } }[T, U](f, y)"]}
-{"goal":"surjective_fn_has_preimage","proof":["not is_surjective_fn[T, U](f)"]}
+{"goal":"surjective_fn_has_preimage","proof":[]}
+{"goal":"exists(k0: U) { f(k0) = z }","proof":[]}
+{"goal":"exists(k0: T) { g(k0) = y }","proof":[]}
+{"goal":"exists(k0: T) { compose[T, U, V](f, g, k0) = z }","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[T, U, V](f, g, x)","function(x0: T) { compose[T, U, V](f, g, x0) != z }(x)"]}
+{"goal":"compose_surjective_fn","proof":["function[T0, T1](x0: T1 -> T0) { forall(x1: T0) { exists(k0: T1) { x0(k0) = x1 } } = is_surjective_fn[T1, T0](x0) }[V, T](compose[T, U, V](f, g))"]}
+{"goal":"is_injective_fn[T, V](compose[T, U, V](f, g))","proof":[]}
+{"goal":"is_surjective_fn[T, V](compose[T, U, V](f, g))","proof":[]}
+{"goal":"is_bijection_fn[T, V](compose[T, U, V](f, g))","proof":["function[T0, T1](x0: T0 -> T1) { (is_injective_fn[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_bijection_fn[T0, T1](x0) }[T, V](compose[T, U, V](f, g))"]}
+{"goal":"compose_bijection_fn","proof":[]}

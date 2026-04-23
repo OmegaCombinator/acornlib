@@ -2,9 +2,4 @@
 
 Goal: make ordinary set-theoretic function manipulation reusable instead of reproved locally.
 
-- [ ] Add APIs for composition of unary functions as reusable combinators
-- [ ] Replace local copies of image/preimage reasoning in existing files
-
-## Current Focus
-
-The image-preimage helper branch is complete. The active frontier is APIs for composition of unary functions as reusable combinators.
+This branch is complete enough for now. The remaining local uses are foundational helper proofs in `set.ac`, not high-value downstream refactors.

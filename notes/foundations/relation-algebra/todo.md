@@ -2,8 +2,7 @@
 
 Goal: centralize the standard reasoning patterns about relations so later libraries can reuse them.
 
-- [ ] Define reusable predicates for reflexive, symmetric, transitive, and antisymmetric relations
-- [ ] Add equivalence-relation infrastructure on arbitrary types
+- [ ] [Equivalence-relation infrastructure on arbitrary types](equivalence-relations/todo.md)
 - [ ] Define relation composition and prove its associativity
 - [ ] Add converse/inverse relation constructions
 - [ ] Add closure operators such as reflexive-transitive closure
@@ -12,3 +11,7 @@ Goal: centralize the standard reasoning patterns about relations so later librar
 - [ ] Support order relations as a special case of general relation algebra
 - [ ] Add congruence-style relations for algebraic structures
 - [ ] Refactor `util.is_equivalence` and related code toward a more systematic API
+
+## Current Focus
+
+The active frontier is [equivalence-relations](equivalence-relations/todo.md).

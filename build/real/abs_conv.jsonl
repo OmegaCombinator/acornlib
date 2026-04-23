@@ -537,39 +537,19 @@
 {"goal":"limit(mask_seq_sum(a, s)) = limit(partial[Real](a))","proof":[]}
 {"goal":"converges_to(mask_seq_sum(a, s), limit(partial[Real](a)))","proof":["function(x0: Nat -> Real) { not converges(x0) or converges_to(x0, limit(x0)) }(mask_seq_sum(a, s))"]}
 {"goal":"increasing_universal_union_mask_limit","proof":[]}
-{"goal":"in_image_of_range(p, k, n)","proof":["function(x0: Nat -> Nat, x1: Nat) { Set.new[Nat](in_image_of_range(x0, x1)) = image_of_range(x0, x1) }(p, k)","function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Nat](in_image_of_range(p, k), n)"]}
-{"goal":"exists(k0: Nat) { k0 < k and p(k0) = n }","proof":["function(x0: Nat -> Nat, x1: Nat, x2: Nat) { not in_image_of_range(x0, x1, x2) or exists(k0: Nat) { k0 < x1 and x0(k0) = x2 } }(p, k, n)"]}
-{"goal":"nat_lt_set(k).contains(i)","proof":[]}
-{"goal":"v.contains(p(i))","proof":[]}
-{"goal":"v.contains(n)","proof":[]}
-{"goal":"exists(k0: Nat) { nat_lt_set(k).contains(k0) and n = p(k0) }","proof":[]}
-{"goal":"i < k","proof":[]}
-{"goal":"in_image_of_range(p, k, n)","proof":["function(x0: Nat, x1: Nat, x2: Nat, x3: Nat -> Nat) { not x0 < x1 or x2 != x3(x0) or in_image_of_range(x3, x1, x2) }(i, k, n, p)"]}
-{"goal":"u.contains(n)","proof":["function(x0: Nat -> Nat, x1: Nat) { Set.new[Nat](in_image_of_range(x0, x1)) = image_of_range(x0, x1) }(p, k)","function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Nat](in_image_of_range(p, k), n)"]}
-{"goal":"u.contains(n) = v.contains(n)","proof":[]}
-{"goal":"image_of_range_eq_set_image","proof":["function[T0](x0: Set[T0]) { Set.new[T0](x0.contains) = x0 }[Nat](image_of_range(p, k))","function[T0](x0: Set[T0]) { Set.new[T0](x0.contains) = x0 }[Nat](set_image[Nat, Nat](nat_lt_set(k), p))"]}
-{"goal":"in_image_of_range(p, k, n)","proof":["function(x0: Nat -> Nat, x1: Nat) { Set.new[Nat](in_image_of_range(x0, x1)) = image_of_range(x0, x1) }(p, k)","function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Nat](in_image_of_range(p, k), n)"]}
-{"goal":"exists(k0: Nat) { k0 < k and p(k0) = n }","proof":["function(x0: Nat, x1: Nat -> Nat, x2: Nat) { exists(k0: Nat) { k0 < x0 and x1(k0) = x2 } = in_image_of_range(x1, x0, x2) }(k, p, n)"]}
-{"goal":"i < k.suc","proof":["function(x0: Nat, x1: Nat) { not x0 < x1 or x0 < x1.suc }(i, k)"]}
-{"goal":"in_image_of_range(p, k.suc, n)","proof":["function(x0: Nat, x1: Nat, x2: Nat, x3: Nat -> Nat) { not x0 < x1 or x2 != x3(x0) or in_image_of_range(x3, x1, x2) }(i, k.suc, n, p)"]}
-{"goal":"image_of_range(p, k.suc).contains(n)","proof":["function(x0: Nat -> Nat, x1: Nat) { Set.new[Nat](in_image_of_range(x0, x1)) = image_of_range(x0, x1) }(p, k.suc)","function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Nat](in_image_of_range(p, k.suc), n)"]}
-{"goal":"image_of_range(p, k).subset(image_of_range(p, k.suc))","proof":["function[T0](x0: Set[T0], x1: Set[T0]) { forall(x2: T0) { not x2 ∈ x0 or x2 ∈ x1 } = x0 ⊂ x1 }[Nat](image_of_range(p, k), image_of_range(p, k.suc))","exists(k0: Nat) { k0 ∈ image_of_range(p, k) and not k0 ∈ image_of_range(p, k.suc) }","let w31: Nat satisfy { w31 ∈ image_of_range(p, k) and not w31 ∈ image_of_range(p, k.suc) }","function(x0: Nat) { not x0 ∈ image_of_range(p, k) or x0 ∈ image_of_range(p, k.suc) }(w31)"]}
+{"goal":"image_of_range_eq_set_image","proof":["function(x0: Nat, x1: Nat -> Nat) { set_image[Nat, Nat](nat_lt_set(x0), x1) = image_of_range(x1, x0) }(k, p)"]}
+{"goal":"image_of_range(p, k).subset(image_of_range(p, k.suc))","proof":[]}
 {"goal":"set_seq_increasing(image_of_range(p))","proof":["function(x0: Nat -> Set[Nat]) { exists(k0: Nat) { not x0(k0) ⊂ x0(k0.suc) } or set_seq_increasing(x0) }(image_of_range(p))","exists(k0: Nat) { not image_of_range(p, k0) ⊂ image_of_range(p, k0.suc) }","let w30: Nat satisfy { not image_of_range(p, w30) ⊂ image_of_range(p, w30.suc) }","function(x0: Nat) { image_of_range(p, x0) ⊂ image_of_range(p, x0.suc) }(w30)"]}
 {"goal":"image_of_range_increasing","proof":[]}
-{"goal":"is_surjective[Nat](p)","proof":[]}
-{"goal":"exists(k0: Nat) { p(k0) = n }","proof":["function[T0, T1](x0: T1 -> T0) { forall(x1: T0) { exists(k0: T1) { x0(k0) = x1 } } = lib(util).is_surjective_fn[T1, T0](x0) }[Nat, Nat](p)","function[T0](x0: T0 -> T0) { is_surjective[T0](x0) = lib(util).is_surjective_fn[T0, T0](x0) }[Nat](p)","function[T0, T1](x0: T0 -> T1) { not lib(util).is_surjective_fn[T0, T1](x0) or forall(x1: T1) { exists(k0: T0) { x0(k0) = x1 } } = true }[Nat, Nat](p)","function[T0, T1](x0: T0 -> T1, x1: T1) { not lib(util).is_surjective_fn[T0, T1](x0) or exists(k0: T0) { x0(k0) = x1 } }[Nat, Nat](p, n)"]}
-{"goal":"i < k","proof":["function(x0: Nat) { x0 < x0.suc }(i)"]}
-{"goal":"in_image_of_range(p, k, n)","proof":["function(x0: Nat, x1: Nat -> Nat, x2: Nat) { exists(k0: Nat) { k0 < x0 and x1(k0) = x2 } = in_image_of_range(x1, x0, x2) }(k, p, n)","not exists(k0: Nat) { k0 < k and p(k0) = n }","function(x0: Nat) { not (x0 < k and p(x0) = n) }(i)"]}
-{"goal":"image_of_range(p, k).contains(n)","proof":["function(x0: Nat -> Nat, x1: Nat) { Set.new[Nat](in_image_of_range(x0, x1)) = image_of_range(x0, x1) }(p, k)","function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Nat](in_image_of_range(p, k), n)"]}
-{"goal":"seq_union[Nat](image_of_range(p)).superset(image_of_range(p, k))","proof":["function[T0](x0: Nat -> Set[T0], x1: Nat) { seq_union[T0](x0) ⊃ x0(x1) }[Nat](image_of_range(p), k)"]}
-{"goal":"image_of_range(p, k).contains(n)","proof":[]}
-{"goal":"seq_union[Nat](image_of_range(p)).contains(n)","proof":["function[T0](x0: Set[T0], x1: Set[T0], x2: T0) { not x0 ⊂ x1 or not x2 ∈ x0 or x2 ∈ x1 }[Nat](image_of_range(p, k), seq_union[Nat](image_of_range(p)), n)","function[T0](x0: Set[T0], x1: Set[T0]) { x0 ⊃ x1 = x1 ⊂ x0 }[Nat](seq_union[Nat](image_of_range(p)), image_of_range(p, k))"]}
-{"goal":"Set.universal_set[Nat].contains(n)","proof":["function(x0: Nat) { x0 ∈ seq_union[Nat](image_of_range(p)) }(n)","function[T0](x0: Set[T0], x1: Set[T0], x2: T0) { not x0 ⊂ x1 or not x2 ∈ x0 or x2 ∈ x1 }[Nat](seq_union[Nat](image_of_range(p)), Set.universal_set[Nat], n)","function[T0](x0: Set[T0]) { x0 ⊂ Set.universal_set[T0] }[Nat](seq_union[Nat](image_of_range(p)))"]}
-{"goal":"seq_union[Nat](image_of_range(p)).contains(n) implies Set.universal_set[Nat].contains(n)","proof":["function(x0: Nat) { x0 ∈ Set.universal_set[Nat] }(n)"]}
-{"goal":"seq_union[Nat](image_of_range(p)).subset(Set.universal_set[Nat])","proof":["function[T0](x0: Set[T0]) { x0 ⊂ Set.universal_set[T0] }[Nat](seq_union[Nat](image_of_range(p)))"]}
-{"goal":"Set.universal_set[Nat].contains(n) implies seq_union[Nat](image_of_range(p)).contains(n)","proof":["function(x0: Nat) { x0 ∈ seq_union[Nat](image_of_range(p)) }(n)"]}
-{"goal":"Set.universal_set[Nat].subset(seq_union[Nat](image_of_range(p)))","proof":["function[T0](x0: Set[T0], x1: Set[T0]) { forall(x2: T0) { not x2 ∈ x0 or x2 ∈ x1 } = x0 ⊂ x1 }[Nat](Set.universal_set[Nat], seq_union[Nat](image_of_range(p)))","exists(k0: Nat) { k0 ∈ Set.universal_set[Nat] and not k0 ∈ seq_union[Nat](image_of_range(p)) }","let w31: Nat satisfy { w31 ∈ Set.universal_set[Nat] and not w31 ∈ seq_union[Nat](image_of_range(p)) }","function(x0: Nat) { x0 ∈ seq_union[Nat](image_of_range(p)) }(w31)"]}
-{"goal":"seq_union[Nat](image_of_range(p)) = Set.universal_set[Nat]","proof":["function[T0](x0: Set[T0], x1: Set[T0]) { not x0 ⊂ x1 or not x1 ⊂ x0 or x0 = x1 }[Nat](seq_union[Nat](image_of_range(p)), Set.universal_set[Nat])"]}
+{"goal":"set_image_seq(nat_lt_set, p, k) = set_image[Nat, Nat](nat_lt_set(k), p)","proof":["function[T0, T1](x0: Nat -> Set[T0], x1: T0 -> T1, x2: Nat) { set_image_seq[T0, T1](x0, x1, x2) = set_image[T0, T1](x0(x2), x1) }[Nat, Nat](nat_lt_set, p, k)"]}
+{"goal":"image_of_range(p, k) = set_image_seq(nat_lt_set, p, k)","proof":[]}
+{"goal":"seq_union[Nat](image_of_range(p)) = seq_union[Nat](set_image_seq[Nat, Nat](nat_lt_set, p))","proof":[]}
+{"goal":"seq_union[Nat](image_of_range(p)) = set_image[Nat, Nat](seq_union[Nat](nat_lt_set), p)","proof":[]}
+{"goal":"seq_union[Nat](image_of_range(p)) = set_image[Nat, Nat](Set.universal_set[Nat], p)","proof":[]}
+{"goal":"image_of_range_union_eq_universal_image","proof":[]}
+{"goal":"seq_union[Nat](image_of_range(p)) = set_image[Nat, Nat](Set.universal_set[Nat], p)","proof":[]}
+{"goal":"set_image[Nat, Nat](Set.universal_set[Nat], p) = Set.universal_set[Nat]","proof":["function[T0, T1](x0: T1 -> T0) { forall(x1: T0) { exists(k0: T1) { x0(k0) = x1 } } = lib(util).is_surjective_fn[T1, T0](x0) }[Nat, Nat](p)","function[T0](x0: T0 -> T0) { forall(x1: T0) { exists(k0: T0) { x0(k0) = x1 } } = is_surjective[T0](x0) }[Nat](p)"]}
+{"goal":"seq_union[Nat](image_of_range(p)) = Set.universal_set[Nat]","proof":[]}
 {"goal":"image_of_range_union_universal","proof":[]}
 {"goal":"not n < m or m != n","proof":["m < m","function(x0: Nat, x1: Nat) { not x0 < x1 or x0 < x1.suc }(m, n)","function(x0: Nat, x1: Nat) { not x0 < x1 or x0.suc <= x1 }(n, m)","n.suc <= m","m < n","function(x0: Nat, x1: Nat) { not x0 < x1 or not x1 <= x0 }(m, n.suc)"]}
 {"goal":"m != n","proof":[]}
@@ -641,9 +621,7 @@
 {"goal":"partial[Real](constant[Nat, Real](0), n) = 0","proof":["function(x0: Nat) { partial[Real](constant[Nat, Real](lib(zero).Zero.0[Real]), x0) = lib(zero).Zero.0[Real] }(n)"]}
 {"goal":"partial[Real](constant[Nat, Real](0), n) = constant(0, n)","proof":["constant(0, n) != 0","function[T0, T1](x0: T1, x1: T0) { constant[T0, T1](x0, x1) = x0 }[Nat, Real](0, n)"]}
 {"goal":"partial_constant_zero_is_constant","proof":[]}
-{"goal":"in_image_of_range(p, m, n)","proof":["function(x0: Nat -> Nat, x1: Nat) { Set.new[Nat](in_image_of_range(x0, x1)) = image_of_range(x0, x1) }(p, m)","function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Nat](in_image_of_range(p, m), n)"]}
-{"goal":"exists(k0: Nat) { k0 < m and p(k0) = n }","proof":["function(x0: Nat -> Nat, x1: Nat, x2: Nat) { not in_image_of_range(x0, x1, x2) or exists(k0: Nat) { k0 < x1 and x0(k0) = x2 } }(p, m, n)"]}
-{"goal":"p(i) = n","proof":[]}
+{"goal":"exists(k0: Nat) { nat_lt_set(m).contains(k0) and n = p(k0) }","proof":[]}
 {"goal":"p(m) = n","proof":["function[T0](x0: T0) { Set.new[T0](lib(set).singleton_fun[T0](x0)) = Set.singleton[T0](x0) }[Nat](p(m))","function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Nat](lib(set).singleton_fun(p(m)), n)","function[T0](x0: T0, x1: T0) { not lib(set).singleton_fun[T0](x0, x1) or x0 = x1 }[Nat](p(m), n)"]}
 {"goal":"p(i) = p(m)","proof":[]}
 {"goal":"is_injective[Nat](p)","proof":[]}
@@ -653,8 +631,10 @@
 {"goal":"image_disjoint_from_next","proof":["function[T0](x0: Set[T0], x1: Set[T0]) { exists(k0: T0) { k0 ∈ x0 and k0 ∈ x1 } or x0.is_disjoint(x1) }[Nat](image_of_range(p, m), Set.singleton(p(m)))","not exists(k0: Nat) { k0 ∈ image_of_range(p, m) and k0 ∈ Set.singleton(p(m)) and not false }","exists(k1: Nat) { k1 ∈ image_of_range(p, m) and k1 ∈ Set.singleton(p(m)) }","let w31: Nat satisfy { w31 ∈ image_of_range(p, m) and w31 ∈ Set.singleton(p(m)) }","function(x0: Nat) { not (x0 ∈ image_of_range(p, m) and x0 ∈ Set.singleton(p(m)) and not false) }(w31)"]}
 {"goal":"image_of_range(p, m.suc) = image_of_range(p, m).union(Set.singleton(p(m)))","proof":[]}
 {"goal":"image_range_suc_eq_union","proof":[]}
-{"goal":"not in_image_of_range(p, Nat.0, n)","proof":["function(x0: Nat -> Nat, x1: Nat, x2: Nat) { not in_image_of_range(x0, x1, x2) or exists(k0: Nat) { k0 < x1 and x0(k0) = x2 } }(p, lib(zero).Zero.0[Nat], n)","exists(k0: Nat) { k0 < lib(zero).Zero.0[Nat] and p(k0) = n }","let w34: Nat satisfy { w34 < lib(zero).Zero.0[Nat] and p(w34) = n }","function(x0: Nat) { not x0 < lib(zero).Zero.0[Nat] }(w34)"]}
-{"goal":"not image_of_range(p, Nat.0).contains(n)","proof":["function(x0: Nat -> Nat, x1: Nat) { Set.new[Nat](in_image_of_range(x0, x1)) = image_of_range(x0, x1) }(p, lib(zero).Zero.0[Nat])","function[T0](x0: T0 -> Bool, x1: T0) { x1 ∈ Set.new[T0](x0) = x0(x1) }[Nat](in_image_of_range(p, lib(zero).Zero.0[Nat]), n)"]}
+{"goal":"exists(k0: Nat) { nat_lt_set(Nat.0).contains(k0) and n = p(k0) }","proof":[]}
+{"goal":"i < Nat.0","proof":[]}
+{"goal":"false","proof":["function(x0: Nat) { not x0 < Nat.0 }(i)"]}
+{"goal":"not image_of_range(p, Nat.0).contains(n)","proof":[]}
 {"goal":"mask(a, image_of_range(p, Nat.0), n) = 0","proof":["function(x0: Nat -> Real, x1: Set[Nat], x2: Nat) { filter_seq(x0, x1.contains, x2) = mask(x0, x1, x2) }(a, image_of_range(p, Nat.0), n)","function(x0: Nat -> Real, x1: Nat -> Bool, x2: Nat) { 0 = filter_seq(x0, x1, x2) or x1(x2) }(a, image_of_range(p, Nat.0).contains, n)"]}
 {"goal":"mask(a, image_of_range(p, Nat.0), n) = 0","proof":["function(x0: Nat) { mask(a, image_of_range(p, Nat.0), x0) = 0 }(n)"]}
 {"goal":"constant(0, n) = 0","proof":["function(x0: Nat) { partial[Real](constant[Nat, Real](0), x0) = constant(0, x0) }(n)","function(x0: Nat) { partial[Real](constant[Nat, Real](0), x0) = 0 }(n)"]}

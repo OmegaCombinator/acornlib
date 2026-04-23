@@ -933,6 +933,31 @@ define double_image_set(f: (Nat, Nat) -> Real) -> Set[Real] {
     Set[Real].new(double_image(f))
 }
 
+theorem double_image_set_nonempty(f: (Nat, Nat) -> Real) {
+    is_nonempty(double_image_set(f))
+} by {
+    double_image(f, f(Nat.0, Nat.0))
+    double_image_set(f).contains(f(Nat.0, Nat.0))
+    is_nonempty(double_image_set(f))
+}
+
+theorem double_image_set_upper_bound_of_double_is_upper_bound(f: (Nat, Nat) -> Real, b: Real) {
+    double_is_upper_bound(f, b) implies is_set_upper_bound(double_image_set(f), b)
+} by {
+    if double_is_upper_bound(f, b) {
+        forall(x: Real) {
+            if double_image_set(f).contains(x) {
+                double_image(f, x)
+                let (m: Nat, n: Nat) satisfy {
+                    f(m, n) = x
+                }
+                f(m, n) <= b
+                x <= b
+            }
+        }
+    }
+}
+
 /// The supremum of the double image as a set equals the supremum as a double function.
 theorem double_image_supremum_equiv(f: (Nat, Nat) -> Real, s_val: Real) {
     is_set_supremum(double_image_set(f), s_val)
@@ -992,27 +1017,12 @@ theorem double_sum_pos_part_converges_of_supremum(f: (Nat, Nat) -> Real, s: Real
 
         doubly_increasing(rectangular_sum(pos_part_2(f)))
 
-        // The image is nonempty (contains rectangular_sum(pos_part_2(f), 0, 0))
         let img_set = double_image_set(rectangular_sum(pos_part_2(f)))
-        double_image(rectangular_sum(pos_part_2(f)), rectangular_sum(pos_part_2(f), Nat.0, Nat.0))
-        img_set.contains(rectangular_sum(pos_part_2(f), Nat.0, Nat.0))
+        double_image_set_nonempty(rectangular_sum(pos_part_2(f)))
         is_nonempty(img_set)
 
-        // The image is bounded above by s
-        forall(x: Real) {
-            if img_set.contains(x) {
-                // x is in img_set = double_image_set(...), so double_image holds for x
-                double_image_set(rectangular_sum(pos_part_2(f))).contains(x)
-                double_image(rectangular_sum(pos_part_2(f)), x)
-                // double_image means there exist m, n such that f(m, n) = x
-                let (m: Nat, n: Nat) satisfy {
-                    rectangular_sum(pos_part_2(f), m, n) = x
-                }
-                double_is_upper_bound(rectangular_sum(pos_part_2(f)), s)
-                rectangular_sum(pos_part_2(f), m, n) <= s
-                x <= s
-            }
-        }
+        double_image_set_upper_bound_of_double_is_upper_bound(rectangular_sum(pos_part_2(f)), s)
+        is_set_upper_bound(double_image_set(rectangular_sum(pos_part_2(f))), s)
         is_set_upper_bound(img_set, s)
         has_upper_bound(img_set)
 
@@ -1041,27 +1051,12 @@ theorem double_sum_neg_part_converges_of_supremum(f: (Nat, Nat) -> Real, s: Real
 
         doubly_increasing(rectangular_sum(neg_part_2(f)))
 
-        // The image is nonempty (contains rectangular_sum(neg_part_2(f), 0, 0))
         let img_set = double_image_set(rectangular_sum(neg_part_2(f)))
-        double_image(rectangular_sum(neg_part_2(f)), rectangular_sum(neg_part_2(f), Nat.0, Nat.0))
-        img_set.contains(rectangular_sum(neg_part_2(f), Nat.0, Nat.0))
+        double_image_set_nonempty(rectangular_sum(neg_part_2(f)))
         is_nonempty(img_set)
 
-        // The image is bounded above by s
-        forall(x: Real) {
-            if img_set.contains(x) {
-                // x is in img_set = double_image_set(...), so double_image holds for x
-                double_image_set(rectangular_sum(neg_part_2(f))).contains(x)
-                double_image(rectangular_sum(neg_part_2(f)), x)
-                // double_image means there exist m, n such that f(m, n) = x
-                let (m: Nat, n: Nat) satisfy {
-                    rectangular_sum(neg_part_2(f), m, n) = x
-                }
-                double_is_upper_bound(rectangular_sum(neg_part_2(f)), s)
-                rectangular_sum(neg_part_2(f), m, n) <= s
-                x <= s
-            }
-        }
+        double_image_set_upper_bound_of_double_is_upper_bound(rectangular_sum(neg_part_2(f)), s)
+        is_set_upper_bound(double_image_set(rectangular_sum(neg_part_2(f))), s)
         is_set_upper_bound(img_set, s)
         has_upper_bound(img_set)
 
@@ -1531,23 +1526,11 @@ theorem fubini_rows(f: (Nat, Nat) -> Real, s: Real) {
 
         // Get suprema for positive and negative parts
         let img_pos = double_image_set(rectangular_sum(pos_part_2(f)))
-        rectangular_sum(pos_part_2(f), Nat.0, Nat.0) = Real.0
-        double_image(rectangular_sum(pos_part_2(f)), Real.0)
-        double_image_set(rectangular_sum(pos_part_2(f))).contains(Real.0)
-        img_pos.contains(Real.0)
+        double_image_set_nonempty(rectangular_sum(pos_part_2(f)))
         is_nonempty(img_pos)
 
-        forall(x: Real) {
-            if img_pos.contains(x) {
-                double_image_set(rectangular_sum(pos_part_2(f))).contains(x)
-                double_image(rectangular_sum(pos_part_2(f)), x)
-                let (m: Nat, n: Nat) satisfy {
-                    rectangular_sum(pos_part_2(f), m, n) = x
-                }
-                rectangular_sum(pos_part_2(f), m, n) <= s
-                x <= s
-            }
-        }
+        double_image_set_upper_bound_of_double_is_upper_bound(rectangular_sum(pos_part_2(f)), s)
+        is_set_upper_bound(double_image_set(rectangular_sum(pos_part_2(f))), s)
         is_set_upper_bound(img_pos, s)
         has_upper_bound(img_pos)
 
@@ -1557,23 +1540,11 @@ theorem fubini_rows(f: (Nat, Nat) -> Real, s: Real) {
         double_image_is_supremum(rectangular_sum(pos_part_2(f)), s_pos)
 
         let img_neg = double_image_set(rectangular_sum(neg_part_2(f)))
-        rectangular_sum(neg_part_2(f), Nat.0, Nat.0) = Real.0
-        double_image(rectangular_sum(neg_part_2(f)), Real.0)
-        double_image_set(rectangular_sum(neg_part_2(f))).contains(Real.0)
-        img_neg.contains(Real.0)
+        double_image_set_nonempty(rectangular_sum(neg_part_2(f)))
         is_nonempty(img_neg)
 
-        forall(x: Real) {
-            if img_neg.contains(x) {
-                double_image_set(rectangular_sum(neg_part_2(f))).contains(x)
-                double_image(rectangular_sum(neg_part_2(f)), x)
-                let (m: Nat, n: Nat) satisfy {
-                    rectangular_sum(neg_part_2(f), m, n) = x
-                }
-                rectangular_sum(neg_part_2(f), m, n) <= s
-                x <= s
-            }
-        }
+        double_image_set_upper_bound_of_double_is_upper_bound(rectangular_sum(neg_part_2(f)), s)
+        is_set_upper_bound(double_image_set(rectangular_sum(neg_part_2(f))), s)
         is_set_upper_bound(img_neg, s)
         has_upper_bound(img_neg)
 
@@ -1605,23 +1576,11 @@ theorem fubini_cols(f: (Nat, Nat) -> Real, s: Real) {
 
         // Get suprema for positive and negative parts
         let img_pos = double_image_set(rectangular_sum(pos_part_2(f)))
-        rectangular_sum(pos_part_2(f), Nat.0, Nat.0) = Real.0
-        double_image(rectangular_sum(pos_part_2(f)), Real.0)
-        double_image_set(rectangular_sum(pos_part_2(f))).contains(Real.0)
-        img_pos.contains(Real.0)
+        double_image_set_nonempty(rectangular_sum(pos_part_2(f)))
         is_nonempty(img_pos)
 
-        forall(x: Real) {
-            if img_pos.contains(x) {
-                double_image_set(rectangular_sum(pos_part_2(f))).contains(x)
-                double_image(rectangular_sum(pos_part_2(f)), x)
-                let (m: Nat, n: Nat) satisfy {
-                    rectangular_sum(pos_part_2(f), m, n) = x
-                }
-                rectangular_sum(pos_part_2(f), m, n) <= s
-                x <= s
-            }
-        }
+        double_image_set_upper_bound_of_double_is_upper_bound(rectangular_sum(pos_part_2(f)), s)
+        is_set_upper_bound(double_image_set(rectangular_sum(pos_part_2(f))), s)
         is_set_upper_bound(img_pos, s)
         has_upper_bound(img_pos)
 
@@ -1631,23 +1590,11 @@ theorem fubini_cols(f: (Nat, Nat) -> Real, s: Real) {
         double_image_is_supremum(rectangular_sum(pos_part_2(f)), s_pos)
 
         let img_neg = double_image_set(rectangular_sum(neg_part_2(f)))
-        rectangular_sum(neg_part_2(f), Nat.0, Nat.0) = Real.0
-        double_image(rectangular_sum(neg_part_2(f)), Real.0)
-        double_image_set(rectangular_sum(neg_part_2(f))).contains(Real.0)
-        img_neg.contains(Real.0)
+        double_image_set_nonempty(rectangular_sum(neg_part_2(f)))
         is_nonempty(img_neg)
 
-        forall(x: Real) {
-            if img_neg.contains(x) {
-                double_image_set(rectangular_sum(neg_part_2(f))).contains(x)
-                double_image(rectangular_sum(neg_part_2(f)), x)
-                let (m: Nat, n: Nat) satisfy {
-                    rectangular_sum(neg_part_2(f), m, n) = x
-                }
-                rectangular_sum(neg_part_2(f), m, n) <= s
-                x <= s
-            }
-        }
+        double_image_set_upper_bound_of_double_is_upper_bound(rectangular_sum(neg_part_2(f)), s)
+        is_set_upper_bound(double_image_set(rectangular_sum(neg_part_2(f))), s)
         is_set_upper_bound(img_neg, s)
         has_upper_bound(img_neg)
 

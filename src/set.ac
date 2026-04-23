@@ -347,6 +347,21 @@ theorem subset_trans[K](a: Set[K], b: Set[K], c: Set[K]) {
     }
 }
 
+/// An initial segment is contained in its successor segment.
+theorem nat_lt_set_subset_suc(bound: Nat) {
+    nat_lt_set(bound).subset(nat_lt_set(bound.suc))
+} by {
+    forall(n: Nat) {
+        if nat_lt_set(bound).contains(n) {
+            nat_lt_set_contains_eq(bound, n)
+            n < bound
+            n < bound.suc
+            nat_lt_set_contains_eq(bound.suc, n)
+            nat_lt_set(bound.suc).contains(n)
+        }
+    }
+}
+
 theorem double_inclusion[K](a: Set[K], b: Set[K]) {
     a.subset(b) and b.subset(a) implies a = b
 } by {
@@ -1815,6 +1830,11 @@ define seq_union[T](seq: Nat -> Set[T]) -> Set[T] {
     union_family(seq)
 }
 
+/// The sequence obtained by taking the image of each set under a fixed function.
+define set_image_seq[T, U](seq: Nat -> Set[T], f: T -> U, n: Nat) -> Set[U] {
+    set_image(seq(n), f)
+}
+
 /// The sequence where each set is replaced by its complement.
 define seq_complement[T](seq: Nat -> Set[T]) -> (Nat -> Set[T]) {
     function(i: Nat) {
@@ -1929,6 +1949,88 @@ theorem seq_union_contains[T](s: Nat -> Set[T], i: Nat) {
             seq_union(s).contains(x)
         }
     }
+}
+
+/// The pointwise image of a sequence has union equal to the image of the union.
+theorem seq_union_set_image[T, U](seq: Nat -> Set[T], f: T -> U) {
+    seq_union(set_image_seq(seq, f)) = set_image(seq_union(seq), f)
+} by {
+    let u = seq_union(set_image_seq(seq, f))
+    let v = set_image(seq_union(seq), f)
+    let u_simp = union_family(set_image_seq(seq, f))
+    let su = seq_union(seq)
+    let su_simp = union_family(seq)
+
+    forall(y: U) {
+        if u.contains(y) {
+            u_simp.contains(y)
+            let i: Nat satisfy {
+                set_image_seq(seq, f, i).contains(y)
+            }
+            set_image_seq(seq, f, i) = set_image(seq(i), f)
+            set_image_contains_witness(seq(i), f, y)
+            let x: T satisfy {
+                seq(i).contains(x) and y = f(x)
+            }
+            seq_union_contains(seq, i)
+            su.superset(seq(i))
+            su.contains(x)
+            maps_into_set_image(su, f, x)
+            v.contains(f(x))
+            v.contains(y)
+        }
+
+        if v.contains(y) {
+            set_image_contains_witness(su, f, y)
+            let x: T satisfy {
+                su.contains(x) and y = f(x)
+            }
+            su = su_simp
+            su_simp.contains(x)
+            let i: Nat satisfy {
+                seq(i).contains(x)
+            }
+            set_image_seq(seq, f, i) = set_image(seq(i), f)
+            maps_into_set_image(seq(i), f, x)
+            set_image_seq(seq, f, i).contains(f(x))
+            u_simp.contains(f(x))
+            u.contains(f(x))
+            u.contains(y)
+        }
+
+        u.contains(y) = v.contains(y)
+    }
+
+    set_ext(u, v)
+}
+
+/// The union of the natural initial segments is the universal set.
+theorem seq_union_nat_lt_set_universal {
+    seq_union(nat_lt_set) = Set[Nat].universal_set
+} by {
+    let u = seq_union(nat_lt_set)
+    let v = Set[Nat].universal_set
+
+    forall(n: Nat) {
+        if u.contains(n) {
+            universal_set_contains_eq[Nat](n)
+            v.contains(n)
+        }
+
+        if v.contains(n) {
+            universal_set_contains_eq[Nat](n)
+            n < n.suc
+            nat_lt_set_contains_eq(n.suc, n)
+            nat_lt_set(n.suc).contains(n)
+            seq_union_contains(nat_lt_set, n.suc)
+            u.superset(nat_lt_set(n.suc))
+            u.contains(n)
+        }
+
+        u.contains(n) = v.contains(n)
+    }
+
+    set_ext(u, v)
 }
 
 theorem seq_union_complement_eq_intersection_complement[T](s: Nat -> Set[T]) {

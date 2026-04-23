@@ -1,7 +1,7 @@
 from nat import Nat
 from add_group import AddGroup
 from order import PartialOrder, LinearOrder
-from util import is_transitive
+from util import antisymmetric_eq, transitive_step
 
 /// A left-ordered group is a group with a left-invariant order.
 /// This means that if `a <= b`, then `c + a <= c + b` for any c in the group.
@@ -15,11 +15,22 @@ typeclass G: AddLeftOrderedGroup extends AddGroup, LinearOrder {
 theorem lt_trans[G: AddLeftOrderedGroup](a: G, b: G, c: G) {
     a < b and b < c implies a < c
 } by {
-    is_transitive(G.lte)
-    a < b implies a <= b
-    b < c implies b <= c
-    a.min(c) <= a
-    a < c or a.min(c) = c
+    if a < b and b < c {
+        a <= b
+        a != b
+        b <= c
+        transitive_step(G.lte, a, b, c)
+        a <= c
+        if a = c {
+            c <= b
+            b <= a
+            antisymmetric_eq(G.lte, a, b)
+            a = b
+            false
+        }
+        a != c
+        a < c
+    }
 }
 
 /// An ordered group has both left and right invariance.
@@ -40,6 +51,13 @@ theorem negative_of_negative[G: AddLeftOrderedGroup](a: G) {
 
 theorem add_inequality[F: AddOrderedGroup](a: F, b: F, c: F, d: F) {
     a <= b and c <= d implies a + c <= b + d
+} by {
+    if a <= b and c <= d {
+        a + c <= b + c
+        b + c <= b + d
+        transitive_step(F.lte, a + c, b + c, b + d)
+        a + c <= b + d
+    }
 }
 
 theorem minus_flips_inequality[F: AddOrderedGroup](a: F, b: F) {

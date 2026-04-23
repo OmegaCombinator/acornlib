@@ -7,6 +7,11 @@ define compose[T, U, V](f: U -> V, g: T -> U) -> T -> V {
     }
 }
 
+/// The identity function on a type.
+define identity_fn[T](x: T) -> T {
+    x
+}
+
 /// Flip the order of arguments to a two-argument function.
 define flip[T, U, V](f: (T, U) -> V, a: U, b: T) -> V {
     f(b, a)
@@ -54,6 +59,59 @@ theorem binary_function_extensionality[T, U, V](f: (T, U) -> V, g: (T, U) -> V) 
             function_extensionality(f(x), g(x))
         }
     }
+}
+
+/// Left identity for composition.
+theorem compose_identity_left[T, U](f: T -> U) {
+    compose(identity_fn[U], f) = f
+} by {
+    forall(x: T) {
+        compose(identity_fn[U], f, x) = identity_fn[U](f(x))
+        identity_fn[U](f(x)) = f(x)
+    }
+    function_extensionality(compose(identity_fn[U], f), f)
+}
+
+/// Right identity for composition.
+theorem compose_identity_right[T, U](f: T -> U) {
+    compose(f, identity_fn[T]) = f
+} by {
+    forall(x: T) {
+        compose(f, identity_fn[T], x) = f(identity_fn[T](x))
+        identity_fn[T](x) = x
+        f(identity_fn[T](x)) = f(x)
+    }
+    function_extensionality(compose(f, identity_fn[T]), f)
+}
+
+/// Composition is associative.
+theorem compose_assoc[A, B, C, D](f: C -> D, g: B -> C, h: A -> B) {
+    compose(f, compose(g, h)) = compose(compose(f, g), h)
+} by {
+    forall(x: A) {
+        compose(f, compose(g, h), x) = f(compose(g, h)(x))
+        compose(g, h, x) = g(h(x))
+        compose(f, compose(g, h), x) = f(g(h(x)))
+        compose(compose(f, g), h, x) = compose(f, g)(h(x))
+        compose(f, g, h(x)) = f(g(h(x)))
+        compose(compose(f, g), h, x) = f(g(h(x)))
+        compose(f, compose(g, h), x) = compose(compose(f, g), h, x)
+    }
+    function_extensionality(compose(f, compose(g, h)), compose(compose(f, g), h))
+}
+
+/// Composing with a constant function yields a constant function.
+theorem compose_constant[T, U, V](f: U -> V, u: U) {
+    compose(f, constant[T, U](u)) = constant[T, V](f(u))
+} by {
+    forall(x: T) {
+        compose(f, constant[T, U](u), x) = f(constant[T, U](u)(x))
+        constant[T, U](u)(x) = u
+        f(constant[T, U](u)(x)) = f(u)
+        constant[T, V](f(u), x) = f(u)
+        compose(f, constant[T, U](u), x) = constant[T, V](f(u), x)
+    }
+    function_extensionality(compose(f, constant[T, U](u)), constant[T, V](f(u)))
 }
 
 theorem constant_is_constant[T, U](u: U) {
@@ -107,6 +165,194 @@ define is_equivalence[T](f: (T, T) -> Bool) -> Bool {
     is_reflexive(f) and is_symmetric(f) and is_transitive(f)
 }
 
+/// The equality relation on a type.
+define eq_relation[T](x: T, y: T) -> Bool {
+    x = y
+}
+
+/// An equivalence relation is reflexive.
+theorem equivalence_is_reflexive[T](f: (T, T) -> Bool) {
+    is_equivalence(f) implies is_reflexive(f)
+} by {
+    if is_equivalence(f) {
+        is_reflexive(f)
+    }
+}
+
+/// An equivalence relation is symmetric.
+theorem equivalence_is_symmetric[T](f: (T, T) -> Bool) {
+    is_equivalence(f) implies is_symmetric(f)
+} by {
+    if is_equivalence(f) {
+        is_symmetric(f)
+    }
+}
+
+/// An equivalence relation is transitive.
+theorem equivalence_is_transitive[T](f: (T, T) -> Bool) {
+    is_equivalence(f) implies is_transitive(f)
+} by {
+    if is_equivalence(f) {
+        is_transitive(f)
+    }
+}
+
+/// A reflexive relation holds on each diagonal element.
+theorem reflexive_self[T](f: (T, T) -> Bool, x: T) {
+    is_reflexive(f) implies f(x, x)
+} by {
+    if is_reflexive(f) {
+        f(x, x)
+    }
+}
+
+/// A symmetric relation reverses any related pair.
+theorem symmetric_flip[T](f: (T, T) -> Bool, x: T, y: T) {
+    is_symmetric(f) and f(x, y) implies f(y, x)
+} by {
+    if is_symmetric(f) and f(x, y) {
+        f(y, x)
+    }
+}
+
+/// A transitive relation composes two consecutive steps.
+theorem transitive_step[T](f: (T, T) -> Bool, x: T, y: T, z: T) {
+    is_transitive(f) and f(x, y) and f(y, z) implies f(x, z)
+} by {
+    if is_transitive(f) {
+        if f(x, y) and f(y, z) {
+            f(x, z)
+        }
+    }
+}
+
+/// An antisymmetric relation turns two-way comparison into equality.
+theorem antisymmetric_eq[T](f: (T, T) -> Bool, x: T, y: T) {
+    is_antisymmetric(f) and f(x, y) and f(y, x) implies x = y
+} by {
+    if is_antisymmetric(f) and f(x, y) and f(y, x) {
+        x = y
+    }
+}
+
+/// Equality is an equivalence relation.
+theorem eq_relation_is_equivalence[T] {
+    is_equivalence(eq_relation[T])
+} by {
+    forall(x: T) {
+        eq_relation[T](x, x)
+    }
+    is_reflexive(eq_relation[T])
+
+    forall(x: T, y: T) {
+        if eq_relation[T](x, y) {
+            y = x
+            eq_relation[T](y, x)
+        }
+    }
+    is_symmetric(eq_relation[T])
+
+    forall(x: T, y: T, z: T) {
+        if eq_relation[T](x, y) and eq_relation[T](y, z) {
+            x = z
+            eq_relation[T](x, z)
+        }
+    }
+    is_transitive(eq_relation[T])
+
+    is_equivalence(eq_relation[T])
+}
+
+/// Equality of relations transports reflexivity.
+theorem relation_eq_imp_reflexive[T](f: (T, T) -> Bool, g: (T, T) -> Bool) {
+    f = g and is_reflexive(f) implies is_reflexive(g)
+} by {
+    if f = g and is_reflexive(f) {
+        is_reflexive(g)
+    }
+}
+
+/// Equality of relations transports symmetry.
+theorem relation_eq_imp_symmetric[T](f: (T, T) -> Bool, g: (T, T) -> Bool) {
+    f = g and is_symmetric(f) implies is_symmetric(g)
+} by {
+    if f = g and is_symmetric(f) {
+        is_symmetric(g)
+    }
+}
+
+/// Equality of relations transports transitivity.
+theorem relation_eq_imp_transitive[T](f: (T, T) -> Bool, g: (T, T) -> Bool) {
+    f = g and is_transitive(f) implies is_transitive(g)
+} by {
+    if f = g and is_transitive(f) {
+        is_transitive(g)
+    }
+}
+
+/// Equality of relations transports antisymmetry.
+theorem relation_eq_imp_antisymmetric[T](f: (T, T) -> Bool, g: (T, T) -> Bool) {
+    f = g and is_antisymmetric(f) implies is_antisymmetric(g)
+} by {
+    if f = g and is_antisymmetric(f) {
+        is_antisymmetric(g)
+    }
+}
+
+/// Equality of relations transports equivalence-relation structure.
+theorem relation_eq_imp_equivalence[T](f: (T, T) -> Bool, g: (T, T) -> Bool) {
+    f = g and is_equivalence(f) implies is_equivalence(g)
+} by {
+    if f = g and is_equivalence(f) {
+        is_equivalence(g)
+    }
+}
+
+/// Reflexivity, symmetry, and transitivity together give an equivalence relation.
+theorem reflexive_symmetric_transitive_imp_equivalence[T](f: (T, T) -> Bool) {
+    is_reflexive(f) and is_symmetric(f) and is_transitive(f) implies is_equivalence(f)
+} by {
+    if is_reflexive(f) and is_symmetric(f) and is_transitive(f) {
+        is_equivalence(f)
+    }
+}
+
+/// An equivalence relation relates every element to itself.
+theorem equivalence_self[T](f: (T, T) -> Bool, x: T) {
+    is_equivalence(f) implies f(x, x)
+} by {
+    if is_equivalence(f) {
+        equivalence_is_reflexive(f)
+        is_reflexive(f)
+        reflexive_self(f, x)
+        f(x, x)
+    }
+}
+
+/// An equivalence relation can reverse any related pair.
+theorem equivalence_flip[T](f: (T, T) -> Bool, x: T, y: T) {
+    is_equivalence(f) and f(x, y) implies f(y, x)
+} by {
+    if is_equivalence(f) and f(x, y) {
+        equivalence_is_symmetric(f)
+        is_symmetric(f)
+        symmetric_flip(f, x, y)
+        f(y, x)
+    }
+}
+
+/// An equivalence relation composes two related steps.
+theorem equivalence_step[T](f: (T, T) -> Bool, x: T, y: T, z: T) {
+    is_equivalence(f) and f(x, y) and f(y, z) implies f(x, z)
+} by {
+    if is_equivalence(f) and f(x, y) and f(y, z) {
+        equivalence_is_transitive(f)
+        is_transitive(f)
+        transitive_step(f, x, y, z)
+        f(x, z)
+    }
+}
+
 /// True if f is an injective function from T to U.
 define is_injective_fn[T, U](f: T -> U) -> Bool {
     forall(x: T, y: T) {
@@ -147,6 +393,25 @@ theorem injective_fn_eq[T, U](f: T -> U, x1: T, x2: T) {
     }
 }
 
+/// Composition preserves injectivity.
+theorem compose_injective_fn[T, U, V](f: U -> V, g: T -> U) {
+    is_injective_fn(f) and is_injective_fn(g) implies is_injective_fn(compose(f, g))
+} by {
+    if is_injective_fn(f) and is_injective_fn(g) {
+        forall(x1: T, x2: T) {
+            if compose(f, g)(x1) = compose(f, g)(x2) {
+                compose(f, g, x1) = f(g(x1))
+                compose(f, g, x2) = f(g(x2))
+                f(g(x1)) = f(g(x2))
+                injective_fn_eq(f, g(x1), g(x2))
+                g(x1) = g(x2)
+                injective_fn_eq(g, x1, x2)
+                x1 = x2
+            }
+        }
+    }
+}
+
 /// Surjectivity provides a preimage for every codomain point.
 theorem surjective_fn_has_preimage[T, U](f: T -> U, y: U) {
     is_surjective_fn(f) implies exists(x: T) {
@@ -157,6 +422,44 @@ theorem surjective_fn_has_preimage[T, U](f: T -> U, y: U) {
         exists(x: T) {
             f(x) = y
         }
+    }
+}
+
+/// Composition preserves surjectivity.
+theorem compose_surjective_fn[T, U, V](f: U -> V, g: T -> U) {
+    is_surjective_fn(f) and is_surjective_fn(g) implies is_surjective_fn(compose(f, g))
+} by {
+    if is_surjective_fn(f) and is_surjective_fn(g) {
+        forall(z: V) {
+            surjective_fn_has_preimage(f, z)
+            let y: U satisfy {
+                f(y) = z
+            }
+            surjective_fn_has_preimage(g, y)
+            let x: T satisfy {
+                g(x) = y
+            }
+            exists(x0: T) {
+                compose(f, g, x0) = z
+            }
+        }
+    }
+}
+
+/// Composition preserves bijectivity.
+theorem compose_bijection_fn[T, U, V](f: U -> V, g: T -> U) {
+    is_bijection_fn(f) and is_bijection_fn(g) implies is_bijection_fn(compose(f, g))
+} by {
+    if is_bijection_fn(f) and is_bijection_fn(g) {
+        bijection_fn_is_injective(f)
+        bijection_fn_is_injective(g)
+        compose_injective_fn(f, g)
+        is_injective_fn(compose(f, g))
+        bijection_fn_is_surjective(f)
+        bijection_fn_is_surjective(g)
+        compose_surjective_fn(f, g)
+        is_surjective_fn(compose(f, g))
+        is_bijection_fn(compose(f, g))
     }
 }
 

@@ -2,7 +2,6 @@
 
 Goal: make core definitions and proof patterns stable enough that later libraries can build on them without constant local patching.
 
-- [ ] [A reusable API for images, preimages, inverse images, and composition](images-and-composition/todo.md)
 - [ ] [Relation algebra for reflexive, symmetric, transitive, and equivalence relations](relation-algebra/todo.md)
 - [ ] [Quotient constructions with good elimination and equality lemmas](quotients/todo.md)
 - [ ] [Better finite and infinite set infrastructure](finite-and-infinite-sets/todo.md)
@@ -14,4 +13,4 @@ Goal: make core definitions and proof patterns stable enough that later librarie
 
 ## Current Focus
 
-The next branch is [images-and-composition](images-and-composition/todo.md). It should be split into a narrower sub-branch before implementation.
+The next branch is [relation-algebra](relation-algebra/todo.md). It should be split into a narrower sub-branch before implementation.
