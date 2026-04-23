@@ -2,7 +2,6 @@
 
 Goal: make image manipulation follow the standard set-theoretic laws instead of requiring local witness arguments.
 
-- [ ] Package the two proved intersection directions into an exact intersection theorem under injectivity
 - [ ] Add a theorem for image under composition
 - [ ] Add a theorem for image of difference under injective maps
 - [ ] Refactor local image-of-union reasoning to use the generic theorem

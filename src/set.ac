@@ -1007,6 +1007,22 @@ theorem set_image_intersection_reverse_of_injective[T, U](a: Set[T], b: Set[T], 
     }
 }
 
+/// Under injectivity, the image of an intersection is exactly the intersection of the images.
+theorem set_image_intersection_of_injective[T, U](a: Set[T], b: Set[T], f: T -> U) {
+    (forall(x1: T, x2: T) { f(x1) = f(x2) implies x1 = x2 })
+    implies
+    set_image(a.intersection(b), f) = set_image(a, f).intersection(set_image(b, f))
+} by {
+    if forall(x1: T, x2: T) { f(x1) = f(x2) implies x1 = x2 } {
+        set_image_intersection_subset(a, b, f)
+        set_image_intersection_reverse_of_injective(a, b, f)
+        set_image(a.intersection(b), f).subset(set_image(a, f).intersection(set_image(b, f)))
+        set_image(a, f).intersection(set_image(b, f)).subset(set_image(a.intersection(b), f))
+        double_inclusion(set_image(a.intersection(b), f), set_image(a, f).intersection(set_image(b, f)))
+        set_image(a.intersection(b), f) = set_image(a, f).intersection(set_image(b, f))
+    }
+}
+
 /// Preimage distributes over union.
 theorem set_preimage_union[T, U](f: T -> U, a: Set[U], b: Set[U]) {
     set_preimage(f, a.union(b)) = set_preimage(f, a).union(set_preimage(f, b))
