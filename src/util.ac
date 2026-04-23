@@ -193,6 +193,38 @@ theorem relation_subset_step[A, B](r: (A, B) -> Bool, s: (A, B) -> Bool, x: A, y
     }
 }
 
+/// Every relation is contained in itself.
+theorem relation_subset_refl[A, B](r: (A, B) -> Bool) {
+    relation_subset(r, r)
+} by {
+    forall(x: A, y: B) {
+        if r(x, y) {
+            r(x, y)
+        }
+    }
+}
+
+/// Relation inclusion is transitive.
+theorem relation_subset_trans[A, B](r: (A, B) -> Bool, s: (A, B) -> Bool, t: (A, B) -> Bool) {
+    relation_subset(r, s) and relation_subset(s, t) implies relation_subset(r, t)
+} by {
+    if relation_subset(r, s) and relation_subset(s, t) {
+        forall(x: A, y: B) {
+            if r(x, y) {
+                relation_subset_step(r, s, x, y)
+                s(x, y)
+                relation_subset_step(s, t, x, y)
+                t(x, y)
+            }
+        }
+    }
+}
+
+/// The pullback of a homogeneous relation along a function.
+define relation_pullback[A, B](f: A -> B, r: (B, B) -> Bool, x: A, y: A) -> Bool {
+    r(f(x), f(y))
+}
+
 /// An equivalence relation is reflexive.
 theorem equivalence_is_reflexive[T](f: (T, T) -> Bool) {
     is_equivalence(f) implies is_reflexive(f)
@@ -442,6 +474,22 @@ theorem relation_converse_monotone[A, B](r1: (A, B) -> Bool, r2: (A, B) -> Bool)
     }
 }
 
+/// Pullback commutes with converse.
+theorem relation_pullback_converse[A, B](f: A -> B, r: (B, B) -> Bool) {
+    relation_pullback(f, relation_converse(r)) = relation_converse(relation_pullback(f, r))
+} by {
+    let u = relation_pullback(f, relation_converse(r))
+    let v = relation_converse(relation_pullback(f, r))
+    forall(x: A, y: A) {
+        u(x, y) = relation_converse(r, f(x), f(y))
+        relation_converse(r, f(x), f(y)) = r(f(y), f(x))
+        v(x, y) = relation_pullback(f, r, y, x)
+        relation_pullback(f, r, y, x) = r(f(y), f(x))
+        u(x, y) = v(x, y)
+    }
+    binary_function_extensionality(u, v)
+}
+
 /// A symmetric relation contains its converse.
 theorem relation_converse_subset_of_symmetric[T](r: (T, T) -> Bool) {
     is_symmetric(r) implies relation_subset(relation_converse(r), r)
@@ -609,6 +657,25 @@ theorem relation_symmetric_closure_is_symmetric[T](r: (T, T) -> Bool) {
             }
         }
     }
+}
+
+/// Pullback commutes with symmetric closure.
+theorem relation_pullback_symmetric_closure[A, B](f: A -> B, r: (B, B) -> Bool) {
+    relation_pullback(f, relation_symmetric_closure(r)) = relation_symmetric_closure(relation_pullback(f, r))
+} by {
+    let u = relation_pullback(f, relation_symmetric_closure(r))
+    let v = relation_symmetric_closure(relation_pullback(f, r))
+    forall(x: A, y: A) {
+        u(x, y) = relation_symmetric_closure(r, f(x), f(y))
+        relation_symmetric_closure(r, f(x), f(y)) = (r(f(x), f(y)) or relation_converse(r, f(x), f(y)))
+        relation_pullback(f, r, x, y) = r(f(x), f(y))
+        relation_pullback_converse(f, r)
+        relation_converse(relation_pullback(f, r), x, y) = relation_pullback(f, relation_converse(r), x, y)
+        relation_pullback(f, relation_converse(r), x, y) = relation_converse(r, f(x), f(y))
+        v(x, y) = (relation_pullback(f, r, x, y) or relation_converse(relation_pullback(f, r), x, y))
+        u(x, y) = v(x, y)
+    }
+    binary_function_extensionality(u, v)
 }
 
 /// Symmetric closure is the smallest symmetric relation containing the original relation.
@@ -827,17 +894,154 @@ define respects_equivalence[T, U](f: T -> U, r: (T, T) -> Bool, s: (U, U) -> Boo
     }
 }
 
+/// Respecting a relation is the same as landing inside the pullback relation.
+theorem respects_equivalence_eq_relation_subset_pullback[T, U](f: T -> U, r: (T, T) -> Bool, s: (U, U) -> Bool) {
+    respects_equivalence(f, r, s) = relation_subset(r, relation_pullback(f, s))
+} by {
+    if respects_equivalence(f, r, s) {
+        respects_equivalence(f, r, s) = forall(a: T, b: T) {
+            r(a, b) implies s(f(a), f(b))
+        }
+        forall(x1: T, x2: T) {
+            if r(x1, x2) {
+                s(f(x1), f(x2))
+                relation_pullback(f, s, x1, x2)
+            }
+        }
+        relation_subset(r, relation_pullback(f, s))
+    }
+    if relation_subset(r, relation_pullback(f, s)) {
+        relation_subset(r, relation_pullback(f, s)) = forall(a: T, b: T) {
+            r(a, b) implies relation_pullback(f, s, a, b)
+        }
+        forall(x1: T, x2: T) {
+            if r(x1, x2) {
+                relation_subset_step(r, relation_pullback(f, s), x1, x2)
+                relation_pullback(f, s, x1, x2)
+                s(f(x1), f(x2))
+            }
+        }
+        respects_equivalence(f, r, s)
+    }
+    respects_equivalence(f, r, s) = relation_subset(r, relation_pullback(f, s))
+}
+
+/// Pulling back along the identity function leaves a relation unchanged.
+theorem relation_pullback_identity[T](r: (T, T) -> Bool) {
+    relation_pullback(identity_fn[T], r) = r
+} by {
+    let u = relation_pullback(identity_fn[T], r)
+    let v = r
+    forall(x: T, y: T) {
+        u(x, y) = r(identity_fn[T](x), identity_fn[T](y))
+        identity_fn[T](x) = x
+        identity_fn[T](y) = y
+        u(x, y) = v(x, y)
+    }
+    binary_function_extensionality(u, v)
+}
+
+/// Pullback respects function composition.
+theorem relation_pullback_compose[A, B, C](g: A -> B, f: B -> C, r: (C, C) -> Bool) {
+    relation_pullback(compose(f, g), r) = relation_pullback(g, relation_pullback(f, r))
+} by {
+    let u = relation_pullback(compose(f, g), r)
+    let v = relation_pullback(g, relation_pullback(f, r))
+    forall(x: A, y: A) {
+        u(x, y) = r(compose(f, g)(x), compose(f, g)(y))
+        compose(f, g, x) = f(g(x))
+        compose(f, g, y) = f(g(y))
+        v(x, y) = relation_pullback(f, r, g(x), g(y))
+        relation_pullback(f, r, g(x), g(y)) = r(f(g(x)), f(g(y)))
+        u(x, y) = v(x, y)
+    }
+    binary_function_extensionality(u, v)
+}
+
+/// Pullback is monotone with respect to relation inclusion.
+theorem relation_pullback_monotone[A, B](f: A -> B, r: (B, B) -> Bool, s: (B, B) -> Bool) {
+    relation_subset(r, s) implies relation_subset(relation_pullback(f, r), relation_pullback(f, s))
+} by {
+    if relation_subset(r, s) {
+        forall(x: A, y: A) {
+            if relation_pullback(f, r, x, y) {
+                relation_subset_step(r, s, f(x), f(y))
+                relation_pullback(f, s, x, y)
+            }
+        }
+    }
+}
+
+/// Pullback preserves reflexive relations.
+theorem relation_pullback_is_reflexive[A, B](f: A -> B, r: (B, B) -> Bool) {
+    is_reflexive(r) implies is_reflexive(relation_pullback(f, r))
+} by {
+    if is_reflexive(r) {
+        forall(x: A) {
+            reflexive_self(r, f(x))
+            relation_pullback(f, r, x, x)
+        }
+    }
+}
+
+/// Pullback preserves symmetric relations.
+theorem relation_pullback_is_symmetric[A, B](f: A -> B, r: (B, B) -> Bool) {
+    is_symmetric(r) implies is_symmetric(relation_pullback(f, r))
+} by {
+    if is_symmetric(r) {
+        forall(x: A, y: A) {
+            if relation_pullback(f, r, x, y) {
+                symmetric_flip(r, f(x), f(y))
+                relation_pullback(f, r, y, x)
+            }
+        }
+    }
+}
+
+/// Pullback preserves transitive relations.
+theorem relation_pullback_is_transitive[A, B](f: A -> B, r: (B, B) -> Bool) {
+    is_transitive(r) implies is_transitive(relation_pullback(f, r))
+} by {
+    if is_transitive(r) {
+        forall(x: A, y: A, z: A) {
+            if relation_pullback(f, r, x, y) and relation_pullback(f, r, y, z) {
+                r(f(x), f(y))
+                r(f(y), f(z))
+                transitive_step(r, f(x), f(y), f(z))
+                r(f(x), f(z))
+                relation_pullback(f, r, x, z)
+            }
+        }
+    }
+}
+
+/// Pullback preserves equivalence relations.
+theorem relation_pullback_is_equivalence[A, B](f: A -> B, r: (B, B) -> Bool) {
+    is_equivalence(r) implies is_equivalence(relation_pullback(f, r))
+} by {
+    if is_equivalence(r) {
+        equivalence_is_reflexive(r)
+        relation_pullback_is_reflexive(f, r)
+        is_reflexive(relation_pullback(f, r))
+        equivalence_is_symmetric(r)
+        relation_pullback_is_symmetric(f, r)
+        is_symmetric(relation_pullback(f, r))
+        equivalence_is_transitive(r)
+        relation_pullback_is_transitive(f, r)
+        is_transitive(relation_pullback(f, r))
+        is_equivalence(relation_pullback(f, r))
+    }
+}
+
 /// The identity function respects any relation.
 theorem identity_fn_respects_equivalence[T](r: (T, T) -> Bool) {
     respects_equivalence(identity_fn[T], r, r)
 } by {
-    forall(x1: T, x2: T) {
-        if r(x1, x2) {
-            identity_fn[T](x1) = x1
-            identity_fn[T](x2) = x2
-            r(identity_fn[T](x1), identity_fn[T](x2))
-        }
-    }
+    relation_subset_refl(r)
+    relation_pullback_identity(r)
+    relation_subset(r, relation_pullback(identity_fn[T], r))
+    respects_equivalence_eq_relation_subset_pullback(identity_fn[T], r, r)
+    respects_equivalence(identity_fn[T], r, r)
 }
 
 /// Composition preserves the property of respecting equivalence relations.
@@ -852,15 +1056,18 @@ theorem compose_respects_equivalence[A, B, C](
     respects_equivalence(compose(f, g), r, t)
 } by {
     if respects_equivalence(g, r, s) and respects_equivalence(f, s, t) {
-        forall(x1: A, x2: A) {
-            if r(x1, x2) {
-                s(g(x1), g(x2))
-                t(f(g(x1)), f(g(x2)))
-                compose(f, g, x1) = f(g(x1))
-                compose(f, g, x2) = f(g(x2))
-                t(compose(f, g)(x1), compose(f, g)(x2))
-            }
-        }
+        respects_equivalence_eq_relation_subset_pullback(g, r, s)
+        relation_subset(r, relation_pullback(g, s))
+        respects_equivalence_eq_relation_subset_pullback(f, s, t)
+        relation_subset(s, relation_pullback(f, t))
+        relation_pullback_monotone(g, s, relation_pullback(f, t))
+        relation_subset(relation_pullback(g, s), relation_pullback(g, relation_pullback(f, t)))
+        relation_subset_trans(r, relation_pullback(g, s), relation_pullback(g, relation_pullback(f, t)))
+        relation_subset(r, relation_pullback(g, relation_pullback(f, t)))
+        relation_pullback_compose(g, f, t)
+        relation_subset(r, relation_pullback(compose(f, g), t))
+        respects_equivalence_eq_relation_subset_pullback(compose(f, g), r, t)
+        respects_equivalence(compose(f, g), r, t)
     }
 }
 

@@ -98,6 +98,14 @@ If the task was only partially completed:
 - keep the notes honest about what is left
 - do not mark broad progress if the concrete subtask is still unfinished
 
+If a task is explicitly deferred rather than completed:
+
+- move that bullet to the end of its current `todo.md`
+- keep the wording honest about why it was deferred if that is not already obvious
+- if every remaining item in a leaf `todo.md` is deferred, move that whole branch to the end of its parent list
+- keep applying this rule recursively so the overall notes tree stays in execution order
+- do not leave a deferred item at the active frontier if there is non-deferred work elsewhere in the same list
+
 ## Verification
 
 In execution mode, the notes are not enough by themselves. Always try to verify the code change before updating the notes as though the item is complete.
@@ -120,6 +128,9 @@ In execution mode, the notes are not enough by themselves. Always try to verify 
 - When splitting a topic, make the parent `todo.md` point to the narrower subfolders.
 - Stop splitting when a single bullet is concrete enough to plausibly complete in one session.
 - When a `todo.md` is totally complete, remove the file and delete all references to it from parent notes instead of keeping a completed marker.
+- Keep the notes tree ordered as a real queue: active work first, deferred work later.
+- If an item is deferred, reorder it toward the end rather than leaving it in place.
+- If an entire subtopic is deferred, move the parent link for that subtopic toward the end of the parent `todo.md`.
 
 ## Output
 

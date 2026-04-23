@@ -1,5 +1,4 @@
-from nat import Nat
-from nat.nat_base import add_zero_right, add_zero_left, add_suc_right, add_suc_left, zero_or_suc
+from nat.nat_base import Nat, add_zero_right, add_zero_left, add_suc_right, add_suc_left, zero_or_suc
 from util import eq_relation, binary_function_extensionality, relation_compose, relation_compose_intro, relation_compose_has_witness, relation_compose_assoc, relation_compose_eq_relation_left, relation_compose_eq_relation_right, relation_converse, relation_converse_compose, relation_converse_eq_relation, relation_subset, relation_subset_step, reflexive_self, transitive_step, is_reflexive, is_transitive
 
 /// General constructions on homogeneous relations indexed by natural numbers.

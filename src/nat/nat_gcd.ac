@@ -1,6 +1,8 @@
 from nat.nat_base import true_below
 from nat.basic_addition import Nat
 from pair import Pair
+from relation import relation_power, relation_power_zero_self, relation_power_suc, relation_power_in_refl_trans_closure, relation_power_positive_in_trans_closure, relation_refl_trans_closure, relation_trans_closure, relation_refl_trans_closure_subset_of_reflexive_transitive
+from util import relation_compose_intro, relation_subset, relation_subset_step, is_reflexive, is_transitive
 numerals Nat
 
 /// Performs one step of the Euclidean algorithm for computing GCD.
@@ -23,6 +25,64 @@ define gcd_step_n(p: Pair[Nat, Nat], n: Nat) -> Pair[Nat, Nat] {
             gcd_step(gcd_step_n(p, pred))
         }
     }
+}
+
+/// The Euclidean algorithm step viewed as a relation on pairs of natural numbers.
+define gcd_step_relation(p: Pair[Nat, Nat], q: Pair[Nat, Nat]) -> Bool {
+    gcd_step(p) = q
+}
+
+/// Successive Euclidean iterates are related by one Euclidean step.
+theorem gcd_step_relation_step_n(p: Pair[Nat, Nat], n: Nat) {
+    gcd_step_relation(gcd_step_n(p, n), gcd_step_n(p, n.suc))
+} by {
+    gcd_step_n(p, n.suc) = gcd_step(gcd_step_n(p, n))
+}
+
+/// The `n`th Euclidean iterate lies in the `n`th power of the step relation.
+theorem gcd_step_n_in_relation_power(p: Pair[Nat, Nat], n: Nat) {
+    relation_power(gcd_step_relation, n, p, gcd_step_n(p, n))
+} by {
+    define f(m: Nat) -> Bool {
+        relation_power(gcd_step_relation, m, p, gcd_step_n(p, m))
+    }
+    gcd_step_n(p, Nat.zero) = p
+    relation_power_zero_self(gcd_step_relation, p)
+    f(Nat.zero)
+    forall(m: Nat) {
+        if f(m) {
+            relation_power_suc(gcd_step_relation, m)
+            gcd_step_relation_step_n(p, m)
+            relation_compose_intro(
+                relation_power(gcd_step_relation, m),
+                gcd_step_relation,
+                p,
+                gcd_step_n(p, m),
+                gcd_step_n(p, m.suc)
+            )
+            relation_power(gcd_step_relation, m.suc, p, gcd_step_n(p, m.suc))
+            f(m.suc)
+        }
+    }
+    f(n)
+}
+
+/// Every Euclidean iterate is reflexive-transitively reachable from the initial pair.
+theorem gcd_step_n_in_refl_trans_closure(p: Pair[Nat, Nat], n: Nat) {
+    relation_refl_trans_closure(gcd_step_relation, p, gcd_step_n(p, n))
+} by {
+    gcd_step_n_in_relation_power(p, n)
+    relation_power_in_refl_trans_closure(gcd_step_relation, n, p, gcd_step_n(p, n))
+    relation_refl_trans_closure(gcd_step_relation, p, gcd_step_n(p, n))
+}
+
+/// Every positive Euclidean iterate is transitively reachable from the initial pair.
+theorem gcd_step_n_positive_in_trans_closure(p: Pair[Nat, Nat], n: Nat) {
+    relation_trans_closure(gcd_step_relation, p, gcd_step_n(p, n.suc))
+} by {
+    gcd_step_n_in_relation_power(p, n.suc)
+    relation_power_positive_in_trans_closure(gcd_step_relation, n, p, gcd_step_n(p, n.suc))
+    relation_trans_closure(gcd_step_relation, p, gcd_step_n(p, n.suc))
 }
 
 /// True if a predicate is false for all values below n.
@@ -146,6 +206,11 @@ define divides_both(a: Nat, p: Pair[Nat, Nat]) -> Bool {
     a.divides(p.first) and a.divides(p.second)
 }
 
+/// The relation that records preservation of a common divisor along Euclidean states.
+define preserves_divides_both(d: Nat, p: Pair[Nat, Nat], q: Pair[Nat, Nat]) -> Bool {
+    divides_both(d, p) implies divides_both(d, q)
+}
+
 theorem divides_both_step(a: Nat, p: Pair[Nat, Nat]) {
     divides_both(a, p) implies divides_both(a, gcd_step(p))
 } by {
@@ -161,14 +226,65 @@ theorem divides_both_step(a: Nat, p: Pair[Nat, Nat]) {
     }
 }
 
+/// Preservation of a common divisor is reflexive as a relation on Euclidean states.
+theorem preserves_divides_both_is_reflexive(d: Nat) {
+    is_reflexive(preserves_divides_both(d))
+} by {
+    forall(p: Pair[Nat, Nat]) {
+        if divides_both(d, p) {
+            divides_both(d, p)
+        }
+    }
+}
+
+/// Preservation of a common divisor is transitive as a relation on Euclidean states.
+theorem preserves_divides_both_is_transitive(d: Nat) {
+    is_transitive(preserves_divides_both(d))
+} by {
+    forall(p: Pair[Nat, Nat], q: Pair[Nat, Nat], r: Pair[Nat, Nat]) {
+        if preserves_divides_both(d, p, q) and preserves_divides_both(d, q, r) {
+            if divides_both(d, p) {
+                divides_both(d, q)
+                divides_both(d, r)
+            }
+        }
+    }
+}
+
+/// One Euclidean step preserves every common divisor.
+theorem gcd_step_relation_subset_preserves_divides_both(d: Nat) {
+    relation_subset(gcd_step_relation, preserves_divides_both(d))
+} by {
+    forall(p: Pair[Nat, Nat], q: Pair[Nat, Nat]) {
+        if gcd_step_relation(p, q) {
+            if divides_both(d, p) {
+                divides_both_step(d, p)
+                divides_both(d, gcd_step(p))
+                gcd_step(p) = q
+                divides_both(d, q)
+            }
+        }
+    }
+}
+
 theorem divides_gcd_step_n(d: Nat, p: Pair[Nat, Nat], n: Nat) {
     divides_both(d, p) implies divides_both(d, gcd_step_n(p, n))
 } by {
-    let f = function(x: Nat) { divides_both(d, gcd_step_n(p, x)) }
-    forall(x: Nat) {
-        if f(x) {
-            f(x.suc)
-        }
+    if divides_both(d, p) {
+        preserves_divides_both_is_reflexive(d)
+        preserves_divides_both_is_transitive(d)
+        gcd_step_relation_subset_preserves_divides_both(d)
+        relation_refl_trans_closure_subset_of_reflexive_transitive(gcd_step_relation, preserves_divides_both(d))
+        gcd_step_n_in_refl_trans_closure(p, n)
+        relation_subset(relation_refl_trans_closure(gcd_step_relation), preserves_divides_both(d))
+        relation_subset_step(
+            relation_refl_trans_closure(gcd_step_relation),
+            preserves_divides_both(d),
+            p,
+            gcd_step_n(p, n)
+        )
+        preserves_divides_both(d, p, gcd_step_n(p, n))
+        divides_both(d, gcd_step_n(p, n))
     }
 }
 
