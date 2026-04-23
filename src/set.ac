@@ -1,6 +1,6 @@
 from list import List
 from nat import Nat
-from util import compose, is_injective_fn, is_surjective_fn, is_bijection_fn, bijection_fn_is_injective, bijection_fn_is_surjective, injective_fn_eq, surjective_fn_has_preimage
+from util import compose, is_equivalence, relation_converse, equivalence_flip, equivalence_self, equivalence_step, equivalence_imp_relation_converse_eq, is_injective_fn, is_surjective_fn, is_bijection_fn, bijection_fn_is_injective, bijection_fn_is_surjective, injective_fn_eq, surjective_fn_has_preimage
 
 /// Sets with elements of type `K` are defined as Boolean functions over `K`
 structure Set[K] {
@@ -188,6 +188,133 @@ theorem set_ext[K](a: Set[K], b: Set[K]) {
 } by {
     if forall(x: K) { a.contains(x) = b.contains(x) } {
         a.contains = b.contains
+    }
+}
+
+/// The characteristic predicate of the equivalence class of `a`.
+define equivalence_class_fun[T](r: (T, T) -> Bool, a: T, x: T) -> Bool {
+    r(a, x)
+}
+
+/// The equivalence class of `a` under the relation `r`.
+define equivalence_class[T](r: (T, T) -> Bool, a: T) -> Set[T] {
+    Set[T].new(equivalence_class_fun(r, a))
+}
+
+/// True if membership in `s` is preserved along the relation `r`.
+define is_saturated_under[T](s: Set[T], r: (T, T) -> Bool) -> Bool {
+    forall(x: T, y: T) {
+        s.contains(x) and r(x, y) implies s.contains(y)
+    }
+}
+
+/// Membership in an equivalence class is given by the underlying relation.
+theorem equivalence_class_contains_eq[T](r: (T, T) -> Bool, a: T, x: T) {
+    equivalence_class(r, a).contains(x) = r(a, x)
+}
+
+/// Any related element belongs to the equivalence class.
+theorem equivalence_class_contains_of_related[T](r: (T, T) -> Bool, a: T, b: T) {
+    r(a, b) implies equivalence_class(r, a).contains(b)
+} by {
+    if r(a, b) {
+        equivalence_class_contains_eq(r, a, b)
+        equivalence_class(r, a).contains(b)
+    }
+}
+
+/// Equivalent elements have the same equivalence class.
+theorem equivalence_class_membership_eq_of_equiv[T](r: (T, T) -> Bool, a: T, b: T, x: T) {
+    is_equivalence(r) and r(a, b) implies
+    equivalence_class(r, a).contains(x) = equivalence_class(r, b).contains(x)
+} by {
+    if is_equivalence(r) and r(a, b) {
+        if equivalence_class(r, a).contains(x) {
+            equivalence_class_contains_eq(r, a, x)
+            equivalence_flip(r, a, b)
+            r(b, a)
+            equivalence_step(r, b, a, x)
+            r(b, x)
+            equivalence_class_contains_eq(r, b, x)
+            equivalence_class(r, b).contains(x)
+        }
+        if equivalence_class(r, b).contains(x) {
+            equivalence_class_contains_eq(r, b, x)
+            equivalence_step(r, a, b, x)
+            r(a, x)
+            equivalence_class_contains_eq(r, a, x)
+            equivalence_class(r, a).contains(x)
+        }
+        equivalence_class(r, a).contains(x) = equivalence_class(r, b).contains(x)
+    }
+}
+
+/// Equivalent elements have the same equivalence class.
+theorem equivalence_class_eq_of_equiv[T](r: (T, T) -> Bool, a: T, b: T) {
+    is_equivalence(r) and r(a, b) implies equivalence_class(r, a) = equivalence_class(r, b)
+} by {
+    let u = equivalence_class(r, a)
+    let v = equivalence_class(r, b)
+    if is_equivalence(r) and r(a, b) {
+        forall(x: T) {
+            equivalence_class_membership_eq_of_equiv(r, a, b, x)
+            u.contains(x) = v.contains(x)
+        }
+        set_ext(u, v)
+    }
+}
+
+/// Equal equivalence classes force their representatives to be equivalent.
+theorem equivalence_of_equivalence_class_eq[T](r: (T, T) -> Bool, a: T, b: T) {
+    is_equivalence(r) and equivalence_class(r, a) = equivalence_class(r, b) implies r(a, b)
+} by {
+    if is_equivalence(r) and equivalence_class(r, a) = equivalence_class(r, b) {
+        equivalence_self(r, a)
+        equivalence_class_contains_eq(r, a, a)
+        equivalence_class(r, a).contains(a)
+        equivalence_class(r, b).contains(a)
+        equivalence_class_contains_eq(r, b, a)
+        r(b, a)
+        relation_converse(r, a, b)
+        equivalence_imp_relation_converse_eq(r)
+        r(a, b)
+    }
+}
+
+/// Every equivalence class is saturated under its equivalence relation.
+theorem equivalence_class_is_saturated[T](r: (T, T) -> Bool, a: T) {
+    is_equivalence(r) implies is_saturated_under(equivalence_class(r, a), r)
+} by {
+    if is_equivalence(r) {
+        forall(x: T, y: T) {
+            if equivalence_class(r, a).contains(x) and r(x, y) {
+                equivalence_class_contains_eq(r, a, x)
+                r(a, x)
+                equivalence_step(r, a, x, y)
+                r(a, y)
+                equivalence_class_contains_eq(r, a, y)
+                equivalence_class(r, a).contains(y)
+            }
+        }
+    }
+}
+
+/// A saturated set containing `a` contains the whole equivalence class of `a`.
+theorem saturated_contains_equivalence_class[T](s: Set[T], r: (T, T) -> Bool, a: T, x: T) {
+    is_saturated_under(s, r) and s.contains(a) and equivalence_class(r, a).contains(x) implies s.contains(x)
+} by {
+    if is_saturated_under(s, r) and s.contains(a) and equivalence_class(r, a).contains(x) {
+        is_saturated_under(s, r) = forall(y1: T, y2: T) {
+            s.contains(y1) and r(y1, y2) implies s.contains(y2)
+        }
+        forall(y1: T, y2: T) {
+            s.contains(y1) and r(y1, y2) implies s.contains(y2)
+        }
+        equivalence_class_contains_eq(r, a, x)
+        r(a, x)
+        s.contains(a) and r(a, x)
+        s.contains(a) and r(a, x) implies s.contains(x)
+        s.contains(x)
     }
 }
 

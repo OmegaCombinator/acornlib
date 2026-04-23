@@ -170,6 +170,29 @@ define eq_relation[T](x: T, y: T) -> Bool {
     x = y
 }
 
+/// The composite of relations `r : A -> B` and `s : B -> C`.
+define relation_compose[A, B, C](r: (A, B) -> Bool, s: (B, C) -> Bool, x: A, z: C) -> Bool {
+    exists(y: B) {
+        r(x, y) and s(y, z)
+    }
+}
+
+/// True if every pair related by `r` is also related by `s`.
+define relation_subset[A, B](r: (A, B) -> Bool, s: (A, B) -> Bool) -> Bool {
+    forall(x: A, y: B) {
+        r(x, y) implies s(x, y)
+    }
+}
+
+/// A relation inclusion applies to any explicitly related pair.
+theorem relation_subset_step[A, B](r: (A, B) -> Bool, s: (A, B) -> Bool, x: A, y: B) {
+    relation_subset(r, s) and r(x, y) implies s(x, y)
+} by {
+    if relation_subset(r, s) and r(x, y) {
+        s(x, y)
+    }
+}
+
 /// An equivalence relation is reflexive.
 theorem equivalence_is_reflexive[T](f: (T, T) -> Bool) {
     is_equivalence(f) implies is_reflexive(f)
@@ -179,12 +202,456 @@ theorem equivalence_is_reflexive[T](f: (T, T) -> Bool) {
     }
 }
 
+/// A witness for two consecutive relations yields a witness for the composite relation.
+theorem relation_compose_intro[A, B, C](r: (A, B) -> Bool, s: (B, C) -> Bool, x: A, y: B, z: C) {
+    r(x, y) and s(y, z) implies relation_compose(r, s, x, z)
+} by {
+    if r(x, y) and s(y, z) {
+        exists(w: B) {
+            w = y and r(x, w) and s(w, z)
+        }
+        relation_compose(r, s, x, z)
+    }
+}
+
+/// Any instance of a composite relation has a middle witness.
+theorem relation_compose_has_witness[A, B, C](r: (A, B) -> Bool, s: (B, C) -> Bool, x: A, z: C) {
+    relation_compose(r, s, x, z) implies exists(y: B) {
+        r(x, y) and s(y, z)
+    }
+} by {
+    if relation_compose(r, s, x, z) {
+        exists(y: B) {
+            r(x, y) and s(y, z)
+        }
+    }
+}
+
+/// Relation composition is associative.
+theorem relation_compose_assoc[A, B, C, D](
+    r: (A, B) -> Bool,
+    s: (B, C) -> Bool,
+    t: (C, D) -> Bool
+) {
+    relation_compose(relation_compose(r, s), t) = relation_compose(r, relation_compose(s, t))
+} by {
+    let u = relation_compose(relation_compose(r, s), t)
+    let v = relation_compose(r, relation_compose(s, t))
+    forall(x: A, z: D) {
+        if u(x, z) {
+            relation_compose_has_witness(relation_compose(r, s), t, x, z)
+            let c: C satisfy {
+                relation_compose(r, s, x, c) and t(c, z)
+            }
+            relation_compose_has_witness(r, s, x, c)
+            let b: B satisfy {
+                r(x, b) and s(b, c)
+            }
+            relation_compose_intro(s, t, b, c, z)
+            relation_compose(s, t, b, z)
+            relation_compose_intro(r, relation_compose(s, t), x, b, z)
+            v(x, z)
+        }
+        if v(x, z) {
+            relation_compose_has_witness(r, relation_compose(s, t), x, z)
+            let b: B satisfy {
+                r(x, b) and relation_compose(s, t, b, z)
+            }
+            relation_compose_has_witness(s, t, b, z)
+            let c: C satisfy {
+                s(b, c) and t(c, z)
+            }
+            relation_compose_intro(r, s, x, b, c)
+            relation_compose(r, s, x, c)
+            relation_compose_intro(relation_compose(r, s), t, x, c, z)
+            u(x, z)
+        }
+        u(x, z) = v(x, z)
+    }
+    binary_function_extensionality(u, v)
+}
+
+/// Equality is a left identity for relation composition.
+theorem relation_compose_eq_relation_left[A, B](r: (A, B) -> Bool) {
+    relation_compose(eq_relation[A], r) = r
+} by {
+    let u = relation_compose(eq_relation[A], r)
+    let v = r
+    forall(x: A, y: B) {
+        if u(x, y) {
+            relation_compose_has_witness(eq_relation[A], r, x, y)
+            let x0: A satisfy {
+                eq_relation[A](x, x0) and r(x0, y)
+            }
+            eq_relation[A](x, x0)
+            x = x0
+            v(x, y)
+        }
+        if v(x, y) {
+            eq_relation[A](x, x)
+            relation_compose_intro(eq_relation[A], r, x, x, y)
+            u(x, y)
+        }
+        u(x, y) = v(x, y)
+    }
+    binary_function_extensionality(u, v)
+}
+
+/// Equality is a right identity for relation composition.
+theorem relation_compose_eq_relation_right[A, B](r: (A, B) -> Bool) {
+    relation_compose(r, eq_relation[B]) = r
+} by {
+    let u = relation_compose(r, eq_relation[B])
+    let v = r
+    forall(x: A, y: B) {
+        if u(x, y) {
+            relation_compose_has_witness(r, eq_relation[B], x, y)
+            let y0: B satisfy {
+                r(x, y0) and eq_relation[B](y0, y)
+            }
+            eq_relation[B](y0, y)
+            y0 = y
+            v(x, y)
+        }
+        if v(x, y) {
+            eq_relation[B](y, y)
+            relation_compose_intro(r, eq_relation[B], x, y, y)
+            u(x, y)
+        }
+        u(x, y) = v(x, y)
+    }
+    binary_function_extensionality(u, v)
+}
+
+/// Relation composition is monotone in both arguments.
+theorem relation_compose_monotone[A, B, C](
+    r1: (A, B) -> Bool,
+    r2: (A, B) -> Bool,
+    s1: (B, C) -> Bool,
+    s2: (B, C) -> Bool
+) {
+    relation_subset(r1, r2) and relation_subset(s1, s2) implies
+    relation_subset(relation_compose(r1, s1), relation_compose(r2, s2))
+} by {
+    if relation_subset(r1, r2) and relation_subset(s1, s2) {
+        relation_subset(r1, r2) = forall(x0: A, y0: B) {
+            r1(x0, y0) implies r2(x0, y0)
+        }
+        relation_subset(s1, s2) = forall(y0: B, z0: C) {
+            s1(y0, z0) implies s2(y0, z0)
+        }
+        forall(x: A, z: C) {
+            if relation_compose(r1, s1, x, z) {
+                relation_compose_has_witness(r1, s1, x, z)
+                let y: B satisfy {
+                    r1(x, y) and s1(y, z)
+                }
+                r2(x, y)
+                s2(y, z)
+                relation_compose_intro(r2, s2, x, y, z)
+                relation_compose(r2, s2, x, z)
+            }
+        }
+    }
+}
+
+/// The converse of a relation swaps its arguments.
+define relation_converse[A, B](r: (A, B) -> Bool, y: B, x: A) -> Bool {
+    r(x, y)
+}
+
+/// Taking converse twice recovers the original relation.
+theorem relation_converse_involutive[A, B](r: (A, B) -> Bool) {
+    relation_converse(relation_converse(r)) = r
+} by {
+    let u = relation_converse(relation_converse(r))
+    let v = r
+    forall(x: A, y: B) {
+        u(x, y) = relation_converse(r, y, x)
+        relation_converse(r, y, x) = r(x, y)
+        u(x, y) = v(x, y)
+    }
+    binary_function_extensionality(u, v)
+}
+
+/// Equality is fixed by converse.
+theorem relation_converse_eq_relation[T] {
+    relation_converse(eq_relation[T]) = eq_relation[T]
+} by {
+    let u = relation_converse(eq_relation[T])
+    let v = eq_relation[T]
+    forall(x: T, y: T) {
+        u(x, y) = eq_relation[T](y, x)
+        eq_relation[T](y, x) = (y = x)
+        y = x = (x = y)
+        eq_relation[T](x, y) = (x = y)
+        u(x, y) = v(x, y)
+    }
+    binary_function_extensionality(u, v)
+}
+
+/// Converse reverses the order of relation composition.
+theorem relation_converse_compose[A, B, C](r: (A, B) -> Bool, s: (B, C) -> Bool) {
+    relation_converse(relation_compose(r, s)) = relation_compose(relation_converse(s), relation_converse(r))
+} by {
+    let u = relation_converse(relation_compose(r, s))
+    let v = relation_compose(relation_converse(s), relation_converse(r))
+    forall(z: C, x: A) {
+        if u(z, x) {
+            relation_compose(r, s, x, z)
+            relation_compose_has_witness(r, s, x, z)
+            let y: B satisfy {
+                r(x, y) and s(y, z)
+            }
+            relation_converse(s, z, y)
+            relation_converse(r, y, x)
+            relation_compose_intro(relation_converse(s), relation_converse(r), z, y, x)
+            v(z, x)
+        }
+        if v(z, x) {
+            relation_compose_has_witness(relation_converse(s), relation_converse(r), z, x)
+            let y: B satisfy {
+                relation_converse(s, z, y) and relation_converse(r, y, x)
+            }
+            s(y, z)
+            r(x, y)
+            relation_compose_intro(r, s, x, y, z)
+            relation_compose(r, s, x, z)
+            u(z, x)
+        }
+        u(z, x) = v(z, x)
+    }
+    binary_function_extensionality(u, v)
+}
+
+/// Taking converse is monotone with respect to relation inclusion.
+theorem relation_converse_monotone[A, B](r1: (A, B) -> Bool, r2: (A, B) -> Bool) {
+    relation_subset(r1, r2) implies relation_subset(relation_converse(r1), relation_converse(r2))
+} by {
+    if relation_subset(r1, r2) {
+        relation_subset(r1, r2) = forall(x: A, y: B) {
+            r1(x, y) implies r2(x, y)
+        }
+        forall(y: B, x: A) {
+            if relation_converse(r1, y, x) {
+                r1(x, y)
+                r2(x, y)
+                relation_converse(r2, y, x)
+            }
+        }
+    }
+}
+
+/// A symmetric relation contains its converse.
+theorem relation_converse_subset_of_symmetric[T](r: (T, T) -> Bool) {
+    is_symmetric(r) implies relation_subset(relation_converse(r), r)
+} by {
+    if is_symmetric(r) {
+        is_symmetric(r) = forall(x: T, y: T) {
+            r(x, y) implies r(y, x)
+        }
+        forall(x: T, y: T) {
+            if relation_converse(r, x, y) {
+                r(y, x)
+                r(x, y)
+            }
+        }
+    }
+}
+
+/// A symmetric relation is contained in its converse.
+theorem relation_subset_converse_of_symmetric[T](r: (T, T) -> Bool) {
+    is_symmetric(r) implies relation_subset(r, relation_converse(r))
+} by {
+    if is_symmetric(r) {
+        is_symmetric(r) = forall(x: T, y: T) {
+            r(x, y) implies r(y, x)
+        }
+        forall(x: T, y: T) {
+            if r(x, y) {
+                r(y, x)
+                relation_converse(r, x, y)
+            }
+        }
+    }
+}
+
+/// Symmetry identifies each converse value with the original relation value.
+theorem symmetric_relation_converse_eq_at[T](r: (T, T) -> Bool, x: T, y: T) {
+    is_symmetric(r) implies relation_converse(r, x, y) = r(x, y)
+} by {
+    if is_symmetric(r) {
+        relation_converse_subset_of_symmetric(r)
+        relation_subset_converse_of_symmetric(r)
+        if relation_converse(r, x, y) {
+            relation_subset_step(relation_converse(r), r, x, y)
+            r(x, y)
+        }
+        if r(x, y) {
+            relation_subset_step(r, relation_converse(r), x, y)
+            relation_converse(r, x, y)
+        }
+        relation_converse(r, x, y) = r(x, y)
+    }
+}
+
+/// A symmetric relation is equal to its converse.
+theorem symmetric_imp_relation_converse_eq[T](r: (T, T) -> Bool) {
+    is_symmetric(r) implies relation_converse(r) = r
+} by {
+    let u = relation_converse(r)
+    let v = r
+    if is_symmetric(r) {
+        forall(x: T, y: T) {
+            symmetric_relation_converse_eq_at(r, x, y)
+            u(x, y) = v(x, y)
+        }
+        binary_function_extensionality(u, v)
+    }
+}
+
+/// Equality with the converse implies symmetry.
+theorem relation_converse_eq_imp_symmetric[T](r: (T, T) -> Bool) {
+    relation_converse(r) = r implies is_symmetric(r)
+} by {
+    if relation_converse(r) = r {
+        is_symmetric(r) = forall(x: T, y: T) {
+            r(x, y) implies r(y, x)
+        }
+        forall(x: T, y: T) {
+            if r(x, y) {
+                relation_converse(r, y, x)
+                r(y, x)
+            }
+        }
+    }
+}
+
+/// The reflexive closure of a homogeneous relation.
+define relation_reflexive_closure[T](r: (T, T) -> Bool, x: T, y: T) -> Bool {
+    eq_relation[T](x, y) or r(x, y)
+}
+
+/// Every relation is contained in its reflexive closure.
+theorem relation_subset_reflexive_closure[T](r: (T, T) -> Bool) {
+    relation_subset(r, relation_reflexive_closure(r))
+} by {
+    forall(x: T, y: T) {
+        if r(x, y) {
+            relation_reflexive_closure(r, x, y)
+        }
+    }
+}
+
+/// Reflexive closure is reflexive.
+theorem relation_reflexive_closure_is_reflexive[T](r: (T, T) -> Bool) {
+    is_reflexive(relation_reflexive_closure(r))
+} by {
+    forall(x: T) {
+        eq_relation[T](x, x)
+        relation_reflexive_closure(r, x, x)
+    }
+}
+
+/// Reflexive closure is the smallest reflexive relation containing the original relation.
+theorem relation_reflexive_closure_subset_of_reflexive[T](r: (T, T) -> Bool, s: (T, T) -> Bool) {
+    is_reflexive(s) and relation_subset(r, s) implies relation_subset(relation_reflexive_closure(r), s)
+} by {
+    if is_reflexive(s) and relation_subset(r, s) {
+        is_reflexive(s) = forall(t: T) {
+            s(t, t)
+        }
+        forall(x: T, y: T) {
+            if relation_reflexive_closure(r, x, y) {
+                relation_reflexive_closure(r, x, y) = (eq_relation[T](x, y) or r(x, y))
+                if eq_relation[T](x, y) {
+                    x = y
+                    s(x, x)
+                    s(x, y)
+                } else {
+                    relation_subset_step(r, s, x, y)
+                    s(x, y)
+                }
+            }
+        }
+    }
+}
+
+/// The symmetric closure of a homogeneous relation.
+define relation_symmetric_closure[T](r: (T, T) -> Bool, x: T, y: T) -> Bool {
+    r(x, y) or relation_converse(r, x, y)
+}
+
+/// Every relation is contained in its symmetric closure.
+theorem relation_subset_symmetric_closure[T](r: (T, T) -> Bool) {
+    relation_subset(r, relation_symmetric_closure(r))
+} by {
+    forall(x: T, y: T) {
+        if r(x, y) {
+            relation_symmetric_closure(r, x, y)
+        }
+    }
+}
+
+/// Symmetric closure is symmetric.
+theorem relation_symmetric_closure_is_symmetric[T](r: (T, T) -> Bool) {
+    is_symmetric(relation_symmetric_closure(r))
+} by {
+    forall(x: T, y: T) {
+        if relation_symmetric_closure(r, x, y) {
+            relation_symmetric_closure(r, x, y) = (r(x, y) or relation_converse(r, x, y))
+            if r(x, y) {
+                relation_converse(r, y, x)
+                relation_symmetric_closure(r, y, x)
+            } else {
+                r(y, x)
+                relation_symmetric_closure(r, y, x)
+            }
+        }
+    }
+}
+
+/// Symmetric closure is the smallest symmetric relation containing the original relation.
+theorem relation_symmetric_closure_subset_of_symmetric[T](r: (T, T) -> Bool, s: (T, T) -> Bool) {
+    is_symmetric(s) and relation_subset(r, s) implies relation_subset(relation_symmetric_closure(r), s)
+} by {
+    if is_symmetric(s) and relation_subset(r, s) {
+        is_symmetric(s) = forall(x0: T, y0: T) {
+            s(x0, y0) implies s(y0, x0)
+        }
+        forall(x: T, y: T) {
+            if relation_symmetric_closure(r, x, y) {
+                relation_symmetric_closure(r, x, y) = (r(x, y) or relation_converse(r, x, y))
+                if r(x, y) {
+                    relation_subset_step(r, s, x, y)
+                    s(x, y)
+                } else {
+                    r(y, x)
+                    relation_subset_step(r, s, y, x)
+                    s(y, x)
+                    s(x, y)
+                }
+            }
+        }
+    }
+}
+
 /// An equivalence relation is symmetric.
 theorem equivalence_is_symmetric[T](f: (T, T) -> Bool) {
     is_equivalence(f) implies is_symmetric(f)
 } by {
     if is_equivalence(f) {
         is_symmetric(f)
+    }
+}
+
+/// An equivalence relation is fixed by converse.
+theorem equivalence_imp_relation_converse_eq[T](r: (T, T) -> Bool) {
+    is_equivalence(r) implies relation_converse(r) = r
+} by {
+    if is_equivalence(r) {
+        equivalence_is_symmetric(r)
+        symmetric_imp_relation_converse_eq(r)
     }
 }
 
@@ -350,6 +817,50 @@ theorem equivalence_step[T](f: (T, T) -> Bool, x: T, y: T, z: T) {
         is_transitive(f)
         transitive_step(f, x, y, z)
         f(x, z)
+    }
+}
+
+/// True if `f` sends equivalent inputs to equivalent outputs.
+define respects_equivalence[T, U](f: T -> U, r: (T, T) -> Bool, s: (U, U) -> Bool) -> Bool {
+    forall(x1: T, x2: T) {
+        r(x1, x2) implies s(f(x1), f(x2))
+    }
+}
+
+/// The identity function respects any relation.
+theorem identity_fn_respects_equivalence[T](r: (T, T) -> Bool) {
+    respects_equivalence(identity_fn[T], r, r)
+} by {
+    forall(x1: T, x2: T) {
+        if r(x1, x2) {
+            identity_fn[T](x1) = x1
+            identity_fn[T](x2) = x2
+            r(identity_fn[T](x1), identity_fn[T](x2))
+        }
+    }
+}
+
+/// Composition preserves the property of respecting equivalence relations.
+theorem compose_respects_equivalence[A, B, C](
+    f: B -> C,
+    g: A -> B,
+    r: (A, A) -> Bool,
+    s: (B, B) -> Bool,
+    t: (C, C) -> Bool
+) {
+    respects_equivalence(g, r, s) and respects_equivalence(f, s, t) implies
+    respects_equivalence(compose(f, g), r, t)
+} by {
+    if respects_equivalence(g, r, s) and respects_equivalence(f, s, t) {
+        forall(x1: A, x2: A) {
+            if r(x1, x2) {
+                s(g(x1), g(x2))
+                t(f(g(x1)), f(g(x2)))
+                compose(f, g, x1) = f(g(x1))
+                compose(f, g, x2) = f(g(x2))
+                t(compose(f, g)(x1), compose(f, g)(x2))
+            }
+        }
     }
 }
 

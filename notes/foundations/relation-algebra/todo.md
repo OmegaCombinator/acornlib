@@ -2,10 +2,7 @@
 
 Goal: centralize the standard reasoning patterns about relations so later libraries can reuse them.
 
-- [ ] [Equivalence-relation infrastructure on arbitrary types](equivalence-relations/todo.md)
-- [ ] Define relation composition and prove its associativity
-- [ ] Add converse/inverse relation constructions
-- [ ] Add closure operators such as reflexive-transitive closure
+- [ ] [Closure operators such as reflexive and symmetric closure](closure-operators/todo.md)
 - [ ] Add compatibility lemmas for relations under functions
 - [ ] Add standard lemmas for partial equivalence relations
 - [ ] Support order relations as a special case of general relation algebra
@@ -14,4 +11,4 @@ Goal: centralize the standard reasoning patterns about relations so later librar
 
 ## Current Focus
 
-The active frontier is [equivalence-relations](equivalence-relations/todo.md).
+The active frontier is [closure-operators](closure-operators/todo.md).
