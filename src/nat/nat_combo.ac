@@ -2,7 +2,7 @@ from nat.lattice import Nat
 from list import partial
 from semigroup import mul_fn
 from add_semigroup import add_fn
-from util import compose
+from functions import compose
 
 numerals Nat
 

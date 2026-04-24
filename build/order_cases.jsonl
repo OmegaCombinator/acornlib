@@ -278,7 +278,7 @@
 {"goal":"min_assoc","proof":[]}
 {"goal":"a <= a.max(b.max(c))","proof":[]}
 {"goal":"b <= a.max(b.max(c))","proof":["function[T0: LinearOrder](x0: T0, x1: T0) { x0.max(x1) = x1.max(x0) }[L](b, c)","function[T0: LinearOrder](x0: T0, x1: T0) { x0 <= x1.max(x0) }[L](b, c)","function[T0: LinearOrder](x0: T0, x1: T0) { x0 <= x1.max(x0) }[L](b.max(c), a)"]}
-{"goal":"a.max(b) <= a.max(b.max(c))","proof":["function[T0: LinearOrder](x0: T0, x1: T0, x2: T0, x3: T0) { not x0 <= x1 or not x2 <= x3 or x0.max(x2) <= x1.max(x3) }[L](a, a, b, b.max(lib(util).identity_fn(c)))","function[T0: LinearOrder](x0: T0, x1: T0) { x0 <= x0.max(x1) }[L](b, lib(util).identity_fn(c))","function[T0: lib(order).PartialOrder](x0: T0) { x0 <= x0 }[L](a)","function[T0](x0: T0) { lib(util).identity_fn[T0](x0) = x0 }[L](c)"]}
+{"goal":"a.max(b) <= a.max(b.max(c))","proof":["function[T0: LinearOrder](x0: T0, x1: T0, x2: T0) { not x0 <= x1 or not x2 <= x1 or x0.max(x2) <= x1 }[L](a, a.max(b.max(c)), b)"]}
 {"goal":"c <= a.max(b.max(c))","proof":["function[T0: LinearOrder](x0: T0, x1: T0, x2: T0) { (x0 <= x1 or x0 <= x2) = x0 <= x1.max(x2) }[L](c, a, b.max(c))"]}
 {"goal":"a.max(b).max(c) <= a.max(b.max(c))","proof":[]}
 {"goal":"a.max(b) <= a.max(b).max(c)","proof":[]}

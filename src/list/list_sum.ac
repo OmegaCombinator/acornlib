@@ -4,7 +4,7 @@ from add_comm_monoid import AddCommMonoid
 from add_semigroup import add_fn
 from semiring import Semiring
 from semigroup import mul_fn
-from util import compose
+from functions import compose
 
 numerals Nat
 

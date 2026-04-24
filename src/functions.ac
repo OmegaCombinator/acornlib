@@ -1,0 +1,273 @@
+/// Basic constructions and predicates for functions that are independent of relation algebra.
+
+/// Composing two functions.
+define compose[T, U, V](f: U -> V, g: T -> U) -> T -> V {
+    function(t: T) {
+        f(g(t))
+    }
+}
+
+/// The identity function on a type.
+define identity_fn[T](x: T) -> T {
+    x
+}
+
+/// Flip the order of arguments to a two-argument function.
+define flip[T, U, V](f: (T, U) -> V, a: U, b: T) -> V {
+    f(b, a)
+}
+
+/// True if a function is constant.
+define is_constant[T, U](f: T -> U) -> Bool {
+    exists(y: U) {
+        forall(x: T) {
+            f(x) = y
+        }
+    }
+}
+
+/// Predicate extensionality: two predicates are equal when they have the same truth value on every input.
+theorem predicate_extensionality[T](p: T -> Bool, q: T -> Bool) {
+    (forall(x: T) { p(x) = q(x) }) implies p = q
+} by {
+    if forall(x: T) { p(x) = q(x) } {
+        forall(x: T) {
+            p(x) = q(x)
+        }
+    }
+}
+
+/// Function extensionality: two functions are equal when they agree on every input.
+theorem function_extensionality[T, U](f: T -> U, g: T -> U) {
+    (forall(x: T) { f(x) = g(x) }) implies f = g
+} by {
+    if forall(x: T) { f(x) = g(x) } {
+        forall(x: T) {
+            f(x) = g(x)
+        }
+    }
+}
+
+/// Binary function extensionality: two functions are equal when they agree on every pair of inputs.
+theorem binary_function_extensionality[T, U, V](f: (T, U) -> V, g: (T, U) -> V) {
+    (forall(x: T, y: U) { f(x, y) = g(x, y) }) implies f = g
+} by {
+    if forall(x: T, y: U) { f(x, y) = g(x, y) } {
+        forall(x: T) {
+            forall(y: U) {
+                f(x, y) = g(x, y)
+            }
+            function_extensionality(f(x), g(x))
+        }
+    }
+}
+
+/// Left identity for composition.
+theorem compose_identity_left[T, U](f: T -> U) {
+    compose(identity_fn[U], f) = f
+} by {
+    forall(x: T) {
+        compose(identity_fn[U], f, x) = identity_fn[U](f(x))
+        identity_fn[U](f(x)) = f(x)
+    }
+    function_extensionality(compose(identity_fn[U], f), f)
+}
+
+/// Right identity for composition.
+theorem compose_identity_right[T, U](f: T -> U) {
+    compose(f, identity_fn[T]) = f
+} by {
+    forall(x: T) {
+        compose(f, identity_fn[T], x) = f(identity_fn[T](x))
+        identity_fn[T](x) = x
+        f(identity_fn[T](x)) = f(x)
+    }
+    function_extensionality(compose(f, identity_fn[T]), f)
+}
+
+/// Composition is associative.
+theorem compose_assoc[A, B, C, D](f: C -> D, g: B -> C, h: A -> B) {
+    compose(f, compose(g, h)) = compose(compose(f, g), h)
+} by {
+    forall(x: A) {
+        compose(f, compose(g, h), x) = f(compose(g, h)(x))
+        compose(g, h, x) = g(h(x))
+        compose(f, compose(g, h), x) = f(g(h(x)))
+        compose(compose(f, g), h, x) = compose(f, g)(h(x))
+        compose(f, g, h(x)) = f(g(h(x)))
+        compose(compose(f, g), h, x) = f(g(h(x)))
+        compose(f, compose(g, h), x) = compose(compose(f, g), h, x)
+    }
+    function_extensionality(compose(f, compose(g, h)), compose(compose(f, g), h))
+}
+
+/// Composing with a constant function yields a constant function.
+theorem compose_constant[T, U, V](f: U -> V, u: U) {
+    compose(f, constant[T, U](u)) = constant[T, V](f(u))
+} by {
+    forall(x: T) {
+        compose(f, constant[T, U](u), x) = f(constant[T, U](u)(x))
+        constant[T, U](u)(x) = u
+        f(constant[T, U](u)(x)) = f(u)
+        constant[T, V](f(u), x) = f(u)
+        compose(f, constant[T, U](u), x) = constant[T, V](f(u), x)
+    }
+    function_extensionality(compose(f, constant[T, U](u)), constant[T, V](f(u)))
+}
+
+/// Every constant function is constant.
+theorem constant_is_constant[T, U](u: U) {
+    is_constant(constant[T, U](u))
+}
+
+/// A type with a distinguished default element.
+typeclass I: Inhabited {
+    /// A distinguished element of the type.
+    default: I
+}
+
+/// On an inhabited domain, every constant-valued function is equal to a constant function.
+theorem is_constant_imp_eq_constant[T: Inhabited, U](f: T -> U) {
+    is_constant(f) implies exists(u: U) {
+        constant[T, U](u) = f
+    }
+} by {
+    let t: T satisfy {
+        true
+    }
+    let u = f(t)
+    forall(x: T) {
+        constant[T, U](u)(x) = f(x)
+    }
+}
+
+/// True if `f` is injective from `T` to `U`.
+define is_injective_fn[T, U](f: T -> U) -> Bool {
+    forall(x: T, y: T) {
+        f(x) = f(y) implies x = y
+    }
+}
+
+/// True if `f` is surjective from `T` onto `U`.
+define is_surjective_fn[T, U](f: T -> U) -> Bool {
+    forall(y: U) {
+        exists(x: T) {
+            f(x) = y
+        }
+    }
+}
+
+/// True if `f` is bijective from `T` to `U`.
+define is_bijection_fn[T, U](f: T -> U) -> Bool {
+    is_injective_fn(f) and is_surjective_fn(f)
+}
+
+/// A bijection is injective.
+theorem bijection_fn_is_injective[T, U](f: T -> U) {
+    is_bijection_fn(f) implies is_injective_fn(f)
+}
+
+/// A bijection is surjective.
+theorem bijection_fn_is_surjective[T, U](f: T -> U) {
+    is_bijection_fn(f) implies is_surjective_fn(f)
+}
+
+/// Injectivity turns equal outputs into equal inputs.
+theorem injective_fn_eq[T, U](f: T -> U, x1: T, x2: T) {
+    is_injective_fn(f) and f(x1) = f(x2) implies x1 = x2
+} by {
+    if is_injective_fn(f) and f(x1) = f(x2) {
+        x1 = x2
+    }
+}
+
+/// Composition preserves injectivity.
+theorem compose_injective_fn[T, U, V](f: U -> V, g: T -> U) {
+    is_injective_fn(f) and is_injective_fn(g) implies is_injective_fn(compose(f, g))
+} by {
+    if is_injective_fn(f) and is_injective_fn(g) {
+        forall(x1: T, x2: T) {
+            if compose(f, g)(x1) = compose(f, g)(x2) {
+                compose(f, g, x1) = f(g(x1))
+                compose(f, g, x2) = f(g(x2))
+                f(g(x1)) = f(g(x2))
+                injective_fn_eq(f, g(x1), g(x2))
+                g(x1) = g(x2)
+                injective_fn_eq(g, x1, x2)
+                x1 = x2
+            }
+        }
+    }
+}
+
+/// Surjectivity provides a preimage for every codomain point.
+theorem surjective_fn_has_preimage[T, U](f: T -> U, y: U) {
+    is_surjective_fn(f) implies exists(x: T) {
+        f(x) = y
+    }
+} by {
+    if is_surjective_fn(f) {
+        exists(x: T) {
+            f(x) = y
+        }
+    }
+}
+
+/// Composition preserves surjectivity.
+theorem compose_surjective_fn[T, U, V](f: U -> V, g: T -> U) {
+    is_surjective_fn(f) and is_surjective_fn(g) implies is_surjective_fn(compose(f, g))
+} by {
+    if is_surjective_fn(f) and is_surjective_fn(g) {
+        forall(z: V) {
+            surjective_fn_has_preimage(f, z)
+            let y: U satisfy {
+                f(y) = z
+            }
+            surjective_fn_has_preimage(g, y)
+            let x: T satisfy {
+                g(x) = y
+            }
+            exists(x0: T) {
+                compose(f, g, x0) = z
+            }
+        }
+    }
+}
+
+/// Composition preserves bijectivity.
+theorem compose_bijection_fn[T, U, V](f: U -> V, g: T -> U) {
+    is_bijection_fn(f) and is_bijection_fn(g) implies is_bijection_fn(compose(f, g))
+} by {
+    if is_bijection_fn(f) and is_bijection_fn(g) {
+        bijection_fn_is_injective(f)
+        bijection_fn_is_injective(g)
+        compose_injective_fn(f, g)
+        is_injective_fn(compose(f, g))
+        bijection_fn_is_surjective(f)
+        bijection_fn_is_surjective(g)
+        compose_surjective_fn(f, g)
+        is_surjective_fn(compose(f, g))
+        is_bijection_fn(compose(f, g))
+    }
+}
+
+/// True if `f` is injective.
+define is_injective[T](f: T -> T) -> Bool {
+    forall(x: T, y: T) {
+        f(x) = f(y) implies x = y
+    }
+}
+
+/// True if `f` is surjective.
+define is_surjective[T](f: T -> T) -> Bool {
+    forall(y: T) {
+        exists(x: T) {
+            f(x) = y
+        }
+    }
+}
+
+/// True if `f` is bijective.
+define is_bijection[T](f: T -> T) -> Bool {
+    is_injective(f) and is_surjective(f)
+}

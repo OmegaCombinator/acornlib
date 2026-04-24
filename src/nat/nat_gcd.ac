@@ -2,7 +2,7 @@ from nat.nat_base import true_below
 from nat.basic_addition import Nat
 from pair import Pair
 from relation import relation_power, relation_power_zero_self, relation_power_suc, relation_power_in_refl_trans_closure, relation_power_positive_in_trans_closure, relation_refl_trans_closure, relation_trans_closure, relation_refl_trans_closure_subset_of_reflexive_transitive
-from util import relation_compose_intro, relation_subset, relation_subset_step, is_reflexive, is_transitive
+from relation_basic import relation_compose_intro, relation_subset, relation_subset_step, is_reflexive, is_transitive
 numerals Nat
 
 /// Performs one step of the Euclidean algorithm for computing GCD.
