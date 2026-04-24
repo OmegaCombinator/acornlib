@@ -110,7 +110,9 @@ If a task is explicitly deferred rather than completed:
 
 In execution mode, the notes are not enough by themselves. Always try to verify the code change before updating the notes as though the item is complete.
 
-- For Acorn library work, prefer `acorn` or the narrowest verifying command that still justifies the note update.
+- For Acorn library work, run `acorn` while iterating, and before finishing run `acorn check`.
+- If `acorn` verification succeeds but `acorn check` fails, treat that as an Acorn bug and tell the user explicitly.
+- Use the narrowest additional verifying command only when it still justifies the note update.
 - If verification fails, keep the todo item or replace it with narrower remaining work.
 - If the failure appears to come from Acorn itself rather than the library code, report that to the user clearly and keep the notes honest about the blocker.
 
