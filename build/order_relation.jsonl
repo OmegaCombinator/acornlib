@@ -4,6 +4,60 @@
 {"goal":"lte_relation_is_transitive","proof":["function[T0: PartialOrder] { is_transitive[T0](T0.lte) }[P]"]}
 {"goal":"a < c","proof":[]}
 {"goal":"lt_relation_is_transitive","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0, x3: T0) { not x0(x1, x2) or not x0(x2, x3) or x0(x1, x3) } = is_transitive[T0](x0) }[P](P.lt)","let w0: P satisfy { exists(k0: P, k1: P) { w0 < k0 and k0 < k1 and not w0 < k1 } }","let w1: P satisfy { exists(k2: P) { w0 < w1 and w1 < k2 and not w0 < k2 } }","let w2: P satisfy { w0 < w1 and w1 < w2 and not w0 < w2 }","function[T0: PartialOrder](x0: T0, x1: T0, x2: T0) { not x0 < x1 or not x1 < x2 or x0 < x2 }[P](w0, w1, w2)"]}
+{"goal":"a >= a","proof":[]}
+{"goal":"gte_relation_is_reflexive","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0) { x0(x1, x1) } = is_reflexive[T0](x0) }[P](P.gte)","let w0: P satisfy { not w0 >= w0 }","function[T0: PartialOrder](x0: T0) { x0 >= x0 }[P](w0)"]}
+{"goal":"a >= c","proof":[]}
+{"goal":"gte_relation_is_transitive","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0, x3: T0) { not x0(x1, x2) or not x0(x2, x3) or x0(x1, x3) } = is_transitive[T0](x0) }[P](P.gte)","let w0: P satisfy { exists(k0: P, k1: P) { w0 >= k0 and k0 >= k1 and not w0 >= k1 } }","let w1: P satisfy { exists(k2: P) { w0 >= w1 and w1 >= k2 and not w0 >= k2 } }","let w2: P satisfy { w0 >= w1 and w1 >= w2 and not w0 >= w2 }","function[T0: PartialOrder](x0: T0, x1: T0, x2: T0) { not x0 >= x1 or not x1 >= x2 or x0 >= x2 }[P](w0, w1, w2)"]}
+{"goal":"a = b","proof":[]}
+{"goal":"lte_relation_is_antisymmetric","proof":["function[T0: PartialOrder] { is_antisymmetric[T0](T0.lte) }[P]"]}
+{"goal":"a >= b","proof":[]}
+{"goal":"b <= a","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { x0 >= x1 = x1 <= x0 }[P](a, b)"]}
+{"goal":"b >= a","proof":[]}
+{"goal":"a <= b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { x0 >= x1 = x1 <= x0 }[P](b, a)"]}
+{"goal":"a = b","proof":[]}
+{"goal":"gte_relation_is_antisymmetric","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0) { not x0(x1, x2) or not x0(x2, x1) or x2 = x1 } = is_antisymmetric[T0](x0) }[P](P.gte)","let w0: P satisfy { exists(k0: P) { w0 >= k0 and k0 >= w0 and k0 != w0 } }","let w1: P satisfy { w0 >= w1 and w1 >= w0 and w1 != w0 }","function(x0: P, x1: P) { not x0 >= x1 or not x1 >= x0 or x0 = x1 }(w0, w1)"]}
+{"goal":"lt_relation_is_irreflexive","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0) { not x0(x1, x1) } = is_irreflexive[T0](x0) }[P](P.lt)","let w0: P satisfy { w0 < w0 }","function[T0: PartialOrder](x0: T0) { not x0 < x0 }[P](w0)"]}
+{"goal":"a > c","proof":[]}
+{"goal":"gt_relation_is_transitive","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0, x3: T0) { not x0(x1, x2) or not x0(x2, x3) or x0(x1, x3) } = is_transitive[T0](x0) }[P](P.gt)","let w0: P satisfy { exists(k0: P, k1: P) { w0 > k0 and k0 > k1 and not w0 > k1 } }","let w1: P satisfy { exists(k2: P) { w0 > w1 and w1 > k2 and not w0 > k2 } }","let w2: P satisfy { w0 > w1 and w1 > w2 and not w0 > w2 }","function[T0: PartialOrder](x0: T0, x1: T0, x2: T0) { not x0 > x1 or not x1 > x2 or x0 > x2 }[P](w0, w1, w2)"]}
+{"goal":"gt_relation_is_irreflexive","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0) { not x0(x1, x1) } = is_irreflexive[T0](x0) }[P](P.gt)","let w0: P satisfy { w0 > w0 }","function[T0: PartialOrder](x0: T0) { not x0 > x0 }[P](w0)"]}
+{"goal":"a < a","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"lt_relation_is_asymmetric","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0) { not x0(x1, x2) or not x0(x2, x1) } = is_asymmetric[T0](x0) }[P](P.lt)","let w0: P satisfy { exists(k0: P) { w0 < k0 and k0 < w0 } }","let w1: P satisfy { w0 < w1 and w1 < w0 }","function(x0: P, x1: P) { not x0 < x1 or not x1 < x0 or false = true }(w0, w1)"]}
+{"goal":"a > a","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"gt_relation_is_asymmetric","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0) { not x0(x1, x2) or not x0(x2, x1) } = is_asymmetric[T0](x0) }[P](P.gt)","let w0: P satisfy { exists(k0: P) { w0 > k0 and k0 > w0 } }","let w1: P satisfy { w0 > w1 and w1 > w0 }","function(x0: P, x1: P) { not x0 > x1 or not x1 > x0 or false = true }(w0, w1)"]}
+{"goal":"a <= b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { not x0 < x1 or x0 <= x1 }[P](a, b)"]}
+{"goal":"lt_relation_subset_lte","proof":["function[T0, T1](x0: (T0, T1) -> Bool, x1: (T0, T1) -> Bool) { forall(x2: T0, x3: T1) { not x0(x2, x3) or x1(x2, x3) } = relation_subset[T0, T1](x0, x1) }[P, P](P.lt, P.lte)","let w0: P satisfy { exists(k0: P) { w0 < k0 and not w0 <= k0 } }","let w1: P satisfy { w0 < w1 and not w0 <= w1 }","function[T0: PartialOrder](x0: T0, x1: T0) { not x0 < x1 or x0 <= x1 }[P](w0, w1)","not w0 <= w1","w0 < w1","not w0 < w1"]}
+{"goal":"a >= b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { not x0 > x1 or x0 >= x1 }[P](a, b)"]}
+{"goal":"gt_relation_subset_gte","proof":["function[T0, T1](x0: (T0, T1) -> Bool, x1: (T0, T1) -> Bool) { forall(x2: T0, x3: T1) { not x0(x2, x3) or x1(x2, x3) } = relation_subset[T0, T1](x0, x1) }[P, P](P.gt, P.gte)","let w0: P satisfy { exists(k0: P) { w0 > k0 and not w0 >= k0 } }","let w1: P satisfy { w0 > w1 and not w0 >= w1 }","function[T0: PartialOrder](x0: T0, x1: T0) { not x0 > x1 or x0 >= x1 }[P](w0, w1)","not w0 >= w1","w0 > w1","not w0 > w1"]}
+{"goal":"a <= b or a >= b","proof":[]}
+{"goal":"lte_relation_is_total","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0) { x0(x1, x2) or x0(x2, x1) } = is_total[T0](x0) }[L](L.lte)","let w0: L satisfy { exists(k0: L) { not w0 <= k0 and not k0 <= w0 } }","let w1: L satisfy { not w0 <= w1 and not w1 <= w0 }","function[T0: LinearOrder](x0: T0, x1: T0) { x0 <= x1 or x1 <= x0 }[L](w0, w1)"]}
+{"goal":"a <= b or a >= b","proof":[]}
+{"goal":"b >= a","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { x0 >= x1 = x1 <= x0 }[L](b, a)"]}
+{"goal":"a >= b or b >= a","proof":[]}
+{"goal":"a >= b","proof":[]}
+{"goal":"a >= b or b >= a","proof":[]}
+{"goal":"gte_relation_is_total","proof":["function[T0](x0: (T0, T0) -> Bool) { forall(x1: T0, x2: T0) { x0(x1, x2) or x0(x2, x1) } = is_total[T0](x0) }[L](L.gte)","let w0: L satisfy { exists(k0: L) { not w0 >= k0 and not k0 >= w0 } }","let w1: L satisfy { not w0 >= w1 and not w1 >= w0 }","function(x0: L, x1: L) { x0 >= x1 or x1 >= x0 }(w0, w1)"]}
+{"goal":"u(a, b) = b <= a","proof":["function(x0: P, x1: P) { relation_converse(P.lte, x0, x1) = u(x0, x1) }(a, b)","function[T0, T1](x0: (T0, T1) -> Bool, x1: T1, x2: T0) { relation_converse[T0, T1](x0, x1, x2) = x0(x2, x1) }[P, P](P.lte, a, b)"]}
+{"goal":"v(a, b) = a >= b","proof":[]}
+{"goal":"a >= b = b <= a","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { x0 >= x1 = x1 <= x0 }[P](a, b)"]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"lte_relation_converse","proof":[]}
+{"goal":"u(a, b) = b >= a","proof":["function(x0: P, x1: P) { relation_converse(P.gte, x0, x1) = u(x0, x1) }(a, b)","function[T0, T1](x0: (T0, T1) -> Bool, x1: T1, x2: T0) { relation_converse[T0, T1](x0, x1, x2) = x0(x2, x1) }[P, P](P.gte, a, b)"]}
+{"goal":"b >= a = a <= b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { relation_converse[T0, T0](T0.lte, x0, x1) = x0 >= x1 }[P](b, a)","function[T0, T1](x0: (T0, T1) -> Bool, x1: T1, x2: T0) { relation_converse[T0, T1](x0, x1, x2) = x0(x2, x1) }[P, P](P.lte, b, a)"]}
+{"goal":"v(a, b) = a <= b","proof":[]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"gte_relation_converse","proof":[]}
+{"goal":"u(a, b) = b < a","proof":["function(x0: P, x1: P) { relation_converse(P.lt, x0, x1) = u(x0, x1) }(a, b)","function[T0, T1](x0: (T0, T1) -> Bool, x1: T1, x2: T0) { relation_converse[T0, T1](x0, x1, x2) = x0(x2, x1) }[P, P](P.lt, a, b)"]}
+{"goal":"v(a, b) = a > b","proof":[]}
+{"goal":"a > b = b < a","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { x0 > x1 = x1 < x0 }[P](a, b)"]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"lt_relation_converse","proof":[]}
+{"goal":"u(a, b) = b > a","proof":["function(x0: P, x1: P) { relation_converse(P.gt, x0, x1) = u(x0, x1) }(a, b)","function[T0, T1](x0: (T0, T1) -> Bool, x1: T1, x2: T0) { relation_converse[T0, T1](x0, x1, x2) = x0(x2, x1) }[P, P](P.gt, a, b)"]}
+{"goal":"b > a = a < b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { relation_converse[T0, T0](T0.lt, x0, x1) = x0 > x1 }[P](b, a)","function[T0, T1](x0: (T0, T1) -> Bool, x1: T1, x2: T0) { relation_converse[T0, T1](x0, x1, x2) = x0(x2, x1) }[P, P](P.lt, b, a)"]}
+{"goal":"v(a, b) = a < b","proof":[]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"gt_relation_converse","proof":[]}
 {"goal":"relation_subset[P, P](relation_refl_trans_closure[P](P.lte), P.lte)","proof":[]}
 {"goal":"a <= b","proof":[]}
 {"goal":"relation_refl_trans_closure(P.lte, a, b)","proof":[]}
@@ -11,6 +65,27 @@
 {"goal":"lte_refl_trans_closure_at","proof":[]}
 {"goal":"u(a, b) = v(a, b)","proof":[]}
 {"goal":"lte_refl_trans_closure","proof":[]}
+{"goal":"relation_subset[P, P](relation_refl_trans_closure[P](P.gte), P.gte)","proof":[]}
+{"goal":"a >= b","proof":[]}
+{"goal":"relation_refl_trans_closure(P.gte, a, b)","proof":[]}
+{"goal":"relation_refl_trans_closure(P.gte, a, b) = a >= b","proof":[]}
+{"goal":"gte_refl_trans_closure_at","proof":[]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"gte_refl_trans_closure","proof":[]}
+{"goal":"relation_subset[P, P](relation_trans_closure[P](P.lte), P.lte)","proof":[]}
+{"goal":"a <= b","proof":[]}
+{"goal":"relation_trans_closure(P.lte, a, b)","proof":[]}
+{"goal":"relation_trans_closure(P.lte, a, b) = a <= b","proof":[]}
+{"goal":"lte_trans_closure_at","proof":[]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"lte_trans_closure","proof":[]}
+{"goal":"relation_subset[P, P](relation_trans_closure[P](P.gte), P.gte)","proof":[]}
+{"goal":"a >= b","proof":[]}
+{"goal":"relation_trans_closure(P.gte, a, b)","proof":[]}
+{"goal":"relation_trans_closure(P.gte, a, b) = a >= b","proof":[]}
+{"goal":"gte_trans_closure_at","proof":[]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"gte_trans_closure","proof":[]}
 {"goal":"relation_subset[P, P](relation_trans_closure[P](P.lt), P.lt)","proof":[]}
 {"goal":"a < b","proof":[]}
 {"goal":"relation_trans_closure(P.lt, a, b)","proof":[]}
@@ -18,11 +93,86 @@
 {"goal":"lt_trans_closure_at","proof":[]}
 {"goal":"u(a, b) = v(a, b)","proof":[]}
 {"goal":"lt_trans_closure","proof":[]}
+{"goal":"relation_subset[P, P](relation_trans_closure[P](P.gt), P.gt)","proof":[]}
+{"goal":"a > b","proof":[]}
+{"goal":"relation_trans_closure(P.gt, a, b)","proof":[]}
+{"goal":"relation_trans_closure(P.gt, a, b) = a > b","proof":[]}
+{"goal":"gt_trans_closure_at","proof":[]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"gt_trans_closure","proof":[]}
+{"goal":"is_reflexive[A](relation_pullback[A, B](f, B.lte))","proof":[]}
+{"goal":"lte_pullback_is_reflexive","proof":[]}
+{"goal":"is_reflexive[A](relation_pullback[A, B](f, B.gte))","proof":[]}
+{"goal":"gte_pullback_is_reflexive","proof":[]}
+{"goal":"is_transitive[A](relation_pullback[A, B](f, B.lte))","proof":[]}
+{"goal":"lte_pullback_is_transitive","proof":[]}
+{"goal":"is_transitive[A](relation_pullback[A, B](f, B.gte))","proof":[]}
+{"goal":"gte_pullback_is_transitive","proof":[]}
+{"goal":"is_antisymmetric[A](relation_pullback[A, B](f, B.lte))","proof":[]}
+{"goal":"lte_pullback_is_antisymmetric_of_injective","proof":[]}
+{"goal":"is_antisymmetric[A](relation_pullback[A, B](f, B.gte))","proof":[]}
+{"goal":"gte_pullback_is_antisymmetric_of_injective","proof":[]}
+{"goal":"is_irreflexive[A](relation_pullback[A, B](f, B.lt))","proof":[]}
+{"goal":"lt_pullback_is_irreflexive","proof":[]}
+{"goal":"is_irreflexive[A](relation_pullback[A, B](f, B.gt))","proof":[]}
+{"goal":"gt_pullback_is_irreflexive","proof":[]}
+{"goal":"is_asymmetric[A](relation_pullback[A, B](f, B.lt))","proof":[]}
+{"goal":"lt_pullback_is_asymmetric","proof":[]}
+{"goal":"is_asymmetric[A](relation_pullback[A, B](f, B.gt))","proof":[]}
+{"goal":"gt_pullback_is_asymmetric","proof":[]}
+{"goal":"is_total[A](relation_pullback[A, B](f, B.lte))","proof":[]}
+{"goal":"lte_pullback_is_total","proof":[]}
+{"goal":"is_total[A](relation_pullback[A, B](f, B.gte))","proof":[]}
+{"goal":"gte_pullback_is_total","proof":[]}
+{"goal":"a <= b","proof":["function[T0: LinearOrder](x0: T0, x1: T0) { x0 > x1 or x0 <= x1 }[L](a, b)","function[T0: PartialOrder](x0: T0, x1: T0) { not x0 > x1 or x0 != x1 }[L](a, b)"]}
+{"goal":"a < b","proof":["function[T0](x0: T0, x1: T0) { lib(util).eq_relation[T0](x0, x1) = (x0 = x1) }[L](a, b)"]}
+{"goal":"a <= b","proof":["function[T0: LinearOrder](x0: T0, x1: T0) { x0.max(x1) = x1 = x0 <= x1 }[L](a, b)","function[T0: LinearOrder](x0: T0, x1: T0) { not x0 < x1 or x0.max(x1) = x1 }[L](a, b)"]}
+{"goal":"relation_refl_trans_closure(L.lt, a, a)","proof":[]}
+{"goal":"relation_refl_trans_closure(L.lt, a, b)","proof":[]}
+{"goal":"relation_refl_trans_closure(L.lt, a, b)","proof":[]}
+{"goal":"relation_refl_trans_closure(L.lt, a, b) = a <= b","proof":[]}
+{"goal":"lt_refl_trans_closure_at","proof":[]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"lt_refl_trans_closure","proof":[]}
+{"goal":"a >= b","proof":["function[T0: LinearOrder](x0: T0, x1: T0) { x0 >= x1 or x0 < x1 }[L](a, b)","function[T0: PartialOrder](x0: T0, x1: T0) { not x0 < x1 or x0 != x1 }[L](a, b)"]}
+{"goal":"a > b","proof":["function[T0](x0: T0, x1: T0) { lib(util).eq_relation[T0](x0, x1) = (x0 = x1) }[L](a, b)"]}
+{"goal":"a >= b","proof":["function[T0: LinearOrder](x0: T0, x1: T0) { x0.max(x1) = x0 = x0 >= x1 }[L](a, b)","function[T0: LinearOrder](x0: T0, x1: T0) { not x0 > x1 or x0.max(x1) = x0 }[L](a, b)"]}
+{"goal":"relation_refl_trans_closure(L.gt, a, a)","proof":[]}
+{"goal":"relation_refl_trans_closure(L.gt, a, b)","proof":[]}
+{"goal":"relation_refl_trans_closure(L.gt, a, b)","proof":[]}
+{"goal":"relation_refl_trans_closure(L.gt, a, b) = a >= b","proof":[]}
+{"goal":"gt_refl_trans_closure_at","proof":[]}
+{"goal":"u(a, b) = v(a, b)","proof":[]}
+{"goal":"gt_refl_trans_closure","proof":[]}
 {"goal":"relation_pullback[A, B](f, relation_refl_trans_closure[B](B.lte)) = relation_refl_trans_closure[A](relation_pullback[A, B](f, B.lte))","proof":[]}
 {"goal":"relation_pullback[A, B](f, relation_refl_trans_closure[B](B.lte)) = relation_pullback[A, B](f, B.lte)","proof":[]}
 {"goal":"relation_refl_trans_closure[A](relation_pullback[A, B](f, B.lte)) = relation_pullback[A, B](f, B.lte)","proof":[]}
 {"goal":"lte_pullback_refl_trans_closure_of_bijection","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_refl_trans_closure[B](B.gte)) = relation_refl_trans_closure[A](relation_pullback[A, B](f, B.gte))","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_refl_trans_closure[B](B.gte)) = relation_pullback[A, B](f, B.gte)","proof":[]}
+{"goal":"relation_refl_trans_closure[A](relation_pullback[A, B](f, B.gte)) = relation_pullback[A, B](f, B.gte)","proof":[]}
+{"goal":"gte_pullback_refl_trans_closure_of_bijection","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_trans_closure[B](B.lte)) = relation_trans_closure[A](relation_pullback[A, B](f, B.lte))","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_trans_closure[B](B.lte)) = relation_pullback[A, B](f, B.lte)","proof":[]}
+{"goal":"relation_trans_closure[A](relation_pullback[A, B](f, B.lte)) = relation_pullback[A, B](f, B.lte)","proof":[]}
+{"goal":"lte_pullback_trans_closure_of_surjective","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_trans_closure[B](B.gte)) = relation_trans_closure[A](relation_pullback[A, B](f, B.gte))","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_trans_closure[B](B.gte)) = relation_pullback[A, B](f, B.gte)","proof":[]}
+{"goal":"relation_trans_closure[A](relation_pullback[A, B](f, B.gte)) = relation_pullback[A, B](f, B.gte)","proof":[]}
+{"goal":"gte_pullback_trans_closure_of_surjective","proof":[]}
 {"goal":"relation_pullback[A, B](f, relation_trans_closure[B](B.lt)) = relation_trans_closure[A](relation_pullback[A, B](f, B.lt))","proof":[]}
 {"goal":"relation_pullback[A, B](f, relation_trans_closure[B](B.lt)) = relation_pullback[A, B](f, B.lt)","proof":[]}
 {"goal":"relation_trans_closure[A](relation_pullback[A, B](f, B.lt)) = relation_pullback[A, B](f, B.lt)","proof":[]}
 {"goal":"lt_pullback_trans_closure_of_surjective","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_trans_closure[B](B.gt)) = relation_trans_closure[A](relation_pullback[A, B](f, B.gt))","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_trans_closure[B](B.gt)) = relation_pullback[A, B](f, B.gt)","proof":[]}
+{"goal":"relation_trans_closure[A](relation_pullback[A, B](f, B.gt)) = relation_pullback[A, B](f, B.gt)","proof":[]}
+{"goal":"gt_pullback_trans_closure_of_surjective","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_refl_trans_closure[B](B.lt)) = relation_refl_trans_closure[A](relation_pullback[A, B](f, B.lt))","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_refl_trans_closure[B](B.lt)) = relation_pullback[A, B](f, B.lte)","proof":[]}
+{"goal":"relation_refl_trans_closure[A](relation_pullback[A, B](f, B.lt)) = relation_pullback[A, B](f, B.lte)","proof":[]}
+{"goal":"lt_pullback_refl_trans_closure_of_bijection","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_refl_trans_closure[B](B.gt)) = relation_refl_trans_closure[A](relation_pullback[A, B](f, B.gt))","proof":[]}
+{"goal":"relation_pullback[A, B](f, relation_refl_trans_closure[B](B.gt)) = relation_pullback[A, B](f, B.gte)","proof":[]}
+{"goal":"relation_refl_trans_closure[A](relation_pullback[A, B](f, B.gt)) = relation_pullback[A, B](f, B.gte)","proof":[]}
+{"goal":"gt_pullback_refl_trans_closure_of_bijection","proof":[]}

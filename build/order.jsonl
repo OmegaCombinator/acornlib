@@ -182,22 +182,22 @@
 {"goal":"min_absorb_max","proof":[]}
 {"goal":"max_absorb_min","proof":["function[T0: LinearOrder](x0: T0, x1: T0) { not x0 <= x1 or x0.max(x1) = x1 }[L](a.min(b), a)","function[T0: LinearOrder](x0: T0, x1: T0) { x0.max(x1) = x1.max(x0) }[L](a.min(b), a)"]}
 {"goal":"a.min(b) <= b","proof":[]}
-{"goal":"a <= b","proof":["not a.min(b) <= b"]}
-{"goal":"a.min(b) = a","proof":["not a <= b"]}
-{"goal":"a.min(b) = a = a <= b","proof":["a.min(b) = a or a <= b","a <= b","a.min(b) = a","a.min(b) != a"]}
+{"goal":"a <= b","proof":[]}
+{"goal":"a.min(b) = a","proof":[]}
+{"goal":"a.min(b) = a = a <= b","proof":[]}
 {"goal":"min_eq_left_iff_lte","proof":[]}
 {"goal":"a.min(b) <= a","proof":[]}
-{"goal":"a >= b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { x0 >= x1 = x1 <= x0 }[L](a, a.min(b))","not a >= a.min(b)","a >= a.min(b)"]}
-{"goal":"a.min(b) = b","proof":["not a >= b"]}
-{"goal":"a.min(b) = b = a >= b","proof":["a.min(b) = b or a >= b","a >= b","a.min(b) = b","a.min(b) != b"]}
+{"goal":"a >= b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { x0 >= x1 = x1 <= x0 }[L](a, a.min(b))"]}
+{"goal":"a.min(b) = b","proof":[]}
+{"goal":"a.min(b) = b = a >= b","proof":[]}
 {"goal":"min_eq_right_iff_gte","proof":[]}
 {"goal":"a.max(b) >= a","proof":[]}
-{"goal":"a <= b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { x0 >= x1 = x1 <= x0 }[L](b, a)","b >= a","not b >= a"]}
-{"goal":"a.max(b) = b","proof":["not a <= b"]}
-{"goal":"a.max(b) = b = a <= b","proof":["a.max(b) = b or a <= b","a <= b","a.max(b) = b","a.max(b) != b"]}
+{"goal":"a <= b","proof":["function[T0: PartialOrder](x0: T0, x1: T0) { x0 >= x1 = x1 <= x0 }[L](b, a)"]}
+{"goal":"a.max(b) = b","proof":[]}
+{"goal":"a.max(b) = b = a <= b","proof":[]}
 {"goal":"max_eq_right_iff_lte","proof":[]}
 {"goal":"a.max(b) >= b","proof":[]}
-{"goal":"a >= b","proof":["not a.max(b) >= b"]}
-{"goal":"a.max(b) = a","proof":["not a >= b"]}
-{"goal":"a.max(b) = a = a >= b","proof":["a.max(b) = a or a >= b","a >= b","a.max(b) = a","a.max(b) != a"]}
+{"goal":"a >= b","proof":[]}
+{"goal":"a.max(b) = a","proof":[]}
+{"goal":"a.max(b) = a = a >= b","proof":[]}
 {"goal":"max_eq_left_iff_gte","proof":[]}
