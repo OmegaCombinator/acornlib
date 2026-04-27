@@ -104,6 +104,12 @@ Blocker rules:
 
 When the user says to "work on a project", do not stop at roadmap maintenance. Use the selected project's todo tree as the task queue.
 
+Default scope:
+
+- If the user does not specify how much work to do, aim for a chunk that changes around 1000 lines of `.ac` code.
+- Treat 1000 lines as an approximate target, not a quota: stop earlier for a coherent verified result, a real blocker, or a natural session boundary.
+- Do not pad a change to reach the target, and do not take on risky design work just to make the chunk larger.
+
 1. Start at `projects/<project>/todo.md` and read `## Blockers`.
 2. Follow the active branch or else the first unchecked item in execution order that is not blocked.
 3. If an item points to a lower `todo.md`, descend into it unless that branch is blocked.
