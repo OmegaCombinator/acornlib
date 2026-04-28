@@ -1,0 +1,6 @@
+{"goal":"exists(k0: T) { equivalence_class(r, a) = equivalence_class(r, k0) }","proof":["function(x0: T) { equivalence_class(r, a) != equivalence_class(r, x0) }(a)"]}
+{"goal":"equivalence_class_is_equivalence_class","proof":["let w0: T satisfy { equivalence_class(r, w0) = equivalence_class(r, a) }","function[T0](x0: (T0, T0) -> Bool, x1: Set[T0]) { exists(k0: T0) { equivalence_class[T0](x0, k0) = x1 } = is_equivalence_class[T0](x0, x1) }[T](r, equivalence_class(r, a))"]}
+{"goal":"r(a, b)","proof":["equivalence_class(r, b) != equivalence_class(r, a) or not is_equivalence[T](r)","equivalence_class(r, b) != equivalence_class(r, a)"]}
+{"goal":"equivalence_class(r, a) = equivalence_class(r, b)","proof":["not is_equivalence[T](r) or not r(a, b)","not is_equivalence[T](r)"]}
+{"goal":"equivalence_class(r, a) = equivalence_class(r, b) = r(a, b)","proof":["equivalence_class(r, b) = equivalence_class(r, a) or r(a, b)","r(a, b)","equivalence_class(r, b) = equivalence_class(r, a)","equivalence_class(r, b) != equivalence_class(r, a)"]}
+{"goal":"equivalence_class_eq_iff","proof":["not is_equivalence[T](r)"]}

@@ -16,6 +16,7 @@
     "comm_ring.binomial": "c2633cb89d7b9592f1191a797accbf6cfa67ae7e69a31a846a388ea05b4126cc",
     "comm_semigroup": "a68c68dab74b904396238eb5ad605be3443012618ecbf9d273809be7c89eb52a",
     "complex": "da1da0130dee2eca7ae7a465900794ea2bd83c5e2c83de62a36be6b0b24e83f0",
+    "equivalence": "38da1395d797cfe8ca4dc0709fd2bdcf43fac0d9862b93f37f81e536740dafeb",
     "field": "b5f590be5aef18a72e920610b3a4aa73696cf1347602ecd80fcc3edd4fdb1ed9",
     "fin": "29c4390fe453b5dabadfb5b99becc873ad7e52e648b07c3c69ce7d7f89eafb2d",
     "finite_group": "05da09b5aa7485b1ceb798ae9413216dd9a6d1832af8e5cbda2359a367fdb518",

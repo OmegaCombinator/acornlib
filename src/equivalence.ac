@@ -1,0 +1,39 @@
+/// Generic infrastructure for equivalence classes.
+
+from relation_basic import is_equivalence
+from set import Set, equivalence_class, equivalence_class_eq_of_equiv,
+    equivalence_of_equivalence_class_eq
+
+/// True if `c` is an equivalence class for the relation `r`.
+define is_equivalence_class[T](r: (T, T) -> Bool, c: Set[T]) -> Bool {
+    exists(a: T) {
+        c = equivalence_class(r, a)
+    }
+}
+
+/// The class of an element is an equivalence class.
+theorem equivalence_class_is_equivalence_class[T](r: (T, T) -> Bool, a: T) {
+    is_equivalence_class(r, equivalence_class(r, a))
+} by {
+    exists(b: T) {
+        equivalence_class(r, a) = equivalence_class(r, b)
+    }
+}
+
+/// Equality of equivalence classes is equivalence of representatives.
+theorem equivalence_class_eq_iff[T](r: (T, T) -> Bool, a: T, b: T) {
+    is_equivalence(r) implies
+    equivalence_class(r, a) = equivalence_class(r, b) = r(a, b)
+} by {
+    if is_equivalence(r) {
+        if equivalence_class(r, a) = equivalence_class(r, b) {
+            equivalence_of_equivalence_class_eq(r, a, b)
+            r(a, b)
+        }
+        if r(a, b) {
+            equivalence_class_eq_of_equiv(r, a, b)
+            equivalence_class(r, a) = equivalence_class(r, b)
+        }
+        equivalence_class(r, a) = equivalence_class(r, b) = r(a, b)
+    }
+}
