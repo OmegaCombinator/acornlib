@@ -1,0 +1,82 @@
+from semigroup import Semigroup
+from set import Set
+
+// We define subsemigroups with the "bundled" technique, so a subsemigroup carries along
+// its semigroup.
+
+/// True if a subset is closed under the semigroup operation.
+define subsemigroup_closure_constraint[S: Semigroup](contains: S -> Bool) -> Bool {
+    forall(a: S, b: S) {
+        contains(a) and contains(b) implies contains(a * b)
+    }
+}
+
+/// A subsemigroup of a semigroup S, represented as a subset closed under multiplication.
+structure Subsemigroup[S: Semigroup] {
+    /// True if the given element is a member of this subsemigroup.
+    contains: S -> Bool
+} constraint {
+    subsemigroup_closure_constraint(contains)
+}
+
+/// Subsemigroup extensionality: two subsemigroups are equal when they have the same elements.
+theorem subsemigroup_ext[S: Semigroup](a: Subsemigroup[S], b: Subsemigroup[S]) {
+    (forall(x: S) { a.contains(x) = b.contains(x) }) implies a = b
+} by {
+    if forall(x: S) { a.contains(x) = b.contains(x) } {
+        a.contains = b.contains
+    }
+}
+
+attributes Subsemigroup[S: Semigroup] {
+    /// Subsemigroup extensionality from pointwise equality of membership.
+    let ext = subsemigroup_ext[S]
+
+    /// The subset of semigroup elements belonging to this subsemigroup.
+    define as_set(self) -> Set[S] {
+        Set[S].new(self.contains)
+    }
+}
+
+/// The empty subset of any semigroup is closed under multiplication.
+define empty_contains[S: Semigroup](a: S) -> Bool {
+    false
+}
+
+theorem empty_subsemigroup_constraint[S: Semigroup] {
+    subsemigroup_closure_constraint(empty_contains[S])
+} by {
+    forall(a: S, b: S) {
+        if empty_contains[S](a) and empty_contains[S](b) {
+            false
+        }
+    }
+}
+
+/// The empty subsemigroup, containing no elements.
+let empty_subsemigroup[S: Semigroup]: Subsemigroup[S] satisfy {
+    Subsemigroup.new(empty_contains[S]) = Option.some(empty_subsemigroup)
+}
+
+theorem empty_subsemigroup_contains_nothing[S: Semigroup](s: S) {
+    not empty_subsemigroup[S].contains(s)
+}
+
+/// The full subset of any semigroup is closed under multiplication.
+define full_contains[S: Semigroup](a: S) -> Bool {
+    true
+}
+
+theorem full_subsemigroup_constraint[S: Semigroup] {
+    subsemigroup_closure_constraint(full_contains[S])
+}
+
+/// The full subsemigroup, containing every element of the semigroup.
+let full_subsemigroup[S: Semigroup]: Subsemigroup[S] satisfy {
+    Subsemigroup.new(full_contains[S]) = Option.some(full_subsemigroup)
+}
+
+theorem full_subsemigroup_contains_everything[S: Semigroup](s: S) {
+    full_subsemigroup[S].contains(s)
+}
+
