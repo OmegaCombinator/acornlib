@@ -1,0 +1,111 @@
+from monoid import Monoid
+from set import Set
+
+// We define submonoids with the "bundled" technique, so a submonoid carries along
+// its monoid.
+
+/// True if a subset is closed under the monoid operation.
+define submonoid_closure_constraint[M: Monoid](contains: M -> Bool) -> Bool {
+    forall(a: M, b: M) {
+        contains(a) and contains(b) implies contains(a * b)
+    }
+}
+
+/// True if a subset contains the identity element of the monoid.
+define submonoid_identity_constraint[M: Monoid](contains: M -> Bool) -> Bool {
+    contains(M.1)
+}
+
+/// True if a subset satisfies all the requirements to be a submonoid.
+define submonoid_constraint[M: Monoid](contains: M -> Bool) -> Bool {
+    submonoid_identity_constraint(contains) and submonoid_closure_constraint(contains)
+}
+
+/// A submonoid of a monoid M, represented as a subset closed under multiplication that contains the identity.
+structure Submonoid[M: Monoid] {
+    /// True if the given element is a member of this submonoid.
+    contains: M -> Bool
+} constraint {
+    submonoid_constraint(contains)
+}
+
+/// Submonoid extensionality: two submonoids are equal when they have the same elements.
+theorem submonoid_ext[M: Monoid](a: Submonoid[M], b: Submonoid[M]) {
+    (forall(x: M) { a.contains(x) = b.contains(x) }) implies a = b
+} by {
+    if forall(x: M) { a.contains(x) = b.contains(x) } {
+        a.contains = b.contains
+    }
+}
+
+attributes Submonoid[M: Monoid] {
+    /// Submonoid extensionality from pointwise equality of membership.
+    let ext = submonoid_ext[M]
+
+    /// The subset of monoid elements belonging to this submonoid.
+    define as_set(self) -> Set[M] {
+        Set[M].new(self.contains)
+    }
+}
+
+/// True if an element is the identity element of the monoid.
+define is_monoid_identity[M: Monoid](m: M) -> Bool {
+    m = M.1
+}
+
+theorem identity_submonoid_constraint[M: Monoid] {
+    submonoid_constraint(is_monoid_identity[M])
+} by {
+    is_monoid_identity(M.1)
+    submonoid_identity_constraint(is_monoid_identity[M])
+    forall(a: M, b: M) {
+        if is_monoid_identity(a) and is_monoid_identity(b) {
+            a = M.1
+            b = M.1
+            M.1 * M.1 = M.1
+            is_monoid_identity(a * b)
+        }
+    }
+    submonoid_closure_constraint(is_monoid_identity[M])
+}
+
+/// The trivial submonoid containing only the identity element.
+let identity_submonoid[M: Monoid]: Submonoid[M] satisfy {
+    Submonoid.new(is_monoid_identity[M]) = Option.some(identity_submonoid)
+}
+
+theorem identity_submonoid_only_has_identity[M: Monoid](m: M) {
+    identity_submonoid[M].contains(m) implies m = M.1
+}
+
+/// The full subset of any monoid is closed under multiplication and contains the identity.
+define full_monoid_contains[M: Monoid](a: M) -> Bool {
+    true
+}
+
+theorem full_submonoid_constraint[M: Monoid] {
+    submonoid_constraint(full_monoid_contains[M])
+} by {
+    full_monoid_contains[M](M.1)
+    submonoid_identity_constraint(full_monoid_contains[M])
+    forall(a: M, b: M) {
+        if full_monoid_contains[M](a) and full_monoid_contains[M](b) {
+            full_monoid_contains[M](a * b)
+        }
+    }
+    submonoid_closure_constraint(full_monoid_contains[M])
+}
+
+/// The full submonoid, containing every element of the monoid.
+let full_submonoid[M: Monoid]: Submonoid[M] satisfy {
+    Submonoid.new(full_monoid_contains[M]) = Option.some(full_submonoid)
+}
+
+theorem full_submonoid_contains_everything[M: Monoid](m: M) {
+    full_submonoid[M].contains(m)
+}
+
+/// Every submonoid contains the identity element.
+theorem submonoid_contains_identity[M: Monoid](s: Submonoid[M]) {
+    s.contains(M.1)
+}
