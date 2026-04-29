@@ -2,7 +2,6 @@
 
 Goal: make subgroup-like constructions uniform across the algebraic hierarchy.
 
-- [ ] Add submonoids
 - [ ] Add a closure-of-multiplication accessor lemma for `Subsemigroup`
 - [ ] Add intersection of subsemigroups
 - [ ] Strengthen the existing subgroup API
