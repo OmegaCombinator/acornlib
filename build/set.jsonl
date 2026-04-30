@@ -22,6 +22,15 @@
 {"goal":"singleton_set_is_singleton","proof":["function[T0](x0: T0, x1: Set[T0]) { Set.singleton[T0](x0) != x1 or x1.is_singleton }[K](a, Set.singleton(a))"]}
 {"goal":"a.contains = b.contains","proof":[]}
 {"goal":"set_ext","proof":["function[T0](x0: Set[T0]) { Set.new[T0](x0.contains) = x0 }[K](a)","function[T0](x0: Set[T0]) { Set.new[T0](x0.contains) = x0 }[K](b)"]}
+{"goal":"set_eq_contains","proof":[]}
+{"goal":"a.contains = b.contains","proof":[]}
+{"goal":"a.contains(x) = b.contains(x)","proof":[]}
+{"goal":"set_eq_contains_at","proof":[]}
+{"goal":"set_eq_transport_predicate","proof":[]}
+{"goal":"set_eq_transport_predicate_rev","proof":[]}
+{"goal":"a.contains(x) = b.contains(x)","proof":[]}
+{"goal":"set_eq_of_contains_eq","proof":["function[T0](x0: Set[T0]) { Set.new[T0](x0.contains) = x0 }[K](a)","function[T0](x0: Set[T0]) { Set.new[T0](x0.contains) = x0 }[K](b)"]}
+{"goal":"set_eq_of_contains_at_eq","proof":["let w0: K satisfy { w0 ∈ a != w0 ∈ b }"]}
 {"goal":"false","proof":["function[T0](x0: Set[T0]) { forall(x1: T0) { not x1 ∈ x0 } = x0.is_empty }[K](s)","function[T0](x0: Set[T0]) { not x0.is_empty or forall(x1: T0) { not x1 ∈ x0 } = true }[K](s)","function[T0](x0: Set[T0], x1: T0) { not x0.is_empty or not x1 ∈ x0 }[K](s, x)"]}
 {"goal":"s.contains(x) = Set.empty_set[K].contains(x)","proof":[]}
 {"goal":"set_eq_empty_of_is_empty","proof":["function[T0](x0: Set[T0]) { forall(x1: T0) { not x1 ∈ x0 } = x0.is_empty }[K](s)","not forall(x0: K) { x0 ∈ s = x0 ∈ Set.empty_set[K] } or not s.is_empty","let w0: K satisfy { w0 ∈ s != w0 ∈ Set.empty_set[K] }","function[T0](x0: T0) { not x0 ∈ Set.empty_set[T0] }[K](w0)","w0 ∈ Set.empty_set[K] or w0 ∈ s","w0 ∈ s","function[T0](x0: Set[T0]) { not x0.is_empty or forall(x1: T0) { not x1 ∈ x0 } = true }[K](s)","function[T0](x0: Set[T0], x1: T0) { not x0.is_empty or not x1 ∈ x0 }[K](s, w0)"]}
