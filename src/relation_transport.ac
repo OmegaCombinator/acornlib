@@ -1,6 +1,9 @@
 /// Transport and compatibility lemmas for unbundled relations along functions.
 
-from functions import compose, identity_fn, predicate_extensionality, binary_function_extensionality, is_injective_fn, is_surjective_fn, is_bijection_fn, bijection_fn_is_injective, bijection_fn_is_surjective, injective_fn_eq, surjective_fn_has_preimage
+from functions import Inhabited, compose, identity_fn, inverse_fn, inverse_fn_apply_of_surjective,
+    inverse_fn_apply_image_of_bijection, predicate_extensionality, binary_function_extensionality,
+    is_injective_fn, is_surjective_fn, is_bijection_fn, bijection_fn_is_injective,
+    bijection_fn_is_surjective, injective_fn_eq, surjective_fn_has_preimage
 from relation_basic import eq_relation, is_reflexive, is_irreflexive, is_symmetric, is_asymmetric, is_transitive, is_total, is_antisymmetric, is_equivalence, is_partial_equivalence, relation_intersection, relation_subset, relation_subset_refl, relation_subset_step, relation_subset_trans, relation_converse, relation_reflexive_closure, relation_symmetric_closure, eq_relation_is_equivalence, relation_intersection_is_equivalence, relation_converse_is_equivalence, equivalence_is_reflexive, equivalence_is_symmetric, equivalence_is_transitive, partial_equivalence_is_symmetric, partial_equivalence_is_transitive, reflexive_self, symmetric_flip, transitive_step, antisymmetric_eq
 
 /// The pullback of a homogeneous relation along a function.
@@ -1121,6 +1124,93 @@ define respects_function[T, U](r: (T, T) -> Bool, f: T -> U) -> Bool {
 /// True if a predicate has the same truth value on related inputs.
 define respects_predicate[T](r: (T, T) -> Bool, p: T -> Bool) -> Bool {
     respects_function(r, p)
+}
+
+/// The function on a target domain induced by a bijection from a source domain.
+define function_pushforward[A: Inhabited, B, C](f: A -> B, g: A -> C, y: B) -> C {
+    g(inverse_fn(f, y))
+}
+
+/// Transporting a function across a bijection agrees with the original function on images.
+theorem function_pushforward_apply_image_of_bijection[A: Inhabited, B, C](f: A -> B, g: A -> C, x: A) {
+    is_bijection_fn(f) implies function_pushforward(f, g, f(x)) = g(x)
+} by {
+    if is_bijection_fn(f) {
+        function_pushforward(f, g, f(x)) = g(inverse_fn(f, f(x)))
+        inverse_fn_apply_image_of_bijection(f, x)
+        inverse_fn(f, f(x)) = x
+        function_pushforward(f, g, f(x)) = g(x)
+    }
+}
+
+/// Transporting a function across a surjection applies through a chosen preimage.
+theorem function_pushforward_apply_of_surjective[A: Inhabited, B, C](f: A -> B, g: A -> C, y: B) {
+    is_surjective_fn(f) implies exists(x: A) {
+        f(x) = y and function_pushforward(f, g, y) = g(x)
+    }
+} by {
+    if is_surjective_fn(f) {
+        let x = inverse_fn(f, y)
+        inverse_fn_apply_of_surjective(f, y)
+        f(x) = y
+        function_pushforward(f, g, y) = g(x)
+        exists(a: A) {
+            a = x and f(a) = y and function_pushforward(f, g, y) = g(a)
+        }
+    }
+}
+
+/// Transporting a relation-respecting function across a bijection preserves respect for pushed-forward relations.
+theorem function_pushforward_respects_equivalence_of_bijection[A: Inhabited, B, C](
+    f: A -> B,
+    g: A -> C,
+    r: (A, A) -> Bool,
+    s: (C, C) -> Bool
+) {
+    is_bijection_fn(f) and respects_equivalence(g, r, s) implies
+    respects_equivalence(function_pushforward(f, g), relation_pushforward(f, r), s)
+} by {
+    if is_bijection_fn(f) and respects_equivalence(g, r, s) {
+        bijection_fn_is_injective(f)
+        is_injective_fn(f)
+        forall(u: B, v: B) {
+            if relation_pushforward(f, r, u, v) {
+                relation_pushforward_has_preimages(f, r, u, v)
+                let x: A satisfy {
+                    exists(y: A) {
+                        f(x) = u and f(y) = v and r(x, y)
+                    }
+                }
+                let y: A satisfy {
+                    f(x) = u and f(y) = v and r(x, y)
+                }
+                bijection_fn_is_surjective(f)
+                is_surjective_fn(f)
+                inverse_fn_apply_of_surjective(f, u)
+                f(inverse_fn(f, u)) = u
+                f(x) = u
+                f(inverse_fn(f, u)) = f(x)
+                injective_fn_eq(f, inverse_fn(f, u), x)
+                inverse_fn(f, u) = x
+                inverse_fn_apply_of_surjective(f, v)
+                f(inverse_fn(f, v)) = v
+                f(y) = v
+                f(inverse_fn(f, v)) = f(y)
+                injective_fn_eq(f, inverse_fn(f, v), y)
+                inverse_fn(f, v) = y
+                function_pushforward(f, g, u) = g(inverse_fn(f, u))
+                function_pushforward(f, g, v) = g(inverse_fn(f, v))
+                function_pushforward(f, g, u) = g(x)
+                function_pushforward(f, g, v) = g(y)
+                respects_equivalence(g, r, s) = forall(a: A, b: A) {
+                    r(a, b) implies s(g(a), g(b))
+                }
+                s(g(x), g(y))
+                s(function_pushforward(f, g, u), function_pushforward(f, g, v))
+            }
+        }
+        respects_equivalence(function_pushforward(f, g), relation_pushforward(f, r), s)
+    }
 }
 
 /// Respecting a relation is the same as landing inside the pullback relation.

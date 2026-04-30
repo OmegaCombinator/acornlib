@@ -248,6 +248,95 @@ theorem surjective_fn_has_preimage[T, U](f: T -> U, y: U) {
     }
 }
 
+/// A chosen preimage of a point under a surjective function.
+let inverse_fn_at[T: Inhabited, U](f: T -> U, y: U) -> result: T satisfy {
+    is_surjective_fn(f) implies f(result) = y
+} by {
+    if is_surjective_fn(f) {
+        surjective_fn_has_preimage(f, y)
+        let x: T satisfy {
+            f(x) = y
+        }
+        f(x) = y
+    }
+}
+
+/// A chosen inverse for a surjective function.
+define inverse_fn[T: Inhabited, U](f: T -> U, y: U) -> T {
+    inverse_fn_at(f, y)
+}
+
+/// A chosen inverse is a right inverse for a surjective function.
+theorem inverse_fn_apply_of_surjective[T: Inhabited, U](f: T -> U, y: U) {
+    is_surjective_fn(f) implies f(inverse_fn(f, y)) = y
+} by {
+    if is_surjective_fn(f) {
+        inverse_fn(f, y) = inverse_fn_at(f, y)
+        f(inverse_fn(f, y)) = y
+    }
+}
+
+/// A chosen inverse gives back the original point for a bijective function.
+theorem inverse_fn_apply_image_of_bijection[T: Inhabited, U](f: T -> U, x: T) {
+    is_bijection_fn(f) implies inverse_fn(f, f(x)) = x
+} by {
+    if is_bijection_fn(f) {
+        bijection_fn_is_surjective(f)
+        is_surjective_fn(f)
+        inverse_fn_apply_of_surjective(f, f(x))
+        f(inverse_fn(f, f(x))) = f(x)
+        bijection_fn_is_injective(f)
+        is_injective_fn(f)
+        injective_fn_eq(f, inverse_fn(f, f(x)), x)
+        inverse_fn(f, f(x)) = x
+    }
+}
+
+/// The chosen inverse of a bijection is injective.
+theorem inverse_fn_is_injective_of_bijection[T: Inhabited, U](f: T -> U) {
+    is_bijection_fn(f) implies is_injective_fn(inverse_fn(f))
+} by {
+    if is_bijection_fn(f) {
+        bijection_fn_is_surjective(f)
+        is_surjective_fn(f)
+        forall(y1: U, y2: U) {
+            if inverse_fn(f, y1) = inverse_fn(f, y2) {
+                inverse_fn_apply_of_surjective(f, y1)
+                inverse_fn_apply_of_surjective(f, y2)
+                f(inverse_fn(f, y1)) = y1
+                f(inverse_fn(f, y2)) = y2
+                y1 = y2
+            }
+        }
+    }
+}
+
+/// The chosen inverse of a bijection is surjective.
+theorem inverse_fn_is_surjective_of_bijection[T: Inhabited, U](f: T -> U) {
+    is_bijection_fn(f) implies is_surjective_fn(inverse_fn(f))
+} by {
+    if is_bijection_fn(f) {
+        forall(x: T) {
+            exists(y: U) {
+                y = f(x) and inverse_fn(f, y) = x
+            }
+        }
+    }
+}
+
+/// The chosen inverse of a bijection is bijective.
+theorem inverse_fn_is_bijection_of_bijection[T: Inhabited, U](f: T -> U) {
+    is_bijection_fn(f) implies is_bijection_fn(inverse_fn(f))
+} by {
+    if is_bijection_fn(f) {
+        inverse_fn_is_injective_of_bijection(f)
+        is_injective_fn(inverse_fn(f))
+        inverse_fn_is_surjective_of_bijection(f)
+        is_surjective_fn(inverse_fn(f))
+        is_bijection_fn(inverse_fn(f))
+    }
+}
+
 /// Composition preserves surjectivity.
 theorem compose_surjective_fn[T, U, V](f: U -> V, g: T -> U) {
     is_surjective_fn(f) and is_surjective_fn(g) implies is_surjective_fn(compose(f, g))
