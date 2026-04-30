@@ -33,6 +33,18 @@
 {"goal":"implies_self","proof":["a","not a"]}
 {"goal":"implies_eq_not_or","proof":[]}
 {"goal":"not_implies","proof":[]}
+{"goal":"a","proof":[]}
+{"goal":"false_elim","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"not_and_self","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"not_self_and","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"a","proof":[]}
+{"goal":"by_contradiction","proof":[]}
+{"goal":"a or not a","proof":[]}
+{"goal":"a or not a","proof":[]}
+{"goal":"excluded_middle","proof":[]}
 {"goal":"contrapose","proof":[]}
 {"goal":"contrapose_iff","proof":[]}
 {"goal":"implies_contrapositive","proof":["function(x0: Bool, x1: Bool) { (not x0 or x1) = (x1 or not x0) }(a, b)"]}
@@ -42,3 +54,92 @@
 {"goal":"eq_false_intro","proof":[]}
 {"goal":"and_or_distrib_left","proof":[]}
 {"goal":"or_and_distrib_left","proof":[]}
+{"goal":"a and c or (b and c)","proof":[]}
+{"goal":"b","proof":[]}
+{"goal":"a and c or (b and c)","proof":[]}
+{"goal":"a or b and c","proof":[]}
+{"goal":"and_or_distrib_right","proof":[]}
+{"goal":"a or c and (b or c)","proof":[]}
+{"goal":"a and b or c","proof":[]}
+{"goal":"a","proof":[]}
+{"goal":"b","proof":[]}
+{"goal":"a and b or c","proof":[]}
+{"goal":"or_and_distrib_right","proof":[]}
+{"goal":"(a implies b) and (a implies c)","proof":[]}
+{"goal":"b and c","proof":[]}
+{"goal":"implies_and","proof":[]}
+{"goal":"(a implies c) and (b implies c)","proof":[]}
+{"goal":"c","proof":[]}
+{"goal":"or_implies","proof":[]}
+{"goal":"not a or b","proof":[]}
+{"goal":"not a or b","proof":[]}
+{"goal":"b","proof":[]}
+{"goal":"implies_eq_or_not","proof":[]}
+{"goal":"a","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"b","proof":[]}
+{"goal":"false","proof":[]}
+{"goal":"not_eq_not","proof":[]}
+{"goal":"a","proof":[]}
+{"goal":"c","proof":[]}
+{"goal":"b","proof":[]}
+{"goal":"c","proof":[]}
+{"goal":"eq_implies_left","proof":[]}
+{"goal":"a","proof":[]}
+{"goal":"b","proof":[]}
+{"goal":"b","proof":[]}
+{"goal":"a","proof":[]}
+{"goal":"eq_implies_right","proof":[]}
+{"goal":"p(x)","proof":["function(x0: T) { p(x0) and q(x0) }(x)"]}
+{"goal":"q(x)","proof":["function(x0: T) { p(x0) and q(x0) }(x)"]}
+{"goal":"p(x) and q(x)","proof":["(forall(x0: T) { q(x0) } = true)","(forall(x1: T) { p(x1) } = true)","function(x0: T) { p(x0) }(x)","function(x0: T) { q(x0) }(x)"]}
+{"goal":"forall_and_distrib","proof":["(forall(x0: T) { p(x0) } and forall(x1: T) { q(x1) } or forall(x2: T) { p(x2) and q(x2) } = true)","not (forall(x3: T) { p(x3) } and forall(x4: T) { q(x4) }) or not forall(x5: T) { p(x5) and q(x5) }","(forall(x6: T) { q(x6) } = true)","(forall(x7: T) { p(x7) and q(x7) } = true or exists(k0: T) { not p(k0) })","not forall(x8: T) { p(x8) and q(x8) } or not forall(x9: T) { p(x9) }","let w0: T satisfy { not p(w0) }","function(x0: T) { forall(x1: T) { p(x1) } = true or (p(x0) and q(x0)) }(w0)"]}
+{"goal":"p(x)","proof":["function(x0: T) { p(x0) and q(x0) }(x)"]}
+{"goal":"forall_and_left","proof":["let w0: T satisfy { not p(w0) or not q(w0) }","function(x0: T) { p(x0) and q(x0) }(w0)"]}
+{"goal":"q(x)","proof":["function(x0: T) { p(x0) and q(x0) }(x)"]}
+{"goal":"forall_and_right","proof":["let w0: T satisfy { not p(w0) or not q(w0) }","function(x0: T) { p(x0) and q(x0) }(w0)"]}
+{"goal":"p(x) and q(x)","proof":["(forall(x0: T) { q(x0) } = true)","(forall(x1: T) { p(x1) } = true)","function(x0: T) { p(x0) }(x)","function(x0: T) { q(x0) }(x)"]}
+{"goal":"forall_and_intro","proof":[]}
+{"goal":"exists(k0: T) { p(k0) or q(k0) }","proof":[]}
+{"goal":"exists(k0: T) { k0 = x and p(k0) }","proof":[]}
+{"goal":"q(x)","proof":[]}
+{"goal":"exists(k0: T) { k0 = x and q(k0) }","proof":[]}
+{"goal":"exists_or_forward","proof":["let w0: T satisfy { p(w0) or q(w0) }","(forall(x0: T) { not q(x0) } = true)","(forall(x1: T) { not p(x1) } = true)","function(x0: T) { not p(x0) }(w0)","function(x0: T) { not q(x0) }(w0)"]}
+{"goal":"exists(k0: T) { p(k0) }","proof":[]}
+{"goal":"exists(k0: T) { k0 = x and (p(k0) or q(k0)) }","proof":[]}
+{"goal":"exists_or_backward_left","proof":["let w0: T satisfy { p(w0) }","function(x0: T) { not p(x0) and not q(x0) }(w0)"]}
+{"goal":"exists(k0: T) { q(k0) }","proof":[]}
+{"goal":"exists(k0: T) { k0 = x and (p(k0) or q(k0)) }","proof":[]}
+{"goal":"exists_or_backward_right","proof":["let w0: T satisfy { q(w0) }","function(x0: T) { not p(x0) and not q(x0) }(w0)"]}
+{"goal":"exists_or_backward","proof":["function[T0](x0: T0 -> Bool, x1: T0 -> Bool) { not exists(k0: T0) { x0(k0) } or exists(k1: T0) { x1(k1) or x0(k1) } }[T](q, p)","function[T0](x0: T0 -> Bool, x1: T0 -> Bool) { not exists(k0: T0) { x0(k0) } or exists(k1: T0) { x0(k1) or x1(k1) } }[T](p, q)"]}
+{"goal":"exists_or_distrib","proof":["not (forall(x0: T) { not p(x0) } and forall(x1: T) { not q(x1) }) or exists(k0: T) { p(k0) or q(k0) }","not exists(k1: T) { p(k1) or q(k1) } or (forall(x2: T) { not p(x2) } and forall(x3: T) { not q(x3) })","exists(k2: T) { p(k2) or q(k2) } or forall(x4: T) { not q(x4) } = true","exists(k3: T) { p(k3) or q(k3) } or forall(x5: T) { not p(x5) } = true","let w0: T satisfy { p(w0) or q(w0) }","(forall(x6: T) { not p(x6) } = true)","(forall(x7: T) { not q(x7) } = true)","function(x0: T) { not q(x0) }(w0)","function(x0: T) { not p(x0) }(w0)"]}
+{"goal":"p(x)","proof":["function(x0: T) { not a or p(x0) }(x)"]}
+{"goal":"a implies p(x)","proof":["(forall(x0: T) { p(x0) } = true)","function(x0: T) { p(x0) }(x)"]}
+{"goal":"forall_implies_const_left","proof":["not (a and exists(k0: T) { not p(k0) }) or forall(x0: T) { not a or p(x0) } = true","not forall(x1: T) { not a or p(x1) } or (a and exists(k1: T) { not p(k1) })","(forall(x2: T) { not a or p(x2) } = true or a)","a","let w0: T satisfy { not p(w0) }","function(x0: T) { not forall(x1: T) { not a or p(x1) } or not a or p(x0) }(w0)"]}
+{"goal":"p(x)","proof":["function(x0: T) { not a or p(x0) }(x)"]}
+{"goal":"forall_implies_const_left_forward","proof":["let w0: T satisfy { not p(w0) }","function(x0: T) { not a or p(x0) }(w0)"]}
+{"goal":"a implies p(x)","proof":["(forall(x0: T) { p(x0) } = true)","function(x0: T) { p(x0) }(x)"]}
+{"goal":"forall_implies_const_left_backward","proof":["let w0: T satisfy { not p(w0) }","(forall(x0: T) { p(x0) } = true)","not p(w0)","function(x0: T) { p(x0) }(w0)"]}
+{"goal":"exists(k0: T) { p(k0) }","proof":[]}
+{"goal":"a","proof":["function(x0: T) { not p(x0) or a }(x)"]}
+{"goal":"p(x) implies a","proof":["not exists(k0: T) { p(k0) }","function(x0: T) { not p(x0) }(x)"]}
+{"goal":"forall_implies_const_right","proof":[]}
+{"goal":"exists(k0: T) { p(k0) }","proof":[]}
+{"goal":"a","proof":["function(x0: T) { not p(x0) or a }(x)"]}
+{"goal":"forall_implies_const_right_forward","proof":["let w0: T satisfy { p(w0) }","function(x0: T) { not p(x0) or a }(w0)"]}
+{"goal":"p(x) implies a","proof":["not exists(k0: T) { p(k0) }","function(x0: T) { not p(x0) }(x)"]}
+{"goal":"forall_implies_const_right_backward","proof":[]}
+{"goal":"exists(k0: T) { a and p(k0) }","proof":[]}
+{"goal":"exists(k0: T) { k0 = x and p(k0) }","proof":[]}
+{"goal":"exists_and_const_left_forward","proof":["let w0: T satisfy { a and p(w0) }","a","not exists(k0: T) { p(k0) }","function(x0: T) { not p(x0) }(w0)"]}
+{"goal":"exists(k0: T) { p(k0) }","proof":[]}
+{"goal":"exists(k0: T) { k0 = x and a and p(k0) }","proof":[]}
+{"goal":"exists_and_const_left_backward","proof":["a","let w0: T satisfy { p(w0) }","function(x0: T) { not (a and p(x0)) }(w0)"]}
+{"goal":"exists_and_const_left","proof":[]}
+{"goal":"exists(k0: T) { p(k0) and a }","proof":[]}
+{"goal":"exists(k0: T) { k0 = x and p(k0) }","proof":[]}
+{"goal":"exists_and_const_right_forward","proof":["let w0: T satisfy { p(w0) and a }","a","not exists(k0: T) { p(k0) }","function(x0: T) { not p(x0) }(w0)"]}
+{"goal":"exists(k0: T) { p(k0) }","proof":[]}
+{"goal":"exists(k0: T) { k0 = x and p(k0) and a }","proof":[]}
+{"goal":"exists_and_const_right_backward","proof":["a","let w0: T satisfy { p(w0) }","function(x0: T) { not (p(x0) and a) }(w0)"]}
+{"goal":"exists_and_const_right","proof":[]}
