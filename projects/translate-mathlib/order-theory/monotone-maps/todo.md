@@ -10,3 +10,4 @@ Goal: give order-preserving maps a reusable interface.
 Status:
 
 - `src/order_maps.ac` now defines `is_order_surjection`, projection lemmas, identity order surjection, and composition of order-preserving surjections.
+- `src/order_maps.ac` now has strict-order preservation and reflection for order embeddings, interval image lemmas for order embeddings, and antitone interval image lemmas with reversed endpoints.
