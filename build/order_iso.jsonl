@@ -275,11 +275,11 @@
 {"goal":"right_open_interval(e.map(a), e.map(b), e.map(x))","proof":[]}
 {"goal":"right_open_interval(e.map(a), e.map(b), e.map(x)) = right_open_interval(a, b, x)","proof":[]}
 {"goal":"order_iso_right_open_interval_iff","proof":[]}
-{"goal":"e.map(a.min(b)) = e.map(a).min(e.map(b))","proof":["not is_order_embedding[A, B](e.map)"]}
+{"goal":"e.map(a.min(b)) = e.map(a).min(e.map(b))","proof":[]}
 {"goal":"order_iso_min_image","proof":[]}
-{"goal":"e.map(a.max(b)) = e.map(a).max(e.map(b))","proof":["not is_order_embedding[A, B](e.map)"]}
+{"goal":"e.map(a.max(b)) = e.map(a).max(e.map(b))","proof":[]}
 {"goal":"order_iso_max_image","proof":[]}
-{"goal":"e.inv(a.min(b)) = e.inv(a).min(e.inv(b))","proof":["not is_order_embedding[B, A](e.inv)"]}
+{"goal":"e.inv(a.min(b)) = e.inv(a).min(e.inv(b))","proof":[]}
 {"goal":"order_iso_inv_min_image","proof":[]}
-{"goal":"e.inv(a.max(b)) = e.inv(a).max(e.inv(b))","proof":["not is_order_embedding[B, A](e.inv)"]}
+{"goal":"e.inv(a.max(b)) = e.inv(a).max(e.inv(b))","proof":[]}
 {"goal":"order_iso_inv_max_image","proof":[]}
