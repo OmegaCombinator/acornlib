@@ -3,7 +3,6 @@
 Goal: make elementwise order manipulation routine rather than bespoke.
 
 - [ ] Complete the API for `min` and `max`
-- [ ] Add lemmas for `min`/`max` associativity, commutativity, and idempotence
 - [ ] Decide the exact interval preimage API for plain monotone maps; order-embedding interval preimages are in place
 - [ ] Add `clamp`-style constructions where useful
 - [ ] Connect list minima/maxima to order-theoretic interval language
@@ -12,3 +11,5 @@ Goal: make elementwise order manipulation routine rather than bespoke.
 Status:
 
 - `src/order_cases.ac` now includes `>=` and `>` oriented aliases for the existing `min`/`max` lower-bound and upper-bound characterizations.
+- `src/order.ac` now has central `min`/`max` commutativity aliases, associativity variants, right-commutativity, absorption variants, and two-sided plus one-sided monotonicity lemmas.
+- `src/order_interval.ac` now has endpoint consequences, endpoint membership, interval-subset, interval-bound monotonicity, and bounded-below / bounded-above projection lemmas.

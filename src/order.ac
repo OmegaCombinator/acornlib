@@ -1339,6 +1339,20 @@ theorem max_symm[L: LinearOrder](a: L, b: L) {
     }
 }
 
+/// The minimum operation is commutative.
+theorem min_comm[L: LinearOrder](a: L, b: L) {
+    a.min(b) = b.min(a)
+} by {
+    min_symm(a, b)
+}
+
+/// The maximum operation is commutative.
+theorem max_comm[L: LinearOrder](a: L, b: L) {
+    a.max(b) = b.max(a)
+} by {
+    max_symm(a, b)
+}
+
 theorem min_lte_left[L: LinearOrder](a: L, b: L) {
     a.min(b) <= a
 } by {
@@ -1879,6 +1893,82 @@ theorem max_lte_iff[L: LinearOrder](a: L, b: L, c: L) {
     a.max(b) <= c = (a <= c and b <= c)
 }
 
+/// The minimum operation is monotone in both arguments.
+theorem min_lte_min[L: LinearOrder](a: L, b: L, c: L, d: L) {
+    a <= b and c <= d implies a.min(c) <= b.min(d)
+} by {
+    if a <= b and c <= d {
+        min_lte_left(a, c)
+        a.min(c) <= a
+        lte_trans(a.min(c), a, b)
+        a.min(c) <= b
+        min_lte_right(a, c)
+        a.min(c) <= c
+        lte_trans(a.min(c), c, d)
+        a.min(c) <= d
+        lte_min_of_bounds(a.min(c), b, d)
+        a.min(c) <= b.min(d)
+    }
+}
+
+/// The maximum operation is monotone in both arguments.
+theorem max_lte_max[L: LinearOrder](a: L, b: L, c: L, d: L) {
+    a <= b and c <= d implies a.max(c) <= b.max(d)
+} by {
+    if a <= b and c <= d {
+        lte_max_left(b, d)
+        b <= b.max(d)
+        lte_trans(a, b, b.max(d))
+        a <= b.max(d)
+        lte_max_right(b, d)
+        d <= b.max(d)
+        lte_trans(c, d, b.max(d))
+        c <= b.max(d)
+        max_lte_of_upper_bounds(a, c, b.max(d))
+        a.max(c) <= b.max(d)
+    }
+}
+
+/// The minimum operation is monotone in the left argument.
+theorem min_lte_min_left[L: LinearOrder](a: L, b: L, c: L) {
+    a <= b implies a.min(c) <= b.min(c)
+} by {
+    if a <= b {
+        min_lte_min(a, b, c, c)
+        a.min(c) <= b.min(c)
+    }
+}
+
+/// The minimum operation is monotone in the right argument.
+theorem min_lte_min_right[L: LinearOrder](a: L, b: L, c: L) {
+    b <= c implies a.min(b) <= a.min(c)
+} by {
+    if b <= c {
+        min_lte_min(a, a, b, c)
+        a.min(b) <= a.min(c)
+    }
+}
+
+/// The maximum operation is monotone in the left argument.
+theorem max_lte_max_left[L: LinearOrder](a: L, b: L, c: L) {
+    a <= b implies a.max(c) <= b.max(c)
+} by {
+    if a <= b {
+        max_lte_max(a, b, c, c)
+        a.max(c) <= b.max(c)
+    }
+}
+
+/// The maximum operation is monotone in the right argument.
+theorem max_lte_max_right[L: LinearOrder](a: L, b: L, c: L) {
+    b <= c implies a.max(b) <= a.max(c)
+} by {
+    if b <= c {
+        max_lte_max(a, a, b, c)
+        a.max(b) <= a.max(c)
+    }
+}
+
 /// A minimum is below a value only if at least one argument is below that value.
 theorem min_lte_imp[L: LinearOrder](a: L, b: L, c: L) {
     a.min(b) <= c implies a <= c or b <= c
@@ -2008,4 +2098,152 @@ theorem max_gte_iff[L: LinearOrder](a: L, b: L, c: L) {
     max_gte_imp(a, b, c)
     max_gte_of_left_or_right(a, b, c)
     a.max(b) >= c = (a >= c or b >= c)
+}
+
+/// The minimum operation is associative.
+theorem min_assoc[L: LinearOrder](a: L, b: L, c: L) {
+    a.min(b.min(c)) = a.min(b).min(c)
+} by {
+    let left = a.min(b.min(c))
+    let right = a.min(b).min(c)
+    min_lte_left(a, b.min(c))
+    left <= a
+    min_lte_right(a, b.min(c))
+    left <= b.min(c)
+    min_lte_left(b, c)
+    b.min(c) <= b
+    lte_trans(left, b.min(c), b)
+    left <= b
+    lte_min_of_bounds(left, a, b)
+    left <= a.min(b)
+    min_lte_right(b, c)
+    b.min(c) <= c
+    lte_trans(left, b.min(c), c)
+    left <= c
+    lte_min_of_bounds(left, a.min(b), c)
+    left <= right
+    min_lte_left(a.min(b), c)
+    right <= a.min(b)
+    min_lte_left(a, b)
+    a.min(b) <= a
+    lte_trans(right, a.min(b), a)
+    right <= a
+    min_lte_right(a, b)
+    a.min(b) <= b
+    lte_trans(right, a.min(b), b)
+    right <= b
+    min_lte_right(a.min(b), c)
+    right <= c
+    lte_min_of_bounds(right, b, c)
+    right <= b.min(c)
+    lte_min_of_bounds(right, a, b.min(c))
+    right <= left
+    lte_antisymm(left, right)
+}
+
+/// The maximum operation is associative.
+theorem max_assoc[L: LinearOrder](a: L, b: L, c: L) {
+    a.max(b.max(c)) = a.max(b).max(c)
+} by {
+    let left = a.max(b.max(c))
+    let right = a.max(b).max(c)
+    lte_max_left(a, b.max(c))
+    a <= left
+    lte_max_right(a, b.max(c))
+    b.max(c) <= left
+    lte_max_left(b, c)
+    b <= b.max(c)
+    lte_trans(b, b.max(c), left)
+    b <= left
+    max_lte_of_upper_bounds(a, b, left)
+    a.max(b) <= left
+    lte_max_right(b, c)
+    c <= b.max(c)
+    lte_trans(c, b.max(c), left)
+    c <= left
+    max_lte_of_upper_bounds(a.max(b), c, left)
+    right <= left
+    lte_max_left(a.max(b), c)
+    a.max(b) <= right
+    lte_max_left(a, b)
+    a <= a.max(b)
+    lte_trans(a, a.max(b), right)
+    a <= right
+    lte_max_right(a, b)
+    b <= a.max(b)
+    lte_trans(b, a.max(b), right)
+    b <= right
+    lte_max_right(a.max(b), c)
+    c <= right
+    max_lte_of_upper_bounds(b, c, right)
+    b.max(c) <= right
+    max_lte_of_upper_bounds(a, b.max(c), right)
+    left <= right
+    lte_antisymm(left, right)
+}
+
+/// The minimum operation is associative in the reversed nesting.
+theorem min_assoc_rev[L: LinearOrder](a: L, b: L, c: L) {
+    a.min(b).min(c) = a.min(b.min(c))
+} by {
+    min_assoc(a, b, c)
+}
+
+/// The maximum operation is associative in the reversed nesting.
+theorem max_assoc_rev[L: LinearOrder](a: L, b: L, c: L) {
+    a.max(b).max(c) = a.max(b.max(c))
+} by {
+    max_assoc(a, b, c)
+}
+
+/// The outer left argument of a nested minimum may be exchanged.
+theorem min_left_comm[L: LinearOrder](a: L, b: L, c: L) {
+    a.min(b.min(c)) = b.min(a.min(c))
+} by {
+    min_assoc(a, b, c)
+    min_comm(a, b)
+    min_assoc(b, a, c)
+}
+
+/// The outer left argument of a nested maximum may be exchanged.
+theorem max_left_comm[L: LinearOrder](a: L, b: L, c: L) {
+    a.max(b.max(c)) = b.max(a.max(c))
+} by {
+    max_assoc(a, b, c)
+    max_comm(a, b)
+    max_assoc(b, a, c)
+}
+
+/// The two right arguments of an iterated minimum may be exchanged.
+theorem min_right_comm[L: LinearOrder](a: L, b: L, c: L) {
+    a.min(b).min(c) = a.min(c).min(b)
+} by {
+    min_assoc_rev(a, b, c)
+    min_comm(b, c)
+    min_assoc(a, c, b)
+}
+
+/// The two right arguments of an iterated maximum may be exchanged.
+theorem max_right_comm[L: LinearOrder](a: L, b: L, c: L) {
+    a.max(b).max(c) = a.max(c).max(b)
+} by {
+    max_assoc_rev(a, b, c)
+    max_comm(b, c)
+    max_assoc(a, c, b)
+}
+
+/// A minimum absorbs a maximum with the same right argument.
+theorem min_absorb_max_right[L: LinearOrder](a: L, b: L) {
+    a.min(b.max(a)) = a
+} by {
+    max_comm(b, a)
+    min_absorb_max(a, b)
+}
+
+/// A maximum absorbs a minimum with the same right argument.
+theorem max_absorb_min_right[L: LinearOrder](a: L, b: L) {
+    a.max(b.min(a)) = a
+} by {
+    min_comm(b, a)
+    max_absorb_min(a, b)
 }
