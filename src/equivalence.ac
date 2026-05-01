@@ -1385,3 +1385,131 @@ theorem quotient_subset_preimage_image[T](qrel: QuotientRelation[T], s: Set[T]) 
     }
 }
 
+/// For saturated representative subsets, the preimage of the image is contained in the original.
+theorem saturated_preimage_image_subset[T](qrel: QuotientRelation[T], s: Set[T]) {
+    is_saturated_under(s, qrel.rel) implies
+    forall(x: T) {
+        quotient_preimage_set(qrel, quotient_image_set(qrel, s)).contains(x) implies s.contains(x)
+    }
+} by {
+    if is_saturated_under(s, qrel.rel) {
+        forall(x: T) {
+            if quotient_preimage_set(qrel, quotient_image_set(qrel, s)).contains(x) {
+                quotient_preimage_image_contains_eq(qrel, s, x)
+                let a: T satisfy {
+                    s.contains(a) and quotient_projection(qrel, a) = quotient_projection(qrel, x)
+                }
+                rel_of_quotient_projection_eq(qrel, a, x)
+                saturated_step(s, qrel.rel, a, x)
+                s.contains(x)
+            }
+        }
+    }
+}
+
+/// Pointwise membership equality for the preimage-image of a saturated set.
+theorem saturated_preimage_image_iff[T](qrel: QuotientRelation[T], s: Set[T], x: T) {
+    is_saturated_under(s, qrel.rel) implies
+        quotient_preimage_set(qrel, quotient_image_set(qrel, s)).contains(x) = s.contains(x)
+} by {
+    if is_saturated_under(s, qrel.rel) {
+        if s.contains(x) {
+            quotient_subset_preimage_image(qrel, s)
+            quotient_preimage_set(qrel, quotient_image_set(qrel, s)).contains(x)
+        }
+        if quotient_preimage_set(qrel, quotient_image_set(qrel, s)).contains(x) {
+            saturated_preimage_image_subset(qrel, s)
+            s.contains(x)
+        }
+    }
+}
+
+/// The preimage of the image of a saturated set recovers the original set.
+theorem quotient_preimage_image_of_saturated[T](qrel: QuotientRelation[T], s: Set[T]) {
+    is_saturated_under(s, qrel.rel) implies
+        quotient_preimage_set(qrel, quotient_image_set(qrel, s)) = s
+} by {
+    if is_saturated_under(s, qrel.rel) {
+        let u = quotient_preimage_set(qrel, quotient_image_set(qrel, s))
+        forall(x: T) {
+            saturated_preimage_image_iff(qrel, s, x)
+            u.contains(x) = s.contains(x)
+        }
+        set_ext(u, s)
+    }
+}
+
+/// A subset of `qrel`-classes is contained in the image of its preimage.
+theorem on_relation_subset_image_preimage[T](qrel: QuotientRelation[T], qs: Set[Quotient[T]]) {
+    forall(q: Quotient[T]) {
+        qs.contains(q) and q.rel = qrel.rel implies
+            quotient_image_set(qrel, quotient_preimage_set(qrel, qs)).contains(q)
+    }
+} by {
+    forall(q: Quotient[T]) {
+        if qs.contains(q) and q.rel = qrel.rel {
+            quotient_projection_surjective_on_relation(qrel, q)
+            let a: T satisfy {
+                quotient_projection(qrel, a) = q
+            }
+            qs.contains(quotient_projection(qrel, a))
+            quotient_preimage_set_contains_eq(qrel, qs, a)
+            quotient_preimage_set(qrel, qs).contains(a)
+            exists(b: T) {
+                b = a and quotient_preimage_set(qrel, qs).contains(b) and quotient_projection(qrel, b) = q
+            }
+            quotient_image_set_contains_eq(qrel, quotient_preimage_set(qrel, qs), q)
+            quotient_image_set(qrel, quotient_preimage_set(qrel, qs)).contains(q)
+        }
+    }
+}
+
+/// Combined pointwise equivalence: membership of qrel-classes in qs equals membership in the image of the preimage.
+theorem on_relation_image_preimage_iff[T](qrel: QuotientRelation[T], qs: Set[Quotient[T]], q: Quotient[T]) {
+    qs.contains(q) implies q.rel = qrel.rel
+    implies
+    quotient_image_set(qrel, quotient_preimage_set(qrel, qs)).contains(q) = qs.contains(q)
+} by {
+    if qs.contains(q) implies q.rel = qrel.rel {
+        if qs.contains(q) {
+            q.rel = qrel.rel
+            quotient_projection_surjective_on_relation(qrel, q)
+            let a: T satisfy {
+                quotient_projection(qrel, a) = q
+            }
+            qs.contains(quotient_projection(qrel, a))
+            quotient_preimage_set_contains_eq(qrel, qs, a)
+            quotient_preimage_set(qrel, qs).contains(a)
+            exists(b: T) {
+                b = a and quotient_preimage_set(qrel, qs).contains(b) and quotient_projection(qrel, b) = q
+            }
+            quotient_image_set_contains_eq(qrel, quotient_preimage_set(qrel, qs), q)
+            quotient_image_set(qrel, quotient_preimage_set(qrel, qs)).contains(q)
+        }
+        if quotient_image_set(qrel, quotient_preimage_set(qrel, qs)).contains(q) {
+            quotient_image_set_contains_eq(qrel, quotient_preimage_set(qrel, qs), q)
+            let a: T satisfy {
+                quotient_preimage_set(qrel, qs).contains(a) and quotient_projection(qrel, a) = q
+            }
+            quotient_preimage_set_contains_eq(qrel, qs, a)
+            qs.contains(quotient_projection(qrel, a))
+            qs.contains(q)
+        }
+    }
+}
+
+/// The image of the preimage of a quotient subset of `qrel`-classes recovers it.
+theorem quotient_image_preimage_on_relation[T](qrel: QuotientRelation[T], qs: Set[Quotient[T]]) {
+    (forall(q: Quotient[T]) { qs.contains(q) implies q.rel = qrel.rel })
+    implies quotient_image_set(qrel, quotient_preimage_set(qrel, qs)) = qs
+} by {
+    if forall(q: Quotient[T]) { qs.contains(q) implies q.rel = qrel.rel } {
+        let u = quotient_image_set(qrel, quotient_preimage_set(qrel, qs))
+        forall(q: Quotient[T]) {
+            on_relation_image_preimage_iff(qrel, qs, q)
+            u.contains(q) = qs.contains(q)
+        }
+        set_ext(u, qs)
+    }
+}
+
