@@ -19,11 +19,11 @@
 {"goal":"f(x) <= f(y)","proof":[]}
 {"goal":"order_embedding_is_monotone","proof":["function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { forall(x1: T0, x2: T0) { not x1 <= x2 or x0(x1) <= x0(x2) } = is_monotone[T0, T1](x0) }[A, B](f)"]}
 {"goal":"is_order_surjection[A, B](f) = (is_monotone[A, B](f) and is_surjective_fn[A, B](f))","proof":["function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { (is_monotone[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_order_surjection[T0, T1](x0) }[A, B](f)"]}
-{"goal":"is_monotone[A, B](f)","proof":["is_monotone[A, B](f) and is_surjective_fn[A, B](f)"]}
-{"goal":"order_surjection_is_monotone","proof":["not is_order_surjection[A, B](f)"]}
+{"goal":"is_monotone[A, B](f)","proof":[]}
+{"goal":"order_surjection_is_monotone","proof":[]}
 {"goal":"is_order_surjection[A, B](f) = (is_monotone[A, B](f) and is_surjective_fn[A, B](f))","proof":["function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { (is_monotone[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_order_surjection[T0, T1](x0) }[A, B](f)"]}
-{"goal":"is_surjective_fn[A, B](f)","proof":["is_monotone[A, B](f) and is_surjective_fn[A, B](f)"]}
-{"goal":"order_surjection_is_surjective","proof":["not is_order_surjection[A, B](f)"]}
+{"goal":"is_surjective_fn[A, B](f)","proof":[]}
+{"goal":"order_surjection_is_surjective","proof":[]}
 {"goal":"f(x) <= f(y)","proof":[]}
 {"goal":"x <= y","proof":[]}
 {"goal":"f(y) <= f(x)","proof":[]}
@@ -46,11 +46,11 @@
 {"goal":"identity_fn(y) = y","proof":["function[T0](x0: T0) { identity_fn[T0](x0) = x0 }[A](y)"]}
 {"goal":"identity_fn(x) <= identity_fn(y) = x <= y","proof":[]}
 {"goal":"identity_is_order_embedding","proof":["function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { forall(x1: T0, x2: T0) { x1 <= x2 = x0(x1) <= x0(x2) } = is_order_embedding[T0, T1](x0) }[A, A](identity_fn[A])","let w0: A satisfy { exists(k0: A) { w0 <= k0 != identity_fn(w0) <= identity_fn(k0) } }","let w1: A satisfy { w0 <= w1 != identity_fn(w0) <= identity_fn(w1) }","function(x0: A, x1: A) { identity_fn(x0) <= identity_fn(x1) = x0 <= x1 }(w0, w1)"]}
-{"goal":"exists(k0: A) { k0 = y and identity_fn(k0) = y }","proof":["function[T0](x0: T0) { identity_fn[T0](x0) = x0 }[A](y)","function(x0: A) { not (x0 = y and identity_fn(x0) = y) }(y)","function(x0: A) { identity_fn(x0) != y or y != x0 }(y)"]}
+{"goal":"exists(k0: A) { k0 = y and identity_fn(k0) = y }","proof":["function[T0](x0: T0) { identity_fn[T0](x0) = x0 }[A](y)"]}
 {"goal":"identity_is_surjective_fn","proof":["function[T0, T1](x0: T1 -> T0) { forall(x1: T0) { exists(k0: T1) { x0(k0) = x1 } } = is_surjective_fn[T1, T0](x0) }[A, A](identity_fn[A])","let w0: A satisfy { forall(x0: A) { identity_fn(x0) != w0 } }","function(x0: A) { exists(k0: A) { x0 = k0 and identity_fn(k0) = x0 } }(w0)","let w1: A satisfy { w1 = w0 and identity_fn(w1) = w0 }","let w2(arg0: A) -> w2_result: A satisfy { arg0 = w2_result and identity_fn(w2_result) = arg0 }","function(x0: A) { w2(x0) = x0 and identity_fn(w2(x0)) = x0 }(w0)","function(x0: A) { identity_fn(w2(x0)) = x0 }(w0)","(forall(x1: A) { identity_fn(x1) != w0 } = true)","function(x0: A) { identity_fn(x0) != w0 }(w2(w0))"]}
 {"goal":"is_monotone[A, A](identity_fn[A])","proof":[]}
 {"goal":"is_surjective_fn[A, A](identity_fn[A])","proof":[]}
-{"goal":"is_order_surjection[A, A](identity_fn[A])","proof":["function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { (is_monotone[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_order_surjection[T0, T1](x0) }[A, A](identity_fn[A])","function[T0: PartialOrder] { is_surjective_fn[T0, T0](identity_fn[T0]) }[A]","function[T0: PartialOrder] { is_monotone[T0, T0](identity_fn[T0]) }[A]","not (is_monotone[A, A](identity_fn[A]) and is_surjective_fn[A, A](identity_fn[A]))"]}
+{"goal":"is_order_surjection[A, A](identity_fn[A])","proof":["function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { (is_monotone[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_order_surjection[T0, T1](x0) }[A, A](identity_fn[A])"]}
 {"goal":"identity_is_order_surjection","proof":[]}
 {"goal":"g(x) <= g(y)","proof":[]}
 {"goal":"f(g(x)) <= f(g(y))","proof":[]}
@@ -58,14 +58,14 @@
 {"goal":"compose[A, B, C](f, g, y) = f(g(y))","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[A, B, C](f, g, y)"]}
 {"goal":"compose[A, B, C](f, g)(x) <= compose[A, B, C](f, g)(y)","proof":[]}
 {"goal":"monotone_compose","proof":["function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { forall(x1: T0, x2: T0) { not x1 <= x2 or x0(x1) <= x0(x2) } = is_monotone[T0, T1](x0) }[A, C](compose[A, B, C](f, g))"]}
-{"goal":"is_monotone[A, B](g)","proof":["not is_order_surjection[A, B](g)"]}
-{"goal":"is_monotone[B, C](f)","proof":["not is_order_surjection[B, C](f)"]}
-{"goal":"is_monotone[A, C](compose[A, B, C](f, g))","proof":["not is_monotone[B, C](f) or not is_monotone[A, B](g)","not is_monotone[A, B](g)"]}
-{"goal":"is_surjective_fn[A, B](g)","proof":["not is_order_surjection[A, B](g)"]}
-{"goal":"is_surjective_fn[B, C](f)","proof":["not is_order_surjection[B, C](f)"]}
-{"goal":"is_surjective_fn[A, C](compose[A, B, C](f, g))","proof":["not is_surjective_fn[B, C](f) or not is_surjective_fn[A, B](g)","not is_surjective_fn[A, B](g)"]}
-{"goal":"is_order_surjection[A, C](compose[A, B, C](f, g))","proof":["function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { (is_monotone[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_order_surjection[T0, T1](x0) }[B, C](f)","function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { (is_monotone[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_order_surjection[T0, T1](x0) }[A, C](compose[A, B, C](f, g))","is_monotone[A, C](compose[A, B, C](f, g))","is_surjective_fn[A, C](compose[A, B, C](f, g))","is_order_surjection[B, C](f)"]}
-{"goal":"order_surjection_compose","proof":["not is_order_surjection[B, C](f) or not is_order_surjection[A, B](g)","is_order_surjection[B, C](f)","is_order_surjection[A, B](g)","not is_order_surjection[A, B](g)"]}
+{"goal":"is_monotone[A, B](g)","proof":[]}
+{"goal":"is_monotone[B, C](f)","proof":[]}
+{"goal":"is_monotone[A, C](compose[A, B, C](f, g))","proof":[]}
+{"goal":"is_surjective_fn[A, B](g)","proof":[]}
+{"goal":"is_surjective_fn[B, C](f)","proof":[]}
+{"goal":"is_surjective_fn[A, C](compose[A, B, C](f, g))","proof":[]}
+{"goal":"is_order_surjection[A, C](compose[A, B, C](f, g))","proof":["function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { (is_monotone[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_order_surjection[T0, T1](x0) }[B, C](f)","function[T0: PartialOrder, T1: PartialOrder](x0: T0 -> T1) { (is_monotone[T0, T1](x0) and is_surjective_fn[T0, T1](x0)) = is_order_surjection[T0, T1](x0) }[A, C](compose[A, B, C](f, g))"]}
+{"goal":"order_surjection_compose","proof":[]}
 {"goal":"g(y) <= g(x)","proof":[]}
 {"goal":"f(g(x)) <= f(g(y))","proof":[]}
 {"goal":"compose[A, B, C](f, g, x) = f(g(x))","proof":["function[T0, T1, T2](x0: T1 -> T2, x1: T0 -> T1, x2: T0) { compose[T0, T1, T2](x0, x1, x2) = x0(x1(x2)) }[A, B, C](f, g, x)"]}
