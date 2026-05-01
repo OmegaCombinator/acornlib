@@ -9,4 +9,4 @@ Goal: make core definitions and proof patterns stable enough that later librarie
 
 ## Current Focus
 
-Continue transport across equality and equivalence. Core type construction refactors are deferred until their API choices are settled; quotient constructions are deferred until the algebraic quotient API decision is made.
+Foundational quotient API is now committed to the existing `Quotient`/`QuotientOver`/`QuotientRelation` family in `src/equivalence.ac`; subobject transport across the quotient projection is in place. Remaining quotient work is to build group/ring/module quotients and kernel-relation APIs on top of this foundation. Core type construction refactors remain deferred until their API choices are settled.
