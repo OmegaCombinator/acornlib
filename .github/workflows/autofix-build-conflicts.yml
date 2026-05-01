@@ -28,7 +28,7 @@ jobs:
       AUTOFIX_LABEL: autofix
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
       PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr }}
-      RESULT_PATH: ${{ runner.temp }}/autofix-result.md
+      RESULT_PATH: /tmp/autofix-result.md
 
     steps:
       - name: Prepare result state
