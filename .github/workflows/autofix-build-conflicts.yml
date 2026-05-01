@@ -49,24 +49,21 @@ jobs:
             fail "No pull request number was supplied."
           fi
 
-          pr_json="$(gh pr view "$PR_NUMBER" \
-            --repo "$GITHUB_REPOSITORY" \
-            --json number,state,isCrossRepository,headRefName,headRefOid,baseRefName,headRepository,baseRepository,url)"
+          pr_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER")"
 
           state="$(jq -r '.state' <<<"$pr_json")"
-          is_cross_repo="$(jq -r '.isCrossRepository' <<<"$pr_json")"
-          head_ref="$(jq -r '.headRefName' <<<"$pr_json")"
-          head_sha="$(jq -r '.headRefOid' <<<"$pr_json")"
-          head_repo="$(jq -r '.headRepository.nameWithOwner' <<<"$pr_json")"
-          base_ref="$(jq -r '.baseRefName' <<<"$pr_json")"
-          base_repo="$(jq -r '.baseRepository.nameWithOwner' <<<"$pr_json")"
-          pr_url="$(jq -r '.url' <<<"$pr_json")"
+          head_ref="$(jq -r '.head.ref' <<<"$pr_json")"
+          head_sha="$(jq -r '.head.sha' <<<"$pr_json")"
+          head_repo="$(jq -r '.head.repo.full_name // ""' <<<"$pr_json")"
+          base_ref="$(jq -r '.base.ref' <<<"$pr_json")"
+          base_repo="$(jq -r '.base.repo.full_name // ""' <<<"$pr_json")"
+          pr_url="$(jq -r '.html_url' <<<"$pr_json")"
 
-          if [[ "$state" != "OPEN" ]]; then
+          if [[ "$state" != "open" ]]; then
             fail "Pull request #$PR_NUMBER is not open."
           fi
 
-          if [[ "$is_cross_repo" == "true" || "$head_repo" != "$GITHUB_REPOSITORY" ]]; then
+          if [[ "$head_repo" != "$GITHUB_REPOSITORY" ]]; then
             fail "Autofix only supports same-repository pull request branches. This PR head is in \`$head_repo\`."
           fi
 
