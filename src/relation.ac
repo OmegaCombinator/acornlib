@@ -5,7 +5,7 @@ from relation_basic import eq_relation, relation_compose, relation_compose_intro
     relation_compose_has_witness, relation_compose_assoc, relation_compose_eq_relation_left,
     relation_compose_eq_relation_right, relation_converse, relation_converse_compose,
     relation_converse_eq_relation, relation_subset, relation_subset_step, reflexive_self,
-    transitive_step, is_reflexive, is_transitive
+    transitive_step, is_reflexive, is_transitive, relation_eq_iff_subset_both
 from relation_transport import relation_pullback, relation_pullback_eq_relation_of_injective
 
 /// General constructions on homogeneous relations indexed by natural numbers.
@@ -1037,4 +1037,49 @@ theorem relation_trans_closure_is_transitive[T](r: (T, T) -> Bool) {
             relation_trans_closure(r, x, z)
         }
     }
+}
+
+/// Transitive closure of a transitive relation equals itself.
+theorem relation_trans_closure_eq_self_of_transitive[T](r: (T, T) -> Bool) {
+    is_transitive(r) implies relation_trans_closure(r) = r
+} by {
+    if is_transitive(r) {
+        relation_trans_closure_subset_of_transitive(r, r)
+        relation_subset(relation_trans_closure(r), r)
+        relation_subset_trans_closure(r)
+        relation_subset(r, relation_trans_closure(r))
+        relation_eq_iff_subset_both(relation_trans_closure(r), r)
+        relation_trans_closure(r) = r
+    }
+}
+
+/// Transitive closure is idempotent.
+theorem relation_trans_closure_idempotent[T](r: (T, T) -> Bool) {
+    relation_trans_closure(relation_trans_closure(r)) = relation_trans_closure(r)
+} by {
+    relation_trans_closure_is_transitive(r)
+    relation_trans_closure_eq_self_of_transitive(relation_trans_closure(r))
+}
+
+/// Reflexive-transitive closure of a reflexive transitive relation equals itself.
+theorem relation_refl_trans_closure_eq_self_of_reflexive_transitive[T](r: (T, T) -> Bool) {
+    is_reflexive(r) and is_transitive(r) implies relation_refl_trans_closure(r) = r
+} by {
+    if is_reflexive(r) and is_transitive(r) {
+        relation_refl_trans_closure_subset_of_reflexive_transitive(r, r)
+        relation_subset(relation_refl_trans_closure(r), r)
+        relation_subset_refl_trans_closure(r)
+        relation_subset(r, relation_refl_trans_closure(r))
+        relation_eq_iff_subset_both(relation_refl_trans_closure(r), r)
+        relation_refl_trans_closure(r) = r
+    }
+}
+
+/// Reflexive-transitive closure is idempotent.
+theorem relation_refl_trans_closure_idempotent[T](r: (T, T) -> Bool) {
+    relation_refl_trans_closure(relation_refl_trans_closure(r)) = relation_refl_trans_closure(r)
+} by {
+    relation_refl_trans_closure_is_reflexive(r)
+    relation_refl_trans_closure_is_transitive(r)
+    relation_refl_trans_closure_eq_self_of_reflexive_transitive(relation_refl_trans_closure(r))
 }
