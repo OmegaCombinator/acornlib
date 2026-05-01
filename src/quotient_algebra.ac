@@ -3,10 +3,13 @@
 from add_monoid import AddMonoid, is_add_monoid_hom
 from add_group import AddGroup, AddGroupHom, is_add_group_hom, add_group_hom_zero,
     add_group_hom_neg, add_group_hom_add
+from monoid import Monoid, MonoidHom, monoid_hom_mul
+from group import Group, GroupHom, group_hom_mul, group_hom_inv
 from relation_basic import is_equivalence
 from relation_transport import respects_add, is_add_congruence, respects_binary_op,
     respects_unary_op, is_binary_congruence, respects_add_eq_respects_binary_op,
-    add_congruence_eq_binary_congruence
+    add_congruence_eq_binary_congruence, respects_mul, is_mul_congruence,
+    respects_mul_eq_respects_binary_op, mul_congruence_eq_binary_congruence
 from equivalence import kernel_relation, kernel_relation_is_equivalence
 
 /// The kernel of an additive monoid homomorphism preserves addition pairwise.
@@ -132,4 +135,110 @@ theorem add_group_hom_kernel_is_add_congruence[A: AddGroup, B: AddGroup](f: AddG
     respects_add_eq_respects_binary_op(kernel_relation(f.hom))
     is_binary_congruence(kernel_relation(f.hom), A.add)
     add_congruence_eq_binary_congruence(kernel_relation(f.hom))
+}
+
+/// The kernel of a monoid homomorphism preserves multiplication pairwise.
+theorem monoid_hom_kernel_step[M: Monoid, N: Monoid](f: MonoidHom[M, N], x1: M, y1: M, x2: M, y2: M) {
+    kernel_relation(f.hom, x1, y1) and kernel_relation(f.hom, x2, y2)
+    implies kernel_relation(f.hom, x1 * x2, y1 * y2)
+} by {
+    if kernel_relation(f.hom, x1, y1) and kernel_relation(f.hom, x2, y2) {
+        f.hom(x1) = f.hom(y1)
+        f.hom(x2) = f.hom(y2)
+        monoid_hom_mul(f, x1, x2)
+        monoid_hom_mul(f, y1, y2)
+        f.hom(x1 * x2) = f.hom(x1) * f.hom(x2)
+        f.hom(y1 * y2) = f.hom(y1) * f.hom(y2)
+        f.hom(x1 * x2) = f.hom(y1 * y2)
+        kernel_relation(f.hom, x1 * x2, y1 * y2)
+    }
+}
+
+/// The kernel of a monoid homomorphism is compatible with multiplication.
+theorem monoid_hom_kernel_respects_mul[M: Monoid, N: Monoid](f: MonoidHom[M, N]) {
+    respects_mul(kernel_relation(f.hom))
+} by {
+    respects_mul_eq_respects_binary_op(kernel_relation(f.hom))
+    respects_mul(kernel_relation(f.hom)) = respects_binary_op(kernel_relation(f.hom), M.mul)
+    forall(x1: M, y1: M, x2: M, y2: M) {
+        if kernel_relation(f.hom, x1, y1) and kernel_relation(f.hom, x2, y2) {
+            monoid_hom_kernel_step(f, x1, y1, x2, y2)
+            kernel_relation(f.hom, x1 * x2, y1 * y2)
+            kernel_relation(f.hom, M.mul(x1, x2), M.mul(y1, y2))
+        }
+    }
+    respects_binary_op(kernel_relation(f.hom), M.mul)
+}
+
+/// The kernel of a monoid homomorphism is a multiplicative congruence.
+theorem monoid_hom_kernel_is_mul_congruence[M: Monoid, N: Monoid](f: MonoidHom[M, N]) {
+    is_mul_congruence(kernel_relation(f.hom))
+} by {
+    kernel_relation_is_equivalence(f.hom)
+    monoid_hom_kernel_respects_mul(f)
+    respects_mul_eq_respects_binary_op(kernel_relation(f.hom))
+    is_binary_congruence(kernel_relation(f.hom), M.mul)
+    mul_congruence_eq_binary_congruence(kernel_relation(f.hom))
+}
+
+/// The kernel of a group homomorphism preserves multiplication pairwise.
+theorem group_hom_kernel_step[G: Group, H: Group](f: GroupHom[G, H], x1: G, y1: G, x2: G, y2: G) {
+    kernel_relation(f.hom, x1, y1) and kernel_relation(f.hom, x2, y2)
+    implies kernel_relation(f.hom, x1 * x2, y1 * y2)
+} by {
+    if kernel_relation(f.hom, x1, y1) and kernel_relation(f.hom, x2, y2) {
+        f.hom(x1) = f.hom(y1)
+        f.hom(x2) = f.hom(y2)
+        group_hom_mul(f, x1, x2)
+        group_hom_mul(f, y1, y2)
+        f.hom(x1 * x2) = f.hom(x1) * f.hom(x2)
+        f.hom(y1 * y2) = f.hom(y1) * f.hom(y2)
+        f.hom(x1 * x2) = f.hom(y1 * y2)
+        kernel_relation(f.hom, x1 * x2, y1 * y2)
+    }
+}
+
+/// The kernel of a group homomorphism is compatible with multiplication.
+theorem group_hom_kernel_respects_mul[G: Group, H: Group](f: GroupHom[G, H]) {
+    respects_mul(kernel_relation(f.hom))
+} by {
+    respects_mul_eq_respects_binary_op(kernel_relation(f.hom))
+    respects_mul(kernel_relation(f.hom)) = respects_binary_op(kernel_relation(f.hom), G.mul)
+    forall(x1: G, y1: G, x2: G, y2: G) {
+        if kernel_relation(f.hom, x1, y1) and kernel_relation(f.hom, x2, y2) {
+            group_hom_kernel_step(f, x1, y1, x2, y2)
+            kernel_relation(f.hom, x1 * x2, y1 * y2)
+            kernel_relation(f.hom, G.mul(x1, x2), G.mul(y1, y2))
+        }
+    }
+    respects_binary_op(kernel_relation(f.hom), G.mul)
+}
+
+/// The kernel of a group homomorphism is compatible with inverses.
+theorem group_hom_kernel_respects_inverse[G: Group, H: Group](f: GroupHom[G, H]) {
+    respects_unary_op(kernel_relation(f.hom), G.inverse)
+} by {
+    forall(x: G, y: G) {
+        if kernel_relation(f.hom, x, y) {
+            f.hom(x) = f.hom(y)
+            group_hom_inv(f, x)
+            group_hom_inv(f, y)
+            f.hom(x.inverse) = f.hom(x).inverse
+            f.hom(y.inverse) = f.hom(y).inverse
+            f.hom(x.inverse) = f.hom(y.inverse)
+            kernel_relation(f.hom, x.inverse, y.inverse)
+            kernel_relation(f.hom, G.inverse(x), G.inverse(y))
+        }
+    }
+}
+
+/// The kernel of a group homomorphism is a multiplicative congruence.
+theorem group_hom_kernel_is_mul_congruence[G: Group, H: Group](f: GroupHom[G, H]) {
+    is_mul_congruence(kernel_relation(f.hom))
+} by {
+    kernel_relation_is_equivalence(f.hom)
+    group_hom_kernel_respects_mul(f)
+    respects_mul_eq_respects_binary_op(kernel_relation(f.hom))
+    is_binary_congruence(kernel_relation(f.hom), G.mul)
+    mul_congruence_eq_binary_congruence(kernel_relation(f.hom))
 }
