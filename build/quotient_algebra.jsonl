@@ -13,6 +13,9 @@
 {"goal":"add_monoid_hom_kernel_respects_add","proof":["function[T0: lib(add).Add](x0: (T0, T0) -> Bool) { respects_binary_op[T0](x0, T0.add) = respects_add[T0](x0) }[A](kernel_relation[A, B](f))"]}
 {"goal":"is_binary_congruence[A](kernel_relation[A, B](f), A.add)","proof":["function[T0](x0: (T0, T0) -> Bool, x1: (T0, T0) -> T0) { (is_equivalence[T0](x0) and respects_binary_op[T0](x0, x1)) = is_binary_congruence[T0](x0, x1) }[A](kernel_relation[A, B](f), A.add)"]}
 {"goal":"add_monoid_hom_kernel_is_add_congruence","proof":["function[T0](x0: (T0, T0) -> Bool, x1: (T0, T0) -> T0) { (is_equivalence[T0](x0) and respects_binary_op[T0](x0, x1)) = is_binary_congruence[T0](x0, x1) }[A](kernel_relation[A, B](f), A.add)","function[T0: AddMonoid, T1: AddMonoid](x0: T0 -> T1) { not is_add_monoid_hom[T0, T1](x0) or respects_add[T0](kernel_relation[T0, T1](x0)) }[A, B](f)","function[T0: lib(add).Add](x0: (T0, T0) -> Bool) { respects_binary_op[T0](x0, T0.add) = respects_add[T0](x0) }[A](kernel_relation[A, B](f))","function[T0, T1](x0: T0 -> T1) { is_equivalence[T0](kernel_relation[T0, T1](x0)) }[A, B](f)"]}
+{"goal":"respects_binary_op[A](kernel_relation[A, B](f), A.add)","proof":[]}
+{"goal":"respects_binary_op[A](kernel_quotient_relation[A, B](f).rel, A.add)","proof":[]}
+{"goal":"add_monoid_hom_kernel_quotient_relation_respects_add","proof":["function[T0](x0: lib(equivalence).QuotientRelation[T0], x1: (T0, T0) -> T0) { respects_binary_op[T0](x0.rel, x1) = quotient_binary_respects[T0](x0, x1) }[A](kernel_quotient_relation[A, B](f), A.add)"]}
 {"goal":"is_add_monoid_hom[A, B](f) = (f(A.0) = B.0 and forall(x0: A, x1: A) { f(x0 + x1) = f(x0) + f(x1) })","proof":["function[T0: AddMonoid, T1: AddMonoid](x0: T1 -> T0) { (x0(T1.0) = T0.0 and forall(x1: T1, x2: T1) { x0(x1 + x2) = x0(x1) + x0(x2) }) = is_add_monoid_hom[T1, T0](x0) }[B, A](f)"]}
 {"goal":"f(A.0) = B.0","proof":[]}
 {"goal":"f(a) = f(A.0)","proof":[]}
@@ -37,6 +40,30 @@
 {"goal":"kernel_relation[A, B](f.hom, -x, -y)","proof":["function[T0, T1](x0: T0 -> T1, x1: T0, x2: T0) { kernel_relation[T0, T1](x0, x1, x2) = (x0(x1) = x0(x2)) }[A, B](f.hom, -x, -y)"]}
 {"goal":"kernel_relation[A, B](f.hom, -x, -y)","proof":[]}
 {"goal":"add_group_hom_kernel_respects_neg","proof":["function[T0](x0: (T0, T0) -> Bool, x1: T0 -> T0) { forall(x2: T0, x3: T0) { not x0(x2, x3) or x0(x1(x2), x1(x3)) } = respects_unary_op[T0](x0, x1) }[A](kernel_relation[A, B](f.hom), A.neg)","let w0: A satisfy { exists(k0: A) { kernel_relation[A, B](f.hom, w0, k0) and not kernel_relation[A, B](f.hom, -w0, -k0) } }","let w1: A satisfy { kernel_relation[A, B](f.hom, w0, w1) and not kernel_relation[A, B](f.hom, -w0, -w1) }","function(x0: A, x1: A) { not kernel_relation[A, B](f.hom, x0, x1) or kernel_relation[A, B](f.hom, -x0, -x1) }(w0, w1)"]}
+{"goal":"f.hom(x1) = f.hom(y1)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[A, B](f.hom, x1, y1)"]}
+{"goal":"f.hom(x2) = f.hom(y2)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[A, B](f.hom, x2, y2)"]}
+{"goal":"f.hom(x1 - x2) = f.hom(x1 + -x2)","proof":["function[T0: AddGroup](x0: T0, x3: T0) { x0 + -x3 = x0 - x3 }[A](x1, x2)"]}
+{"goal":"f.hom(y1 - y2) = f.hom(y1 + -y2)","proof":["function[T0: AddGroup](x0: T0, x3: T0) { x0 + -x3 = x0 - x3 }[A](y1, y2)"]}
+{"goal":"f.hom(x1 + -x2) = f.hom(x1) + f.hom(-x2)","proof":[]}
+{"goal":"f.hom(y1 + -y2) = f.hom(y1) + f.hom(-y2)","proof":[]}
+{"goal":"f.hom(-x2) = -f.hom(x2)","proof":[]}
+{"goal":"f.hom(-y2) = -f.hom(y2)","proof":[]}
+{"goal":"f.hom(x1 - x2) = f.hom(y1 - y2)","proof":[]}
+{"goal":"kernel_relation[A, B](f.hom, x1 - x2, y1 - y2)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[A, B](f.hom, x1 - x2, y1 - y2)"]}
+{"goal":"kernel_relation[A, B](f.hom, x1 - x2, y1 - y2)","proof":[]}
+{"goal":"add_group_hom_kernel_respects_sub","proof":["function[T0](x0: (T0, T0) -> Bool, x1: (T0, T0) -> T0) { forall(x2: T0, x3: T0, x4: T0, x5: T0) { not x0(x2, x3) or not x0(x4, x5) or x0(x1(x2, x4), x1(x3, x5)) } = respects_binary_op[T0](x0, x1) }[A](kernel_relation[A, B](f.hom), A.sub)","let w0: A satisfy { exists(k0: A, k1: A, k2: A) { kernel_relation[A, B](f.hom, w0, k0) and kernel_relation[A, B](f.hom, k1, k2) and not kernel_relation[A, B](f.hom, w0 - k1, k0 - k2) } }","let w1: A satisfy { exists(k3: A, k4: A) { kernel_relation[A, B](f.hom, w0, w1) and kernel_relation[A, B](f.hom, k3, k4) and not kernel_relation[A, B](f.hom, w0 - k3, w1 - k4) } }","let w2: A satisfy { exists(k5: A) { kernel_relation[A, B](f.hom, w0, w1) and kernel_relation[A, B](f.hom, w2, k5) and not kernel_relation[A, B](f.hom, w0 - w2, w1 - k5) } }","let w3: A satisfy { kernel_relation[A, B](f.hom, w0, w1) and kernel_relation[A, B](f.hom, w2, w3) and not kernel_relation[A, B](f.hom, w0 - w2, w1 - w3) }","function(x0: A, x1: A, x2: A, x3: A) { not kernel_relation[A, B](f.hom, x0, x1) or not kernel_relation[A, B](f.hom, x2, x3) or kernel_relation[A, B](f.hom, x0 - x2, x1 - x3) }(w0, w1, w2, w3)"]}
+{"goal":"respects_binary_op[A](kernel_relation[A, B](f.hom), A.add)","proof":[]}
+{"goal":"respects_binary_op[A](kernel_quotient_relation[A, B](f.hom).rel, A.add)","proof":[]}
+{"goal":"add_group_hom_kernel_quotient_relation_respects_add","proof":[]}
+{"goal":"respects_unary_op[A](kernel_relation[A, B](f.hom), A.neg)","proof":[]}
+{"goal":"respects_unary_op[A](kernel_quotient_relation[A, B](f.hom).rel, A.neg)","proof":[]}
+{"goal":"add_group_hom_kernel_quotient_relation_respects_neg","proof":[]}
+{"goal":"respects_binary_op[A](kernel_relation[A, B](f.hom), A.sub)","proof":[]}
+{"goal":"respects_binary_op[A](kernel_quotient_relation[A, B](f.hom).rel, A.sub)","proof":[]}
+{"goal":"add_group_hom_kernel_quotient_relation_respects_sub","proof":[]}
+{"goal":"add_group_hom_kernel_quotient_add_projection","proof":["function[T0: AddGroup, T3: AddGroup](x0: QuotientOver[T0], x1: QuotientOver[T0], x2: AddGroupHom[T0, T3]) { quotient_over_binary_op[T0](T0.add, x0, x1) = add_group_hom_kernel_quotient_add[T0, T3](x2, x0, x1) }[A, B](quotient_over_mk(kernel_quotient_relation[A, B](f.hom), a), quotient_over_mk(kernel_quotient_relation[A, B](f.hom), b), f)"]}
+{"goal":"add_group_hom_kernel_quotient_neg_projection","proof":["function[T0: AddGroup, T1: AddGroup](x0: AddGroupHom[T0, T1], x1: QuotientOver[T0]) { quotient_over_unary_op[T0](kernel_quotient_relation[T0, T1](x0.hom), T0.neg, x1) = add_group_hom_kernel_quotient_neg[T0, T1](x0, x1) }[A, B](f, quotient_over_mk(kernel_quotient_relation[A, B](f.hom), a))"]}
+{"goal":"add_group_hom_kernel_quotient_sub_projection","proof":["function[T0: AddGroup, T3: AddGroup](x0: QuotientOver[T0], x1: QuotientOver[T0], x2: AddGroupHom[T0, T3]) { quotient_over_binary_op[T0](T0.sub, x0, x1) = add_group_hom_kernel_quotient_sub[T0, T3](x2, x0, x1) }[A, B](quotient_over_mk(kernel_quotient_relation[A, B](f.hom), a), quotient_over_mk(kernel_quotient_relation[A, B](f.hom), b), f)"]}
 {"goal":"is_binary_congruence[A](kernel_relation[A, B](f.hom), A.add)","proof":["function[T0](x0: (T0, T0) -> Bool, x1: (T0, T0) -> T0) { (is_equivalence[T0](x0) and respects_binary_op[T0](x0, x1)) = is_binary_congruence[T0](x0, x1) }[A](kernel_relation[A, B](f.hom), A.add)"]}
 {"goal":"add_group_hom_kernel_is_add_congruence","proof":[]}
 {"goal":"f.hom(x1) = f.hom(y1)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[M, N](f.hom, x1, y1)"]}
@@ -51,6 +78,10 @@
 {"goal":"kernel_relation[M, N](f.hom, x1 * x2, y1 * y2)","proof":[]}
 {"goal":"respects_binary_op[M](kernel_relation[M, N](f.hom), M.mul)","proof":["function[T0](x0: (T0, T0) -> Bool, x1: (T0, T0) -> T0) { forall(x2: T0, x3: T0, x4: T0, x5: T0) { not x0(x2, x3) or not x0(x4, x5) or x0(x1(x2, x4), x1(x3, x5)) } = respects_binary_op[T0](x0, x1) }[M](kernel_relation[M, N](f.hom), M.mul)","let w0: M satisfy { exists(k0: M, k1: M, k2: M) { kernel_relation[M, N](f.hom, w0, k0) and kernel_relation[M, N](f.hom, k1, k2) and not kernel_relation[M, N](f.hom, w0 * k1, k0 * k2) } }","let w1: M satisfy { exists(k3: M, k4: M) { kernel_relation[M, N](f.hom, w0, w1) and kernel_relation[M, N](f.hom, k3, k4) and not kernel_relation[M, N](f.hom, w0 * k3, w1 * k4) } }","let w2: M satisfy { exists(k5: M) { kernel_relation[M, N](f.hom, w0, w1) and kernel_relation[M, N](f.hom, w2, k5) and not kernel_relation[M, N](f.hom, w0 * w2, w1 * k5) } }","let w3: M satisfy { kernel_relation[M, N](f.hom, w0, w1) and kernel_relation[M, N](f.hom, w2, w3) and not kernel_relation[M, N](f.hom, w0 * w2, w1 * w3) }","function[T0: Monoid, T1: Monoid](x0: MonoidHom[T0, T1], x1: T0, x2: T0, x3: T0, x4: T0) { not kernel_relation[T0, T1](x0.hom, x1, x2) or not kernel_relation[T0, T1](x0.hom, x3, x4) or kernel_relation[T0, T1](x0.hom, x1 * x3, x2 * x4) }[M, N](f, w0, w1, w2, w3)"]}
 {"goal":"monoid_hom_kernel_respects_mul","proof":[]}
+{"goal":"respects_binary_op[M](kernel_relation[M, N](f.hom), M.mul)","proof":[]}
+{"goal":"respects_binary_op[M](kernel_quotient_relation[M, N](f.hom).rel, M.mul)","proof":[]}
+{"goal":"monoid_hom_kernel_quotient_relation_respects_mul","proof":[]}
+{"goal":"monoid_hom_kernel_quotient_mul_projection","proof":["function[T0: Monoid, T3: Monoid](x0: QuotientOver[T0], x1: QuotientOver[T0], x2: MonoidHom[T0, T3]) { quotient_over_binary_op[T0](T0.mul, x0, x1) = monoid_hom_kernel_quotient_mul[T0, T3](x2, x0, x1) }[M, N](quotient_over_mk(kernel_quotient_relation[M, N](f.hom), a), quotient_over_mk(kernel_quotient_relation[M, N](f.hom), b), f)"]}
 {"goal":"is_binary_congruence[M](kernel_relation[M, N](f.hom), M.mul)","proof":["function[T0](x0: (T0, T0) -> Bool, x1: (T0, T0) -> T0) { (is_equivalence[T0](x0) and respects_binary_op[T0](x0, x1)) = is_binary_congruence[T0](x0, x1) }[M](kernel_relation[M, N](f.hom), M.mul)"]}
 {"goal":"monoid_hom_kernel_is_mul_congruence","proof":[]}
 {"goal":"f.hom(x1) = f.hom(y1)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[G, H](f.hom, x1, y1)"]}
@@ -72,25 +103,69 @@
 {"goal":"kernel_relation[G, H](f.hom, x.inverse, y.inverse)","proof":["function[T0, T1](x0: T0 -> T1, x1: T0, x2: T0) { kernel_relation[T0, T1](x0, x1, x2) = (x0(x1) = x0(x2)) }[G, H](f.hom, x.inverse, y.inverse)"]}
 {"goal":"kernel_relation[G, H](f.hom, x.inverse, y.inverse)","proof":[]}
 {"goal":"group_hom_kernel_respects_inverse","proof":["function[T0](x0: (T0, T0) -> Bool, x1: T0 -> T0) { forall(x2: T0, x3: T0) { not x0(x2, x3) or x0(x1(x2), x1(x3)) } = respects_unary_op[T0](x0, x1) }[G](kernel_relation[G, H](f.hom), G.inverse)","let w0: G satisfy { exists(k0: G) { kernel_relation[G, H](f.hom, w0, k0) and not kernel_relation[G, H](f.hom, w0.inverse, k0.inverse) } }","let w1: G satisfy { kernel_relation[G, H](f.hom, w0, w1) and not kernel_relation[G, H](f.hom, w0.inverse, w1.inverse) }","function(x0: G, x1: G) { not kernel_relation[G, H](f.hom, x0, x1) or kernel_relation[G, H](f.hom, x0.inverse, x1.inverse) }(w0, w1)"]}
+{"goal":"respects_binary_op[G](kernel_relation[G, H](f.hom), G.mul)","proof":[]}
+{"goal":"respects_binary_op[G](kernel_quotient_relation[G, H](f.hom).rel, G.mul)","proof":[]}
+{"goal":"group_hom_kernel_quotient_relation_respects_mul","proof":[]}
+{"goal":"respects_unary_op[G](kernel_relation[G, H](f.hom), G.inverse)","proof":[]}
+{"goal":"respects_unary_op[G](kernel_quotient_relation[G, H](f.hom).rel, G.inverse)","proof":[]}
+{"goal":"group_hom_kernel_quotient_relation_respects_inverse","proof":[]}
+{"goal":"group_hom_kernel_quotient_mul_projection","proof":["function[T0: Group, T3: Group](x0: QuotientOver[T0], x1: QuotientOver[T0], x2: GroupHom[T0, T3]) { quotient_over_binary_op[T0](T0.mul, x0, x1) = group_hom_kernel_quotient_mul[T0, T3](x2, x0, x1) }[G, H](quotient_over_mk(kernel_quotient_relation[G, H](f.hom), a), quotient_over_mk(kernel_quotient_relation[G, H](f.hom), b), f)"]}
+{"goal":"group_hom_kernel_quotient_inverse_projection","proof":["function[T0: Group, T1: Group](x0: GroupHom[T0, T1], x1: QuotientOver[T0]) { quotient_over_unary_op[T0](kernel_quotient_relation[T0, T1](x0.hom), T0.inverse, x1) = group_hom_kernel_quotient_inverse[T0, T1](x0, x1) }[G, H](f, quotient_over_mk(kernel_quotient_relation[G, H](f.hom), a))"]}
 {"goal":"is_binary_congruence[G](kernel_relation[G, H](f.hom), G.mul)","proof":["function[T0](x0: (T0, T0) -> Bool, x1: (T0, T0) -> T0) { (is_equivalence[T0](x0) and respects_binary_op[T0](x0, x1)) = is_binary_congruence[T0](x0, x1) }[G](kernel_relation[G, H](f.hom), G.mul)"]}
 {"goal":"group_hom_kernel_is_mul_congruence","proof":[]}
-{"goal":"add_f.hom = f.hom","proof":["ring_hom_to_add_group_hom[R, S](f).hom != f.hom","ring_hom_to_add_group_hom[R, S](f).hom = f.hom"]}
+{"goal":"add_f.hom = f.hom","proof":[]}
 {"goal":"respects_add[R](kernel_relation[R, S](add_f.hom))","proof":[]}
-{"goal":"respects_add[R](kernel_relation[R, S](f.hom))","proof":["function[T0: AddGroup, T1: AddGroup](x0: AddGroupHom[T0, T1]) { respects_add[T0](kernel_relation[T0, T1](x0.hom)) }[R, S](add_f)","f.hom = add_f.hom"]}
+{"goal":"respects_add[R](kernel_relation[R, S](f.hom))","proof":[]}
 {"goal":"ring_hom_kernel_respects_add","proof":[]}
-{"goal":"mul_f.hom = f.hom","proof":["ring_hom_to_monoid_hom[R, S](f).hom != f.hom","ring_hom_to_monoid_hom[R, S](f).hom = f.hom"]}
+{"goal":"mul_f.hom = f.hom","proof":[]}
 {"goal":"respects_mul[R](kernel_relation[R, S](mul_f.hom))","proof":[]}
-{"goal":"respects_mul[R](kernel_relation[R, S](f.hom))","proof":["function[T0: Monoid, T1: Monoid](x0: MonoidHom[T0, T1]) { respects_mul[T0](kernel_relation[T0, T1](x0.hom)) }[R, S](mul_f)","f.hom = mul_f.hom"]}
+{"goal":"respects_mul[R](kernel_relation[R, S](f.hom))","proof":[]}
 {"goal":"ring_hom_kernel_respects_mul","proof":[]}
-{"goal":"add_f.hom = f.hom","proof":["ring_hom_to_add_group_hom[R, S](f).hom != f.hom","ring_hom_to_add_group_hom[R, S](f).hom = f.hom"]}
+{"goal":"f.hom(x) = f.hom(y)","proof":["function[T0, T1](x0: T0 -> T1, x1: T0, x2: T0) { kernel_relation[T0, T1](x0, x1, x2) = (x0(x1) = x0(x2)) }[R, S](f.hom, x, y)"]}
+{"goal":"f.hom(-x) = -f.hom(x)","proof":[]}
+{"goal":"f.hom(-y) = -f.hom(y)","proof":[]}
+{"goal":"f.hom(-x) = f.hom(-y)","proof":[]}
+{"goal":"kernel_relation[R, S](f.hom, -x, -y)","proof":["function[T0, T1](x0: T0 -> T1, x1: T0, x2: T0) { kernel_relation[T0, T1](x0, x1, x2) = (x0(x1) = x0(x2)) }[R, S](f.hom, -x, -y)"]}
+{"goal":"kernel_relation[R, S](f.hom, -x, -y)","proof":[]}
+{"goal":"ring_hom_kernel_respects_neg","proof":["function[T0: AddGroup, T1: AddGroup](x0: AddGroupHom[T0, T1]) { respects_unary_op[T0](kernel_relation[T0, T1](x0.hom), T0.neg) }[R, S](ring_hom_to_add_group_hom[R, S](f))","function[T0: Ring, T1: Ring](x0: RingHom[T0, T1]) { ring_hom_to_add_group_hom[T0, T1](x0).hom = x0.hom }[R, S](f)"]}
+{"goal":"f.hom(x1) = f.hom(y1)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[R, S](f.hom, x1, y1)"]}
+{"goal":"f.hom(x2) = f.hom(y2)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[R, S](f.hom, x2, y2)"]}
+{"goal":"f.hom(-x2) = -f.hom(x2)","proof":[]}
+{"goal":"f.hom(-y2) = -f.hom(y2)","proof":[]}
+{"goal":"add_f.hom = f.hom","proof":[]}
+{"goal":"f.hom(x1 - x2) = f.hom(x1 + -x2)","proof":["function[T0: AddGroup](x0: T0, x3: T0) { x0 + -x3 = x0 - x3 }[R](x1, x2)"]}
+{"goal":"f.hom(y1 - y2) = f.hom(y1 + -y2)","proof":["function[T0: AddGroup](x0: T0, x3: T0) { x0 + -x3 = x0 - x3 }[R](y1, y2)"]}
+{"goal":"f.hom(x1 + -x2) = f.hom(x1) + f.hom(-x2)","proof":[]}
+{"goal":"f.hom(y1 + -y2) = f.hom(y1) + f.hom(-y2)","proof":[]}
+{"goal":"f.hom(x1 - x2) = f.hom(y1 - y2)","proof":[]}
+{"goal":"kernel_relation[R, S](f.hom, x1 - x2, y1 - y2)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[R, S](f.hom, x1 - x2, y1 - y2)"]}
+{"goal":"kernel_relation[R, S](f.hom, x1 - x2, y1 - y2)","proof":[]}
+{"goal":"ring_hom_kernel_respects_sub","proof":["function[T0: AddGroup, T1: AddGroup](x0: AddGroupHom[T0, T1]) { respects_binary_op[T0](kernel_relation[T0, T1](x0.hom), T0.sub) }[R, S](ring_hom_to_add_group_hom[R, S](f))","function[T0: Ring, T1: Ring](x0: RingHom[T0, T1]) { ring_hom_to_add_group_hom[T0, T1](x0).hom = x0.hom }[R, S](f)"]}
+{"goal":"add_f.hom = f.hom","proof":[]}
 {"goal":"is_add_congruence[R](kernel_relation[R, S](add_f.hom))","proof":[]}
-{"goal":"is_add_congruence[R](kernel_relation[R, S](f.hom))","proof":["function[T0: AddGroup, T1: AddGroup](x0: AddGroupHom[T0, T1]) { is_add_congruence[T0](kernel_relation[T0, T1](x0.hom)) }[R, S](add_f)","f.hom = add_f.hom"]}
+{"goal":"is_add_congruence[R](kernel_relation[R, S](f.hom))","proof":[]}
 {"goal":"ring_hom_kernel_is_add_congruence","proof":[]}
-{"goal":"mul_f.hom = f.hom","proof":["ring_hom_to_monoid_hom[R, S](f).hom != f.hom","ring_hom_to_monoid_hom[R, S](f).hom = f.hom"]}
+{"goal":"mul_f.hom = f.hom","proof":[]}
 {"goal":"is_mul_congruence[R](kernel_relation[R, S](mul_f.hom))","proof":[]}
-{"goal":"is_mul_congruence[R](kernel_relation[R, S](f.hom))","proof":["function[T0: Monoid, T1: Monoid](x0: MonoidHom[T0, T1]) { is_mul_congruence[T0](kernel_relation[T0, T1](x0.hom)) }[R, S](mul_f)","f.hom = mul_f.hom"]}
+{"goal":"is_mul_congruence[R](kernel_relation[R, S](f.hom))","proof":[]}
 {"goal":"ring_hom_kernel_is_mul_congruence","proof":[]}
-{"goal":"ring_hom_kernel_is_ring_congruence","proof":["function[T0: Ring](x0: (T0, T0) -> Bool) { (is_add_congruence[T0](x0) and is_mul_congruence[T0](x0)) = is_ring_congruence[T0](x0) }[R](kernel_relation[R, S](f.hom))","function[T0: Ring, T1: Ring](x0: RingHom[T0, T1]) { is_mul_congruence[T0](kernel_relation[T0, T1](x0.hom)) }[R, S](f)","function[T0: Ring, T1: Ring](x0: RingHom[T0, T1]) { is_add_congruence[T0](kernel_relation[T0, T1](x0.hom)) }[R, S](f)","not (is_add_congruence[R](kernel_relation[R, S](f.hom)) and is_mul_congruence[R](kernel_relation[R, S](f.hom)))"]}
+{"goal":"respects_binary_op[R](kernel_relation[R, S](f.hom), R.add)","proof":[]}
+{"goal":"respects_binary_op[R](kernel_quotient_relation[R, S](f.hom).rel, R.add)","proof":[]}
+{"goal":"ring_hom_kernel_quotient_relation_respects_add","proof":[]}
+{"goal":"respects_unary_op[R](kernel_relation[R, S](f.hom), R.neg)","proof":[]}
+{"goal":"respects_unary_op[R](kernel_quotient_relation[R, S](f.hom).rel, R.neg)","proof":[]}
+{"goal":"ring_hom_kernel_quotient_relation_respects_neg","proof":[]}
+{"goal":"respects_binary_op[R](kernel_relation[R, S](f.hom), R.sub)","proof":[]}
+{"goal":"respects_binary_op[R](kernel_quotient_relation[R, S](f.hom).rel, R.sub)","proof":[]}
+{"goal":"ring_hom_kernel_quotient_relation_respects_sub","proof":[]}
+{"goal":"respects_binary_op[R](kernel_relation[R, S](f.hom), R.mul)","proof":[]}
+{"goal":"respects_binary_op[R](kernel_quotient_relation[R, S](f.hom).rel, R.mul)","proof":[]}
+{"goal":"ring_hom_kernel_quotient_relation_respects_mul","proof":[]}
+{"goal":"ring_hom_kernel_quotient_add_projection","proof":["function[T0: Ring, T3: Ring](x0: QuotientOver[T0], x1: QuotientOver[T0], x2: RingHom[T0, T3]) { quotient_over_binary_op[T0](T0.add, x0, x1) = ring_hom_kernel_quotient_add[T0, T3](x2, x0, x1) }[R, S](quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a), quotient_over_mk(kernel_quotient_relation[R, S](f.hom), b), f)","quotient_over_binary_op[R](R.add, quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a), quotient_over_mk(kernel_quotient_relation[R, S](f.hom), b)) = quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a + b)"]}
+{"goal":"ring_hom_kernel_quotient_neg_projection","proof":["function[T0: Ring, T1: Ring](x0: RingHom[T0, T1], x1: QuotientOver[T0]) { quotient_over_unary_op[T0](kernel_quotient_relation[T0, T1](x0.hom), T0.neg, x1) = ring_hom_kernel_quotient_neg[T0, T1](x0, x1) }[R, S](f, quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a))","quotient_over_unary_op[R](kernel_quotient_relation[R, S](f.hom), R.neg, quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a)) = quotient_over_mk(kernel_quotient_relation[R, S](f.hom), -a)","quotient_over_unary_op[R](kernel_quotient_relation[R, S](f.hom), R.neg, quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a)) != quotient_over_mk(kernel_quotient_relation[R, S](f.hom), -a)"]}
+{"goal":"ring_hom_kernel_quotient_sub_projection","proof":["function[T0: Ring, T3: Ring](x0: QuotientOver[T0], x1: QuotientOver[T0], x2: RingHom[T0, T3]) { quotient_over_binary_op[T0](T0.sub, x0, x1) = ring_hom_kernel_quotient_sub[T0, T3](x2, x0, x1) }[R, S](quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a), quotient_over_mk(kernel_quotient_relation[R, S](f.hom), b), f)","quotient_over_binary_op[R](R.sub, quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a), quotient_over_mk(kernel_quotient_relation[R, S](f.hom), b)) = quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a - b)"]}
+{"goal":"ring_hom_kernel_quotient_mul_projection","proof":["function[T0: Ring, T3: Ring](x0: QuotientOver[T0], x1: QuotientOver[T0], x2: RingHom[T0, T3]) { quotient_over_binary_op[T0](T0.mul, x0, x1) = ring_hom_kernel_quotient_mul[T0, T3](x2, x0, x1) }[R, S](quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a), quotient_over_mk(kernel_quotient_relation[R, S](f.hom), b), f)","quotient_over_binary_op[R](R.mul, quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a), quotient_over_mk(kernel_quotient_relation[R, S](f.hom), b)) = quotient_over_mk(kernel_quotient_relation[R, S](f.hom), a * b)"]}
+{"goal":"ring_hom_kernel_is_ring_congruence","proof":["function[T0: Ring](x0: (T0, T0) -> Bool) { (is_add_congruence[T0](x0) and is_mul_congruence[T0](x0)) = is_ring_congruence[T0](x0) }[R](kernel_relation[R, S](f.hom))"]}
 {"goal":"is_linear_map[R, M, N](src, dst, f) = (forall(x0: M, x3: M) { f(x0 + x3) = f(x0) + f(x3) } and forall(x4: R, x5: M) { f(src.smul(x4, x5)) = dst.smul(x4, f(x5)) })","proof":["function[T0: AddCommGroup, T1: AddCommGroup, T3: Ring](x0: T0 -> T1, x3: Module[T3, T0], x4: Module[T3, T1]) { (lib(module_hom).preserves_add[T0, T1](x0) and lib(module_hom).preserves_smul[T3, T0, T1](x3, x4, x0)) = is_linear_map[T3, T0, T1](x3, x4, x0) }[M, N, R](f, src, dst)","function[T0: AddCommGroup, T1: AddCommGroup](x0: T0 -> T1) { forall(x3: T0, x4: T0) { x0(x3 + x4) = x0(x3) + x0(x4) } = lib(module_hom).preserves_add[T0, T1](x0) }[M, N](f)","function[T0: Ring, T1: AddCommGroup, T2: AddCommGroup](x0: T1 -> T2, x3: Module[T0, T1], x4: Module[T0, T2]) { forall(x5: T0, x6: T1) { x0(x3.smul(x5, x6)) = x4.smul(x5, x0(x6)) } = lib(module_hom).preserves_smul[T0, T1, T2](x3, x4, x0) }[R, M, N](f, src, dst)"]}
 {"goal":"f(x1) = f(y1)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[M, N](f, x1, y1)"]}
 {"goal":"f(x2) = f(y2)","proof":["function[T0, T1](x0: T0 -> T1, x3: T0, x4: T0) { kernel_relation[T0, T1](x0, x3, x4) = (x0(x3) = x0(x4)) }[M, N](f, x2, y2)"]}
@@ -112,5 +187,12 @@
 {"goal":"f(src.smul(r, x)) = f(src.smul(r, y))","proof":[]}
 {"goal":"kernel_relation[M, N](f, src.smul(r, x), src.smul(r, y))","proof":["function[T0, T1](x0: T0 -> T1, x1: T0, x2: T0) { kernel_relation[T0, T1](x0, x1, x2) = (x0(x1) = x0(x2)) }[M, N](f, src.smul(r, x), src.smul(r, y))"]}
 {"goal":"linear_map_kernel_smul_step","proof":[]}
+{"goal":"respects_binary_op[M](kernel_relation[M, N](f), M.add)","proof":[]}
+{"goal":"respects_binary_op[M](kernel_quotient_relation[M, N](f).rel, M.add)","proof":[]}
+{"goal":"linear_map_kernel_quotient_relation_respects_add","proof":["function[T0](x0: lib(equivalence).QuotientRelation[T0], x1: (T0, T0) -> T0) { respects_binary_op[T0](x0.rel, x1) = quotient_binary_respects[T0](x0, x1) }[M](kernel_quotient_relation[M, N](f), M.add)"]}
+{"goal":"kernel_relation[M, N](f, src.smul(r, x), src.smul(r, y))","proof":[]}
+{"goal":"respects_unary_op[M](kernel_relation[M, N](f), function(x0: M) { src.smul(r, x0) })","proof":["function[T0](x0: (T0, T0) -> Bool, x1: T0 -> T0) { forall(x2: T0, x3: T0) { not x0(x2, x3) or x0(x1(x2), x1(x3)) } = respects_unary_op[T0](x0, x1) }[M](kernel_relation[M, N](f), src.smul(r))","let w0: M satisfy { exists(k0: M) { kernel_relation[M, N](f, w0, k0) and not kernel_relation[M, N](f, src.smul(r, w0), src.smul(r, k0)) } }","let w1: M satisfy { kernel_relation[M, N](f, w0, w1) and not kernel_relation[M, N](f, src.smul(r, w0), src.smul(r, w1)) }","function(x0: M, x1: M) { not kernel_relation[M, N](f, x0, x1) or kernel_relation[M, N](f, src.smul(r, x0), src.smul(r, x1)) }(w0, w1)"]}
+{"goal":"respects_unary_op[M](kernel_quotient_relation[M, N](f).rel, function(x0: M) { src.smul(r, x0) })","proof":[]}
+{"goal":"linear_map_kernel_quotient_relation_respects_smul","proof":["function[T0](x0: (T0, T0) -> Bool, x1: T0 -> T0) { forall(x2: T0, x3: T0) { not x0(x2, x3) or x0(x1(x2), x1(x3)) } = respects_unary_op[T0](x0, x1) }[M](kernel_quotient_relation[M, N](f).rel, src.smul(r))","function[T0](x0: lib(equivalence).QuotientRelation[T0], x1: T0 -> T0) { forall(x2: T0, x3: T0) { not x0.rel(x2, x3) or x0.rel(x1(x2), x1(x3)) } = quotient_unary_respects[T0](x0, x1) }[M](kernel_quotient_relation[M, N](f), src.smul(r))"]}
 {"goal":"is_binary_congruence[M](kernel_relation[M, N](f), M.add)","proof":["function[T0](x0: (T0, T0) -> Bool, x1: (T0, T0) -> T0) { (is_equivalence[T0](x0) and respects_binary_op[T0](x0, x1)) = is_binary_congruence[T0](x0, x1) }[M](kernel_relation[M, N](f), M.add)"]}
 {"goal":"linear_map_kernel_is_add_congruence","proof":["function[T0: Ring, T1: AddCommGroup, T2: AddCommGroup](x0: Module[T0, T1], x1: Module[T0, T2], x2: T1 -> T2) { not is_linear_map[T0, T1, T2](x0, x1, x2) or respects_add[T1](kernel_relation[T1, T2](x2)) }[R, M, N](src, dst, f)","function[T0](x0: (T0, T0) -> Bool, x1: (T0, T0) -> T0) { (is_equivalence[T0](x0) and respects_binary_op[T0](x0, x1)) = is_binary_congruence[T0](x0, x1) }[M](kernel_relation[M, N](f), M.add)","function[T0: lib(add).Add](x0: (T0, T0) -> Bool) { respects_binary_op[T0](x0, T0.add) = respects_add[T0](x0) }[M](kernel_relation[M, N](f))","function[T0, T1](x0: T0 -> T1) { is_equivalence[T0](kernel_relation[T0, T1](x0)) }[M, N](f)"]}
