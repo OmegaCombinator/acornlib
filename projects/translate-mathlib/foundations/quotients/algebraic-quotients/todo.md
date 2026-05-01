@@ -2,7 +2,9 @@
 
 Goal: build group, ring, and module quotient APIs on top of the foundational `Quotient` / `QuotientOver` family, starting from kernel-of-homomorphism congruences.
 
-- [ ] Define a normal subgroup API and the general group quotient `G/N`
+- [ ] Wrap the multiplicative subgroup relation as `is_equivalence` and a `QuotientRelation[G]`; the pointwise reflexive/symmetric/`_trans_at` lemmas are in `src/normal_subgroup.ac` but the `is_transitive` named form times out under default search even though the structurally identical `add_subgroup` proof passes
+- [ ] Show that a normal subgroup's quotient relation is a multiplicative congruence and lift `*`, `inverse` through it
+- [ ] Build the general group quotient `G/N` for normal subgroups
 - [ ] Introduce a dedicated `RingHom[R, S]` struct so the ring kernel bridges no longer need a paired `AddGroupHom`/`MonoidHom` with an equality side condition
 - [ ] Lift `+`, `-`, and `*` through the kernel quotient as actual operations (deferred: a typeclass instance on `Quotient[A]` is blocked because the operation depends on `qrel`, which is value-level rather than type-level; a per-`qrel` `quotient_over_binary_op` lift already exists in `src/equivalence.ac` and is the path forward)
 
@@ -19,3 +21,4 @@ Status:
 - For `AddCommGroup`, `add_subgroup_rel_add_step`, `add_subgroup_rel_respects_add`, and `add_subgroup_rel_is_add_congruence` in `src/add_subgroup.ac` show the subgroup quotient relation is an additive congruence; the helper `add_sub_distrib` packages the regrouping `(a + b) - (a' + b') = (a - a') + (b - b')`.
 - Negation is a quotient unary operation on the subgroup quotient relation: `add_neg_sub`, `add_subgroup_rel_neg_step`, `add_subgroup_rel_respects_neg`, `add_subgroup_quotient_relation_respects_neg`, and `add_subgroup_quotient_relation_respects_add` (the latter rephrasing the additive congruence as `quotient_binary_respects` so it plugs straight into `quotient_over_binary_op_projection`).
 - The lifted operations `add_subgroup_quotient_add` and `add_subgroup_quotient_neg` on `QuotientOver[G]` are in `src/add_subgroup.ac`, with projection-compatibility lemmas `add_subgroup_quotient_add_projection`, `_left`, `_right`, `add_subgroup_quotient_neg_projection`, and `_compatible`.
+- `src/normal_subgroup.ac` defines `is_normal_subgroup`, `normal_conjugate_mem`, `normal_subgroup_rel(s, a, b) := s.contains(a * b.inverse)`, and the pointwise equivalence helpers `normal_subgroup_rel_reflexive` / `_symmetric` / `_trans_at`, plus the forall-form `normal_subgroup_rel_is_reflexive` / `_is_symmetric`. The `is_transitive` named wrapper currently times out under default search (the same proof structure works for `AddGroup` but not for the `Group` typeclass — likely a multiplicative-typeclass resolution cost issue), so the `QuotientRelation[G]` construction is deferred until that wrapper goes through.
