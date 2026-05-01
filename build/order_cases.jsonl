@@ -45,6 +45,7 @@
 {"goal":"a > b","proof":[]}
 {"goal":"a < b or a = b or a > b","proof":[]}
 {"goal":"lt_or_eq_or_gt","proof":[]}
+{"goal":"trichotomy","proof":[]}
 {"goal":"a > b or a = b or a < b","proof":[]}
 {"goal":"a > b or a = b or a < b","proof":[]}
 {"goal":"a < b","proof":[]}

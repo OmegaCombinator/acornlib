@@ -175,6 +175,13 @@ theorem lt_or_eq_or_gt[L: LinearOrder](a: L, b: L) {
     }
 }
 
+/// Exactly one of the standard comparison cases holds up to disjunction.
+theorem trichotomy[L: LinearOrder](a: L, b: L) {
+    a < b or a = b or a > b
+} by {
+    lt_or_eq_or_gt(a, b)
+}
+
 theorem gt_or_eq_or_lt[L: LinearOrder](a: L, b: L) {
     a > b or a = b or a < b
 } by {
