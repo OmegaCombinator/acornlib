@@ -1,0 +1,209 @@
+from add_comm_group import AddCommGroup
+from add_group import AddGroup
+from relation_basic import is_reflexive, is_symmetric, is_transitive, is_equivalence
+from equivalence import QuotientRelation, quotient_relation_new_round_trip
+
+/// True if a subset contains the additive identity.
+define add_zero_constraint[G: AddGroup](contains: G -> Bool) -> Bool {
+    contains(G.0)
+}
+
+/// True if a subset is closed under addition.
+define add_closure_constraint[G: AddGroup](contains: G -> Bool) -> Bool {
+    forall(a: G, b: G) {
+        contains(a) and contains(b) implies contains(a + b)
+    }
+}
+
+/// True if a subset is closed under additive negation.
+define neg_constraint[G: AddGroup](contains: G -> Bool) -> Bool {
+    forall(a: G) {
+        contains(a) implies contains(-a)
+    }
+}
+
+/// True if a subset satisfies all the requirements to be an additive subgroup.
+define add_subgroup_constraint[G: AddGroup](contains: G -> Bool) -> Bool {
+    add_zero_constraint(contains) and add_closure_constraint(contains) and neg_constraint(contains)
+}
+
+/// An additive subgroup of an additive group `G`, represented as a subset closed under the additive group operations.
+structure AddSubgroup[G: AddGroup] {
+    /// True if the given element is a member of this additive subgroup.
+    contains: G -> Bool
+} constraint {
+    add_subgroup_constraint(contains)
+}
+
+/// Membership of zero in any additive subgroup.
+theorem add_subgroup_contains_zero[G: AddGroup](h: AddSubgroup[G]) {
+    h.contains(G.0)
+} by {
+    add_subgroup_constraint(h.contains)
+    add_subgroup_constraint(h.contains) =
+        add_zero_constraint(h.contains) and add_closure_constraint(h.contains) and neg_constraint(h.contains)
+    add_zero_constraint(h.contains)
+    add_zero_constraint(h.contains) = h.contains(G.0)
+}
+
+/// Closure of any additive subgroup under addition.
+theorem add_subgroup_contains_add[G: AddGroup](h: AddSubgroup[G], a: G, b: G) {
+    h.contains(a) and h.contains(b) implies h.contains(a + b)
+} by {
+    if h.contains(a) and h.contains(b) {
+        add_subgroup_constraint(h.contains)
+        add_subgroup_constraint(h.contains) =
+            add_zero_constraint(h.contains) and add_closure_constraint(h.contains) and neg_constraint(h.contains)
+        add_closure_constraint(h.contains)
+        add_closure_constraint(h.contains) = forall(x: G, y: G) {
+            h.contains(x) and h.contains(y) implies h.contains(x + y)
+        }
+        h.contains(a + b)
+    }
+}
+
+/// Closure of any additive subgroup under negation.
+theorem add_subgroup_contains_neg[G: AddGroup](h: AddSubgroup[G], a: G) {
+    h.contains(a) implies h.contains(-a)
+} by {
+    if h.contains(a) {
+        add_subgroup_constraint(h.contains)
+        add_subgroup_constraint(h.contains) =
+            add_zero_constraint(h.contains) and add_closure_constraint(h.contains) and neg_constraint(h.contains)
+        neg_constraint(h.contains)
+        neg_constraint(h.contains) = forall(x: G) {
+            h.contains(x) implies h.contains(-x)
+        }
+        h.contains(-a)
+    }
+}
+
+/// Closure of any additive subgroup under subtraction.
+theorem add_subgroup_contains_sub[G: AddGroup](h: AddSubgroup[G], a: G, b: G) {
+    h.contains(a) and h.contains(b) implies h.contains(a - b)
+} by {
+    if h.contains(a) and h.contains(b) {
+        add_subgroup_contains_neg(h, b)
+        h.contains(-b)
+        add_subgroup_contains_add(h, a, -b)
+        h.contains(a + -b)
+        a - b = a + -b
+    }
+}
+
+/// The equivalence relation on `G` defined by an additive subgroup: `a ~ b` iff `a - b` lies in the subgroup.
+define add_subgroup_rel[G: AddGroup](h: AddSubgroup[G], a: G, b: G) -> Bool {
+    h.contains(a - b)
+}
+
+/// The relation defined by an additive subgroup is reflexive.
+theorem add_subgroup_rel_reflexive[G: AddGroup](h: AddSubgroup[G], a: G) {
+    add_subgroup_rel(h, a, a)
+} by {
+    a - a = G.0
+    add_subgroup_contains_zero(h)
+    h.contains(G.0)
+    h.contains(a - a)
+}
+
+/// The relation defined by an additive subgroup is symmetric.
+theorem add_subgroup_rel_symmetric[G: AddGroup](h: AddSubgroup[G], a: G, b: G) {
+    add_subgroup_rel(h, a, b) implies add_subgroup_rel(h, b, a)
+} by {
+    if add_subgroup_rel(h, a, b) {
+        h.contains(a - b)
+        add_subgroup_contains_neg(h, a - b)
+        h.contains(-(a - b))
+        a - b = a + -b
+        -(a + -b) = --b + -a
+        --b = b
+        -(a - b) = b + -a
+        b + -a = b - a
+        h.contains(b - a)
+    }
+}
+
+/// The relation defined by an additive subgroup is reflexive.
+theorem add_subgroup_rel_is_reflexive[G: AddGroup](h: AddSubgroup[G]) {
+    is_reflexive(add_subgroup_rel(h))
+} by {
+    forall(a: G) {
+        add_subgroup_rel_reflexive(h, a)
+    }
+}
+
+/// The relation defined by an additive subgroup is symmetric.
+theorem add_subgroup_rel_is_symmetric[G: AddGroup](h: AddSubgroup[G]) {
+    is_symmetric(add_subgroup_rel(h))
+} by {
+    forall(a: G, b: G) {
+        if add_subgroup_rel(h, a, b) {
+            add_subgroup_rel_symmetric(h, a, b)
+        }
+    }
+}
+
+/// Subtractions chain through an intermediate point.
+theorem add_subgroup_sub_chain[G: AddGroup](a: G, b: G, c: G) {
+    (a - b) + (b - c) = a - c
+} by {
+    a - b = a + -b
+    b - c = b + -c
+    (a + -b) + (b + -c) = a + (-b + b) + -c
+    -b + b = G.0
+    a + G.0 + -c = a + -c
+    a + -c = a - c
+}
+
+/// Pointwise transitivity helper for the additive-subgroup relation.
+theorem add_subgroup_rel_trans_at[G: AddGroup](h: AddSubgroup[G], a: G, b: G, c: G) {
+    add_subgroup_rel(h, a, b) and add_subgroup_rel(h, b, c) implies add_subgroup_rel(h, a, c)
+} by {
+    if add_subgroup_rel(h, a, b) and add_subgroup_rel(h, b, c) {
+        h.contains(a - b)
+        h.contains(b - c)
+        add_subgroup_contains_add(h, a - b, b - c)
+        h.contains((a - b) + (b - c))
+        add_subgroup_sub_chain(a, b, c)
+        h.contains(a - c)
+    }
+}
+
+/// The relation defined by an additive subgroup is transitive.
+theorem add_subgroup_rel_is_transitive[G: AddGroup](h: AddSubgroup[G]) {
+    is_transitive(add_subgroup_rel(h))
+} by {
+    is_transitive(add_subgroup_rel(h)) = forall(x: G, y: G, z: G) {
+        add_subgroup_rel(h, x, y) and add_subgroup_rel(h, y, z) implies add_subgroup_rel(h, x, z)
+    }
+    forall(a: G, b: G, c: G) {
+        if add_subgroup_rel(h, a, b) and add_subgroup_rel(h, b, c) {
+            add_subgroup_rel_trans_at(h, a, b, c)
+            add_subgroup_rel(h, a, c)
+        }
+    }
+}
+
+/// The relation defined by an additive subgroup is an equivalence relation.
+theorem add_subgroup_rel_is_equivalence[G: AddGroup](h: AddSubgroup[G]) {
+    is_equivalence(add_subgroup_rel(h))
+} by {
+    add_subgroup_rel_is_reflexive(h)
+    add_subgroup_rel_is_symmetric(h)
+    add_subgroup_rel_is_transitive(h)
+}
+
+/// The quotient relation associated with an additive subgroup.
+let add_subgroup_quotient_relation[G: AddGroup](h: AddSubgroup[G]) -> result: QuotientRelation[G] satisfy {
+    QuotientRelation[G].new(add_subgroup_rel(h)) = Option.some(result)
+} by {
+    add_subgroup_rel_is_equivalence(h)
+}
+
+/// The quotient relation associated with an additive subgroup has the expected underlying relation.
+theorem add_subgroup_quotient_relation_rel[G: AddGroup](h: AddSubgroup[G]) {
+    add_subgroup_quotient_relation(h).rel = add_subgroup_rel(h)
+} by {
+    QuotientRelation[G].new(add_subgroup_rel(h)) = Option.some(add_subgroup_quotient_relation(h))
+    quotient_relation_new_round_trip(add_subgroup_rel(h), add_subgroup_quotient_relation(h))
+}
