@@ -13,6 +13,8 @@ from order_maps import is_order_embedding, order_embedding_apply_le,
     order_embedding_reflects_lte, order_embedding_reflects_lt, order_embedding_reflects_ge,
     order_embedding_reflects_gt, identity_is_order_embedding, order_embedding_compose,
     order_embedding_min_image, order_embedding_max_image
+from lattice import MeetSemilattice, JoinSemilattice, meet_lte_left, meet_lte_right,
+    lte_meet_of_bounds, lte_join_left, lte_join_right, join_lte_of_bounds
 
 /// True if two maps are inverse order-preserving maps.
 define is_order_iso_pair[A: PartialOrder, B: PartialOrder](f: A -> B, g: B -> A) -> Bool {
@@ -1551,4 +1553,164 @@ theorem order_iso_inv_max_image[A: LinearOrder, B: LinearOrder](e: OrderIso[A, B
     order_iso_inv_is_order_embedding(e)
     order_embedding_max_image(e.inv, a, b)
     e.inv(a.max(b)) = e.inv(a).max(e.inv(b))
+}
+
+/// An order isomorphism preserves binary infima.
+theorem order_iso_meet_image[A: MeetSemilattice, B: MeetSemilattice](e: OrderIso[A, B], a: A, b: A) {
+    e.map(a.meet(b)) = e.map(a).meet(e.map(b))
+} by {
+    meet_lte_left(a, b)
+    order_iso_apply_le(e, a.meet(b), a)
+    e.map(a.meet(b)) <= e.map(a)
+    meet_lte_right(a, b)
+    order_iso_apply_le(e, a.meet(b), b)
+    e.map(a.meet(b)) <= e.map(b)
+    lte_meet_of_bounds(e.map(a.meet(b)), e.map(a), e.map(b))
+    e.map(a.meet(b)) <= e.map(a).meet(e.map(b))
+
+    meet_lte_left(e.map(a), e.map(b))
+    order_iso_inv_apply_le(e, e.map(a).meet(e.map(b)), e.map(a))
+    e.inv(e.map(a).meet(e.map(b))) <= e.inv(e.map(a))
+    order_iso_left_inverse(e, a)
+    e.inv(e.map(a).meet(e.map(b))) <= a
+
+    meet_lte_right(e.map(a), e.map(b))
+    order_iso_inv_apply_le(e, e.map(a).meet(e.map(b)), e.map(b))
+    e.inv(e.map(a).meet(e.map(b))) <= e.inv(e.map(b))
+    order_iso_left_inverse(e, b)
+    e.inv(e.map(a).meet(e.map(b))) <= b
+
+    lte_meet_of_bounds(e.inv(e.map(a).meet(e.map(b))), a, b)
+    e.inv(e.map(a).meet(e.map(b))) <= a.meet(b)
+    order_iso_apply_le(e, e.inv(e.map(a).meet(e.map(b))), a.meet(b))
+    e.map(e.inv(e.map(a).meet(e.map(b)))) <= e.map(a.meet(b))
+    order_iso_right_inverse(e, e.map(a).meet(e.map(b)))
+    e.map(a).meet(e.map(b)) <= e.map(a.meet(b))
+}
+
+/// An order isomorphism preserves binary suprema.
+theorem order_iso_join_image[A: JoinSemilattice, B: JoinSemilattice](e: OrderIso[A, B], a: A, b: A) {
+    e.map(a.join(b)) = e.map(a).join(e.map(b))
+} by {
+    lte_join_left(a, b)
+    order_iso_apply_le(e, a, a.join(b))
+    e.map(a) <= e.map(a.join(b))
+    lte_join_right(a, b)
+    order_iso_apply_le(e, b, a.join(b))
+    e.map(b) <= e.map(a.join(b))
+    join_lte_of_bounds(e.map(a), e.map(b), e.map(a.join(b)))
+    e.map(a).join(e.map(b)) <= e.map(a.join(b))
+
+    lte_join_left(e.map(a), e.map(b))
+    order_iso_inv_apply_le(e, e.map(a), e.map(a).join(e.map(b)))
+    e.inv(e.map(a)) <= e.inv(e.map(a).join(e.map(b)))
+    order_iso_left_inverse(e, a)
+    a <= e.inv(e.map(a).join(e.map(b)))
+
+    lte_join_right(e.map(a), e.map(b))
+    order_iso_inv_apply_le(e, e.map(b), e.map(a).join(e.map(b)))
+    e.inv(e.map(b)) <= e.inv(e.map(a).join(e.map(b)))
+    order_iso_left_inverse(e, b)
+    b <= e.inv(e.map(a).join(e.map(b)))
+
+    join_lte_of_bounds(a, b, e.inv(e.map(a).join(e.map(b))))
+    a.join(b) <= e.inv(e.map(a).join(e.map(b)))
+    order_iso_apply_le(e, a.join(b), e.inv(e.map(a).join(e.map(b))))
+    e.map(a.join(b)) <= e.map(e.inv(e.map(a).join(e.map(b))))
+    order_iso_right_inverse(e, e.map(a).join(e.map(b)))
+    e.map(a.join(b)) <= e.map(a).join(e.map(b))
+}
+
+/// An order isomorphism preserves binary infima.
+theorem order_iso_inf_image[A: MeetSemilattice, B: MeetSemilattice](e: OrderIso[A, B], a: A, b: A) {
+    e.map(a.meet(b)) = e.map(a).meet(e.map(b))
+} by {
+    order_iso_meet_image(e, a, b)
+}
+
+/// An order isomorphism preserves binary suprema.
+theorem order_iso_sup_image[A: JoinSemilattice, B: JoinSemilattice](e: OrderIso[A, B], a: A, b: A) {
+    e.map(a.join(b)) = e.map(a).join(e.map(b))
+} by {
+    order_iso_join_image(e, a, b)
+}
+
+/// The inverse of an order isomorphism preserves binary infima.
+theorem order_iso_inv_meet_image[A: MeetSemilattice, B: MeetSemilattice](e: OrderIso[A, B], a: B, b: B) {
+    e.inv(a.meet(b)) = e.inv(a).meet(e.inv(b))
+} by {
+    meet_lte_left(a, b)
+    order_iso_inv_apply_le(e, a.meet(b), a)
+    e.inv(a.meet(b)) <= e.inv(a)
+    meet_lte_right(a, b)
+    order_iso_inv_apply_le(e, a.meet(b), b)
+    e.inv(a.meet(b)) <= e.inv(b)
+    lte_meet_of_bounds(e.inv(a.meet(b)), e.inv(a), e.inv(b))
+    e.inv(a.meet(b)) <= e.inv(a).meet(e.inv(b))
+
+    meet_lte_left(e.inv(a), e.inv(b))
+    order_iso_apply_le(e, e.inv(a).meet(e.inv(b)), e.inv(a))
+    e.map(e.inv(a).meet(e.inv(b))) <= e.map(e.inv(a))
+    order_iso_right_inverse(e, a)
+    e.map(e.inv(a).meet(e.inv(b))) <= a
+
+    meet_lte_right(e.inv(a), e.inv(b))
+    order_iso_apply_le(e, e.inv(a).meet(e.inv(b)), e.inv(b))
+    e.map(e.inv(a).meet(e.inv(b))) <= e.map(e.inv(b))
+    order_iso_right_inverse(e, b)
+    e.map(e.inv(a).meet(e.inv(b))) <= b
+
+    lte_meet_of_bounds(e.map(e.inv(a).meet(e.inv(b))), a, b)
+    e.map(e.inv(a).meet(e.inv(b))) <= a.meet(b)
+    order_iso_inv_apply_le(e, e.map(e.inv(a).meet(e.inv(b))), a.meet(b))
+    e.inv(e.map(e.inv(a).meet(e.inv(b)))) <= e.inv(a.meet(b))
+    order_iso_left_inverse(e, e.inv(a).meet(e.inv(b)))
+    e.inv(a).meet(e.inv(b)) <= e.inv(a.meet(b))
+}
+
+/// The inverse of an order isomorphism preserves binary suprema.
+theorem order_iso_inv_join_image[A: JoinSemilattice, B: JoinSemilattice](e: OrderIso[A, B], a: B, b: B) {
+    e.inv(a.join(b)) = e.inv(a).join(e.inv(b))
+} by {
+    lte_join_left(a, b)
+    order_iso_inv_apply_le(e, a, a.join(b))
+    e.inv(a) <= e.inv(a.join(b))
+    lte_join_right(a, b)
+    order_iso_inv_apply_le(e, b, a.join(b))
+    e.inv(b) <= e.inv(a.join(b))
+    join_lte_of_bounds(e.inv(a), e.inv(b), e.inv(a.join(b)))
+    e.inv(a).join(e.inv(b)) <= e.inv(a.join(b))
+
+    lte_join_left(e.inv(a), e.inv(b))
+    order_iso_apply_le(e, e.inv(a), e.inv(a).join(e.inv(b)))
+    e.map(e.inv(a)) <= e.map(e.inv(a).join(e.inv(b)))
+    order_iso_right_inverse(e, a)
+    a <= e.map(e.inv(a).join(e.inv(b)))
+
+    lte_join_right(e.inv(a), e.inv(b))
+    order_iso_apply_le(e, e.inv(b), e.inv(a).join(e.inv(b)))
+    e.map(e.inv(b)) <= e.map(e.inv(a).join(e.inv(b)))
+    order_iso_right_inverse(e, b)
+    b <= e.map(e.inv(a).join(e.inv(b)))
+
+    join_lte_of_bounds(a, b, e.map(e.inv(a).join(e.inv(b))))
+    a.join(b) <= e.map(e.inv(a).join(e.inv(b)))
+    order_iso_inv_apply_le(e, a.join(b), e.map(e.inv(a).join(e.inv(b))))
+    e.inv(a.join(b)) <= e.inv(e.map(e.inv(a).join(e.inv(b))))
+    order_iso_left_inverse(e, e.inv(a).join(e.inv(b)))
+    e.inv(a.join(b)) <= e.inv(a).join(e.inv(b))
+}
+
+/// The inverse of an order isomorphism preserves binary infima.
+theorem order_iso_inv_inf_image[A: MeetSemilattice, B: MeetSemilattice](e: OrderIso[A, B], a: B, b: B) {
+    e.inv(a.meet(b)) = e.inv(a).meet(e.inv(b))
+} by {
+    order_iso_inv_meet_image(e, a, b)
+}
+
+/// The inverse of an order isomorphism preserves binary suprema.
+theorem order_iso_inv_sup_image[A: JoinSemilattice, B: JoinSemilattice](e: OrderIso[A, B], a: B, b: B) {
+    e.inv(a.join(b)) = e.inv(a).join(e.inv(b))
+} by {
+    order_iso_inv_join_image(e, a, b)
 }

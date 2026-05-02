@@ -355,6 +355,98 @@ theorem subgroup_intersection_idempotent[G: Group](a: Subgroup[G]) {
     subgroup_ext(a.intersection(a), a)
 }
 
+/// True if every element of one subgroup belongs to another.
+define subgroup_subset[G: Group](a: Subgroup[G], b: Subgroup[G]) -> Bool {
+    forall(x: G) {
+        a.contains(x) implies b.contains(x)
+    }
+}
+
+/// Subgroup inclusion is reflexive.
+theorem subgroup_subset_refl[G: Group](a: Subgroup[G]) {
+    subgroup_subset(a, a)
+} by {
+    forall(x: G) {
+        a.contains(x) implies a.contains(x)
+    }
+}
+
+/// Subgroup inclusion is transitive.
+theorem subgroup_subset_trans[G: Group](a: Subgroup[G], b: Subgroup[G], c: Subgroup[G]) {
+    subgroup_subset(a, b) and subgroup_subset(b, c) implies subgroup_subset(a, c)
+} by {
+    if subgroup_subset(a, b) and subgroup_subset(b, c) {
+        forall(x: G) {
+            if a.contains(x) {
+                b.contains(x)
+                c.contains(x)
+            }
+        }
+    }
+}
+
+/// The intersection of two subgroups is contained in the left subgroup.
+theorem subgroup_intersection_subset_left_relation[G: Group](a: Subgroup[G], b: Subgroup[G]) {
+    subgroup_subset(a.intersection(b), a)
+} by {
+    forall(x: G) {
+        if a.intersection(b).contains(x) {
+            subgroup_intersection_contains_eq(a, b, x)
+            a.contains(x)
+        }
+    }
+}
+
+/// The intersection of two subgroups is contained in the right subgroup.
+theorem subgroup_intersection_subset_right_relation[G: Group](a: Subgroup[G], b: Subgroup[G]) {
+    subgroup_subset(a.intersection(b), b)
+} by {
+    forall(x: G) {
+        if a.intersection(b).contains(x) {
+            subgroup_intersection_contains_eq(a, b, x)
+            b.contains(x)
+        }
+    }
+}
+
+/// Every common subgroup of two subgroups is contained in their intersection.
+theorem subgroup_subset_intersection_of_subset_left_right[G: Group](
+    c: Subgroup[G], a: Subgroup[G], b: Subgroup[G]
+) {
+    subgroup_subset(c, a) and subgroup_subset(c, b) implies subgroup_subset(c, a.intersection(b))
+} by {
+    if subgroup_subset(c, a) and subgroup_subset(c, b) {
+        forall(x: G) {
+            if c.contains(x) {
+                a.contains(x)
+                b.contains(x)
+                subgroup_intersection_contains_eq(a, b, x)
+                a.intersection(b).contains(x)
+            }
+        }
+    }
+}
+
+/// Containment in an intersection is equivalent to containment in both subgroups.
+theorem subgroup_subset_intersection_iff[G: Group](c: Subgroup[G], a: Subgroup[G], b: Subgroup[G]) {
+    subgroup_subset(c, a.intersection(b)) = (subgroup_subset(c, a) and subgroup_subset(c, b))
+} by {
+    if subgroup_subset(c, a.intersection(b)) {
+        subgroup_intersection_subset_left_relation(a, b)
+        subgroup_subset_trans(c, a.intersection(b), a)
+        subgroup_subset(c, a)
+        subgroup_intersection_subset_right_relation(a, b)
+        subgroup_subset_trans(c, a.intersection(b), b)
+        subgroup_subset(c, b)
+        subgroup_subset(c, a) and subgroup_subset(c, b)
+    }
+    if subgroup_subset(c, a) and subgroup_subset(c, b) {
+        subgroup_subset_intersection_of_subset_left_right(c, a, b)
+        subgroup_subset(c, a.intersection(b))
+    }
+    subgroup_subset(c, a.intersection(b)) = (subgroup_subset(c, a) and subgroup_subset(c, b))
+}
+
 /// The trivial subgroup containing only the identity element.
 let identity_subgroup[G: Group]: Subgroup[G] satisfy {
     Subgroup.new(is_identity[G]) = Option.some(identity_subgroup)
