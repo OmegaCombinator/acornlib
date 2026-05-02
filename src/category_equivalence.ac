@@ -1,9 +1,14 @@
 /// Equivalences of categories.
 
 from category import Category
-from functor import Functor, identity_functor, compose_functor
+from functor import Functor, identity_functor, compose_functor,
+    identity_functor_src_cat, identity_functor_dst_cat,
+    identity_functor_obj_map, identity_functor_mor_map,
+    compose_functor_src_cat, compose_functor_dst_cat,
+    compose_functor_obj_map, compose_functor_mor_map
 from natural_transformation import NaturalTransformation, identity_nat_trans
 from natural_isomorphism import is_natural_isomorphism_pair
+from functions import compose, identity_fn, compose_identity_left
 
 /// True if the forward and backward functors have matching source/target categories.
 define category_equivalence_cats_axiom[O1, M1, O2, M2](
@@ -213,4 +218,58 @@ theorem category_equivalence_counit_iso[O1, M1, O2, M2](e: CategoryEquivalence[O
         and is_natural_isomorphism_pair(e.unit_fwd, e.unit_bwd)
         and category_equivalence_counit_axiom(e.forward, e.backward, e.counit_fwd)
         and is_natural_isomorphism_pair(e.counit_fwd, e.counit_bwd))
+}
+
+/// The composition of `identity_functor(c)` with itself has source category `c`.
+theorem identity_functor_self_compose_src_cat[O, M](c: Category[O, M], h: Functor[O, M, O, M]) {
+    compose_functor(identity_functor(c), identity_functor(c)) = Option.some(h) implies h.src_cat = c
+} by {
+    if compose_functor(identity_functor(c), identity_functor(c)) = Option.some(h) {
+        compose_functor_src_cat(identity_functor(c), identity_functor(c), h)
+        h.src_cat = identity_functor(c).src_cat
+        identity_functor_src_cat(c)
+    }
+}
+
+/// The composition of `identity_functor(c)` with itself has target category `c`.
+theorem identity_functor_self_compose_dst_cat[O, M](c: Category[O, M], h: Functor[O, M, O, M]) {
+    compose_functor(identity_functor(c), identity_functor(c)) = Option.some(h) implies h.dst_cat = c
+} by {
+    if compose_functor(identity_functor(c), identity_functor(c)) = Option.some(h) {
+        compose_functor_dst_cat(identity_functor(c), identity_functor(c), h)
+        h.dst_cat = identity_functor(c).dst_cat
+        identity_functor_dst_cat(c)
+    }
+}
+
+/// The composition of `identity_functor(c)` with itself has identity object map.
+theorem identity_functor_self_compose_obj_map[O, M](c: Category[O, M], h: Functor[O, M, O, M]) {
+    compose_functor(identity_functor(c), identity_functor(c)) = Option.some(h) implies h.obj_map = identity_fn[O]
+} by {
+    if compose_functor(identity_functor(c), identity_functor(c)) = Option.some(h) {
+        compose_functor_obj_map(identity_functor(c), identity_functor(c), h)
+        h.obj_map = compose(identity_functor(c).obj_map, identity_functor(c).obj_map)
+        identity_functor_obj_map(c)
+        identity_functor(c).obj_map = identity_fn[O]
+        h.obj_map = compose(identity_fn[O], identity_fn[O])
+        compose_identity_left(identity_fn[O])
+        compose(identity_fn[O], identity_fn[O]) = identity_fn[O]
+        h.obj_map = identity_fn[O]
+    }
+}
+
+/// The composition of `identity_functor(c)` with itself has identity morphism map.
+theorem identity_functor_self_compose_mor_map[O, M](c: Category[O, M], h: Functor[O, M, O, M]) {
+    compose_functor(identity_functor(c), identity_functor(c)) = Option.some(h) implies h.mor_map = identity_fn[M]
+} by {
+    if compose_functor(identity_functor(c), identity_functor(c)) = Option.some(h) {
+        compose_functor_mor_map(identity_functor(c), identity_functor(c), h)
+        h.mor_map = compose(identity_functor(c).mor_map, identity_functor(c).mor_map)
+        identity_functor_mor_map(c)
+        identity_functor(c).mor_map = identity_fn[M]
+        h.mor_map = compose(identity_fn[M], identity_fn[M])
+        compose_identity_left(identity_fn[M])
+        compose(identity_fn[M], identity_fn[M]) = identity_fn[M]
+        h.mor_map = identity_fn[M]
+    }
 }
