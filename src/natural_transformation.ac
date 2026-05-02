@@ -1,7 +1,8 @@
 /// Natural transformations between functors.
 
 from category import Category, category_identity_src, category_identity_dst,
-    category_id_left, category_id_right
+    category_id_left, category_id_right, category_compose_src, category_compose_dst,
+    category_compose_assoc
 from functor import Functor, functor_src, functor_dst, functor_identity, functor_compose
 
 /// True if the two functors share the same source and target categories.
@@ -274,3 +275,61 @@ theorem identity_nat_trans_component_eq[O1, M1, O2, M2](f: Functor[O1, M1, O2, M
     NaturalTransformation[O1, M1, O2, M2].new(f, f, identity_nat_trans_component(f)) = Option.some(n)
     nat_trans_new_component(f, f, identity_nat_trans_component(f), n)
 }
+
+/// True if two natural transformations can be composed vertically: the inner natural transformation's target functor matches the outer's source functor.
+define vertical_composable[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2]
+) -> Bool {
+    upper.src_functor = lower.dst_functor
+}
+
+/// The component morphism of the vertical composition of two natural transformations at an object.
+define vertical_compose_component[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) -> M2 {
+    upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))
+}
+
+/// Vertically composable natural transformations share the same target category.
+theorem vertical_composable_dst_cat[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2]
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat = lower.src_functor.dst_cat
+        and upper.dst_functor.dst_cat = lower.src_functor.dst_cat
+} by {
+    if vertical_composable(upper, lower) {
+        upper.src_functor = lower.dst_functor
+        nat_trans_shared_dst_cat(lower)
+        lower.src_functor.dst_cat = lower.dst_functor.dst_cat
+        upper.src_functor.dst_cat = lower.src_functor.dst_cat
+        nat_trans_shared_dst_cat(upper)
+        upper.src_functor.dst_cat = upper.dst_functor.dst_cat
+        upper.dst_functor.dst_cat = lower.src_functor.dst_cat
+    }
+}
+
+/// Vertically composable natural transformations share the same source category.
+theorem vertical_composable_src_cat[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2]
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.src_cat = lower.src_functor.src_cat
+        and upper.dst_functor.src_cat = lower.src_functor.src_cat
+} by {
+    if vertical_composable(upper, lower) {
+        upper.src_functor = lower.dst_functor
+        nat_trans_shared_src_cat(lower)
+        lower.src_functor.src_cat = lower.dst_functor.src_cat
+        upper.src_functor.src_cat = lower.src_functor.src_cat
+        nat_trans_shared_src_cat(upper)
+        upper.src_functor.src_cat = upper.dst_functor.src_cat
+        upper.dst_functor.src_cat = lower.src_functor.src_cat
+    }
+}
+
