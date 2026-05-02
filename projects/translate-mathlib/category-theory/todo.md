@@ -4,7 +4,6 @@ Goal: provide the categorical abstractions that Mathlib uses to organize large m
 
 ## Functors and Natural Transformations
 
-- [ ] Add a `compose_functor` constructor that bundles two composable functors into a `Functor`
 - [ ] Add natural transformations between functors
 - [ ] Support equivalences of categories
 
