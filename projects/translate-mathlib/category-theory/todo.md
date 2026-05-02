@@ -4,7 +4,6 @@ Goal: provide the categorical abstractions that Mathlib uses to organize large m
 
 ## Categories
 
-- [ ] Add isomorphisms and the `Iso[O, M]` structure
 - [ ] Build the discrete category construction (objects only, identity morphisms)
 - [ ] Build the opposite category construction
 - [ ] Build the product category construction
