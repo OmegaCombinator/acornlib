@@ -1,0 +1,238 @@
+/// Isomorphisms in a category.
+
+from category import Category, category_identity_src, category_identity_dst,
+    category_compose_src, category_compose_dst, category_compose_assoc,
+    category_id_left, category_id_right
+
+/// True if `f` and `g` are inverse morphisms in the category `c`.
+define is_iso_pair[O, M](c: Category[O, M], f: M, g: M) -> Bool {
+    c.src(f) = c.dst(g)
+    and c.src(g) = c.dst(f)
+    and c.compose(g, f) = c.identity(c.src(f))
+    and c.compose(f, g) = c.identity(c.dst(f))
+}
+
+/// Swapping an inverse pair gives an inverse pair.
+theorem is_iso_pair_swap[O, M](c: Category[O, M], f: M, g: M) {
+    is_iso_pair(c, f, g) implies is_iso_pair(c, g, f)
+} by {
+    if is_iso_pair(c, f, g) {
+        is_iso_pair(c, f, g) = (c.src(f) = c.dst(g)
+            and c.src(g) = c.dst(f)
+            and c.compose(g, f) = c.identity(c.src(f))
+            and c.compose(f, g) = c.identity(c.dst(f)))
+        c.src(f) = c.dst(g)
+        c.src(g) = c.dst(f)
+        c.compose(g, f) = c.identity(c.src(f))
+        c.compose(f, g) = c.identity(c.dst(f))
+        c.compose(f, g) = c.identity(c.src(g))
+        c.compose(g, f) = c.identity(c.dst(g))
+        (c.src(g) = c.dst(f)
+            and c.src(f) = c.dst(g)
+            and c.compose(f, g) = c.identity(c.src(g))
+            and c.compose(g, f) = c.identity(c.dst(g)))
+        is_iso_pair(c, g, f) = (c.src(g) = c.dst(f)
+            and c.src(f) = c.dst(g)
+            and c.compose(f, g) = c.identity(c.src(g))
+            and c.compose(g, f) = c.identity(c.dst(g)))
+        is_iso_pair(c, g, f)
+    }
+}
+
+/// The identity morphism is its own inverse.
+theorem is_iso_pair_identity[O, M](c: Category[O, M], x: O) {
+    is_iso_pair(c, c.identity(x), c.identity(x))
+} by {
+    let i = c.identity(x)
+    category_identity_src(c, x)
+    c.src(i) = x
+    category_identity_dst(c, x)
+    c.dst(i) = x
+    c.src(i) = c.dst(i)
+    category_id_left(c, i)
+    c.compose(c.identity(c.dst(i)), i) = i
+    c.identity(c.dst(i)) = c.identity(x)
+    c.identity(c.dst(i)) = i
+    c.compose(i, i) = i
+    c.compose(i, i) = c.identity(x)
+    c.identity(x) = c.identity(c.src(i))
+    c.compose(i, i) = c.identity(c.src(i))
+    c.identity(x) = c.identity(c.dst(i))
+    c.compose(i, i) = c.identity(c.dst(i))
+    (c.src(i) = c.dst(i)
+        and c.src(i) = c.dst(i)
+        and c.compose(i, i) = c.identity(c.src(i))
+        and c.compose(i, i) = c.identity(c.dst(i)))
+    is_iso_pair(c, i, i) = (c.src(i) = c.dst(i)
+        and c.src(i) = c.dst(i)
+        and c.compose(i, i) = c.identity(c.src(i))
+        and c.compose(i, i) = c.identity(c.dst(i)))
+    is_iso_pair(c, i, i)
+}
+
+/// An isomorphism in a category, with explicit inverse data.
+structure Iso[O, M] {
+    /// The ambient category.
+    cat: Category[O, M]
+
+    /// The forward morphism.
+    hom: M
+
+    /// The inverse morphism.
+    inv: M
+} constraint {
+    is_iso_pair(cat, hom, inv)
+}
+
+/// Construction of an isomorphism remembers the ambient category.
+theorem iso_new_cat[O, M](c: Category[O, M], f: M, g: M, e: Iso[O, M]) {
+    Iso[O, M].new(c, f, g) = Option.some(e) implies e.cat = c
+}
+
+/// Construction of an isomorphism remembers the forward morphism.
+theorem iso_new_hom[O, M](c: Category[O, M], f: M, g: M, e: Iso[O, M]) {
+    Iso[O, M].new(c, f, g) = Option.some(e) implies e.hom = f
+}
+
+/// Construction of an isomorphism remembers the inverse morphism.
+theorem iso_new_inv[O, M](c: Category[O, M], f: M, g: M, e: Iso[O, M]) {
+    Iso[O, M].new(c, f, g) = Option.some(e) implies e.inv = g
+}
+
+/// Every isomorphism is reconstructed from its components.
+theorem iso_new_self[O, M](e: Iso[O, M]) {
+    Iso[O, M].new(e.cat, e.hom, e.inv) = Option.some(e)
+}
+
+/// Equality of options containing isomorphisms is equality of isomorphisms.
+theorem iso_some_injective[O, M](e: Iso[O, M], h: Iso[O, M]) {
+    Option.some(e) = Option.some(h) implies e = h
+}
+
+/// Isomorphisms are equal when their components are equal.
+theorem iso_ext[O, M](e: Iso[O, M], h: Iso[O, M]) {
+    e.cat = h.cat and e.hom = h.hom and e.inv = h.inv implies e = h
+} by {
+    if e.cat = h.cat and e.hom = h.hom and e.inv = h.inv {
+        Iso[O, M].new(e.cat, e.hom, e.inv) = Option.some(e)
+        Iso[O, M].new(h.cat, h.hom, h.inv) = Option.some(h)
+        Option.some(e) = Option.some(h)
+        iso_some_injective(e, h)
+    }
+}
+
+/// The forward and inverse morphisms of an isomorphism form an inverse pair.
+theorem iso_is_iso_pair[O, M](e: Iso[O, M]) {
+    is_iso_pair(e.cat, e.hom, e.inv)
+} by {
+    Iso[O, M].constraint(e.cat, e.hom, e.inv)
+}
+
+/// The source of the forward morphism equals the target of the inverse morphism.
+theorem iso_src_hom[O, M](e: Iso[O, M]) {
+    e.cat.src(e.hom) = e.cat.dst(e.inv)
+} by {
+    iso_is_iso_pair(e)
+    is_iso_pair(e.cat, e.hom, e.inv) = (e.cat.src(e.hom) = e.cat.dst(e.inv)
+        and e.cat.src(e.inv) = e.cat.dst(e.hom)
+        and e.cat.compose(e.inv, e.hom) = e.cat.identity(e.cat.src(e.hom))
+        and e.cat.compose(e.hom, e.inv) = e.cat.identity(e.cat.dst(e.hom)))
+}
+
+/// The source of the inverse morphism equals the target of the forward morphism.
+theorem iso_src_inv[O, M](e: Iso[O, M]) {
+    e.cat.src(e.inv) = e.cat.dst(e.hom)
+} by {
+    iso_is_iso_pair(e)
+    is_iso_pair(e.cat, e.hom, e.inv) = (e.cat.src(e.hom) = e.cat.dst(e.inv)
+        and e.cat.src(e.inv) = e.cat.dst(e.hom)
+        and e.cat.compose(e.inv, e.hom) = e.cat.identity(e.cat.src(e.hom))
+        and e.cat.compose(e.hom, e.inv) = e.cat.identity(e.cat.dst(e.hom)))
+}
+
+/// The composition of the inverse after the forward morphism is the identity at the source.
+theorem iso_inv_hom[O, M](e: Iso[O, M]) {
+    e.cat.compose(e.inv, e.hom) = e.cat.identity(e.cat.src(e.hom))
+} by {
+    iso_is_iso_pair(e)
+    is_iso_pair(e.cat, e.hom, e.inv) = (e.cat.src(e.hom) = e.cat.dst(e.inv)
+        and e.cat.src(e.inv) = e.cat.dst(e.hom)
+        and e.cat.compose(e.inv, e.hom) = e.cat.identity(e.cat.src(e.hom))
+        and e.cat.compose(e.hom, e.inv) = e.cat.identity(e.cat.dst(e.hom)))
+}
+
+/// The composition of the forward after the inverse morphism is the identity at the target.
+theorem iso_hom_inv[O, M](e: Iso[O, M]) {
+    e.cat.compose(e.hom, e.inv) = e.cat.identity(e.cat.dst(e.hom))
+} by {
+    iso_is_iso_pair(e)
+    is_iso_pair(e.cat, e.hom, e.inv) = (e.cat.src(e.hom) = e.cat.dst(e.inv)
+        and e.cat.src(e.inv) = e.cat.dst(e.hom)
+        and e.cat.compose(e.inv, e.hom) = e.cat.identity(e.cat.src(e.hom))
+        and e.cat.compose(e.hom, e.inv) = e.cat.identity(e.cat.dst(e.hom)))
+}
+
+/// The identity morphism on an object as an isomorphism.
+let identity_iso[O, M](c: Category[O, M], x: O) -> result: Iso[O, M] satisfy {
+    result.cat = c and result.hom = c.identity(x) and result.inv = c.identity(x)
+} by {
+    is_iso_pair_identity(c, x)
+    is_iso_pair(c, c.identity(x), c.identity(x))
+    let e: Iso[O, M] satisfy {
+        Iso[O, M].new(c, c.identity(x), c.identity(x)) = Option.some(e)
+    }
+    iso_new_cat(c, c.identity(x), c.identity(x), e)
+    e.cat = c
+    iso_new_hom(c, c.identity(x), c.identity(x), e)
+    e.hom = c.identity(x)
+    iso_new_inv(c, c.identity(x), c.identity(x), e)
+    e.inv = c.identity(x)
+}
+
+/// The identity isomorphism lives in the given category.
+theorem identity_iso_cat[O, M](c: Category[O, M], x: O) {
+    identity_iso(c, x).cat = c
+}
+
+/// The forward morphism of the identity isomorphism is the identity morphism.
+theorem identity_iso_hom[O, M](c: Category[O, M], x: O) {
+    identity_iso(c, x).hom = c.identity(x)
+}
+
+/// The inverse morphism of the identity isomorphism is the identity morphism.
+theorem identity_iso_inv[O, M](c: Category[O, M], x: O) {
+    identity_iso(c, x).inv = c.identity(x)
+}
+
+/// Swapping the forward and inverse morphisms of an isomorphism.
+let inverse_iso[O, M](e: Iso[O, M]) -> result: Iso[O, M] satisfy {
+    result.cat = e.cat and result.hom = e.inv and result.inv = e.hom
+} by {
+    iso_is_iso_pair(e)
+    is_iso_pair_swap(e.cat, e.hom, e.inv)
+    is_iso_pair(e.cat, e.inv, e.hom)
+    let h: Iso[O, M] satisfy {
+        Iso[O, M].new(e.cat, e.inv, e.hom) = Option.some(h)
+    }
+    iso_new_cat(e.cat, e.inv, e.hom, h)
+    h.cat = e.cat
+    iso_new_hom(e.cat, e.inv, e.hom, h)
+    h.hom = e.inv
+    iso_new_inv(e.cat, e.inv, e.hom, h)
+    h.inv = e.hom
+}
+
+/// The inverse isomorphism lives in the same category.
+theorem inverse_iso_cat[O, M](e: Iso[O, M]) {
+    inverse_iso(e).cat = e.cat
+}
+
+/// The forward morphism of the inverse isomorphism is the original inverse morphism.
+theorem inverse_iso_hom[O, M](e: Iso[O, M]) {
+    inverse_iso(e).hom = e.inv
+}
+
+/// The inverse morphism of the inverse isomorphism is the original forward morphism.
+theorem inverse_iso_inv[O, M](e: Iso[O, M]) {
+    inverse_iso(e).inv = e.hom
+}

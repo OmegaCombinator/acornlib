@@ -2,17 +2,10 @@
 
 Goal: provide the categorical abstractions that Mathlib uses to organize large mathematical theories.
 
-## Categories
-
-- [ ] Add isomorphisms and the `Iso[O, M]` structure
-- [ ] Build the discrete category construction (objects only, identity morphisms)
-- [ ] Build the opposite category construction
-- [ ] Build the product category construction
-- [ ] Add a small example category instance (e.g. terminal/initial 1-object category)
-
 ## Functors and Natural Transformations
 
-- [ ] Add functors and natural transformations
+- [ ] Add a `compose_functor` constructor that bundles two composable functors into a `Functor`
+- [ ] Add natural transformations between functors
 - [ ] Support equivalences of categories
 
 ## Universal Constructions
