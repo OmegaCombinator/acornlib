@@ -333,3 +333,372 @@ theorem vertical_composable_src_cat[O1, M1, O2, M2](
     }
 }
 
+
+/// Under composability, the upper natural transformation's source functor obj_map agrees with the lower's target functor obj_map.
+theorem vertical_compose_obj_map_eq[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.obj_map(x) = lower.dst_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        upper.src_functor = lower.dst_functor
+    }
+}
+
+/// Under composability, lower's target functor dst_cat equals upper's source functor dst_cat applied via field congruence.
+theorem vertical_compose_dst_cat_lower_dst_eq_upper_src[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2]
+) {
+    vertical_composable(upper, lower) implies
+        lower.dst_functor.dst_cat = upper.src_functor.dst_cat
+} by {
+    if vertical_composable(upper, lower) {
+        upper.src_functor = lower.dst_functor
+    }
+}
+
+/// Targeted: in lower's frame, the dst of lower's component equals lower's dst_functor.obj_map.
+theorem vc_lower_component_dst[O1, M1, O2, M2](
+    lower: NaturalTransformation[O1, M1, O2, M2], x: O1
+) {
+    lower.src_functor.dst_cat.dst(lower.component(x)) = lower.dst_functor.obj_map(x)
+} by {
+    nat_trans_component_dst(lower, x)
+}
+
+/// Under composability, lower's source functor target category equals upper's source functor target category.
+theorem vc_dst_cat_eq[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2]
+) {
+    vertical_composable(upper, lower) implies
+        lower.src_functor.dst_cat = upper.src_functor.dst_cat
+} by {
+    if vertical_composable(upper, lower) {
+        nat_trans_shared_dst_cat(lower)
+        lower.src_functor.dst_cat = lower.dst_functor.dst_cat
+        vertical_compose_dst_cat_lower_dst_eq_upper_src(upper, lower)
+        lower.dst_functor.dst_cat = upper.src_functor.dst_cat
+    }
+}
+
+/// Substitute one category for another in dst applied to a morphism.
+theorem vc_dst_substitute[O, M](c: Category[O, M], d: Category[O, M], m: M) {
+    c = d implies c.dst(m) = d.dst(m)
+}
+
+/// Substitute one category for another in src applied to a morphism.
+theorem vc_src_substitute[O, M](c: Category[O, M], d: Category[O, M], m: M) {
+    c = d implies c.src(m) = d.src(m)
+}
+
+/// Generic: in equal categories, the same morphism has the same target.
+theorem cat_eq_dst_eq[O, M](c: Category[O, M], d: Category[O, M], m: M, y: O) {
+    c = d and c.dst(m) = y implies d.dst(m) = y
+}
+
+/// Under composability, in upper's dst_cat, the dst of lower's component equals lower's dst_functor obj_map.
+theorem vc_lower_dst_upper_cat[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.dst(lower.component(x)) = lower.dst_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        vc_dst_cat_eq(upper, lower)
+        vc_lower_component_dst(lower, x)
+        cat_eq_dst_eq(lower.src_functor.dst_cat, upper.src_functor.dst_cat,
+            lower.component(x), lower.dst_functor.obj_map(x))
+    }
+}
+
+/// Generic transitive helper.
+theorem vc_eq_chain[T](a: T, b: T, c: T) {
+    a = b and b = c implies a = c
+}
+
+/// Under composability, the upper natural transformation's source functor obj_map equals the lower's target functor obj_map at any object (reversed direction of vertical_compose_obj_map_eq).
+theorem vc_lower_dst_obj_map_eq_upper_src[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        lower.dst_functor.obj_map(x) = upper.src_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        upper.src_functor = lower.dst_functor
+    }
+}
+
+/// Under composability, in upper's dst_cat, the dst of lower's component equals upper's obj_map.
+theorem vc_lower_component_dst_in_upper_cat[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.dst(lower.component(x)) = upper.src_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        upper.src_functor = lower.dst_functor
+        upper.src_functor.obj_map = lower.dst_functor.obj_map
+        upper.src_functor.obj_map(x) = lower.dst_functor.obj_map(x)
+        vc_lower_dst_upper_cat(upper, lower, x)
+        upper.src_functor.dst_cat.dst(lower.component(x)) = lower.dst_functor.obj_map(x)
+        upper.src_functor.dst_cat.dst(lower.component(x)) = upper.src_functor.obj_map(x)
+    }
+}
+
+/// At each object, the component pair of a vertically composable transformation pair is composable in upper's target category.
+theorem vertical_compose_components_composable[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.src(upper.component(x)) = upper.src_functor.dst_cat.dst(lower.component(x))
+} by {
+    if vertical_composable(upper, lower) {
+        nat_trans_component_src(upper, x)
+        upper.src_functor.dst_cat.src(upper.component(x)) = upper.src_functor.obj_map(x)
+        vc_lower_component_dst_in_upper_cat(upper, lower, x)
+        upper.src_functor.dst_cat.dst(lower.component(x)) = upper.src_functor.obj_map(x)
+    }
+}
+
+/// Generic substitution: equal categories give equal src applied to a morphism, with chained equality.
+theorem cat_eq_src_eq[O, M](c: Category[O, M], d: Category[O, M], m: M, y: O) {
+    c = d and c.src(m) = y implies d.src(m) = y
+}
+
+/// Under composability, the src of the lower component in upper's dst_cat is lower's source functor obj_map.
+theorem vc_lower_component_src_in_upper_cat[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.src(lower.component(x)) = lower.src_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        vc_dst_cat_eq(upper, lower)
+        nat_trans_component_src(lower, x)
+        cat_eq_src_eq(lower.src_functor.dst_cat, upper.src_functor.dst_cat,
+            lower.component(x), lower.src_functor.obj_map(x))
+    }
+}
+
+/// Step: Under composability, the components of upper and lower are composable in upper's dst_cat.
+theorem vc_compose_src_step1[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.src(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x)))
+            = upper.src_functor.dst_cat.src(lower.component(x))
+} by {
+    if vertical_composable(upper, lower) {
+        vertical_compose_components_composable(upper, lower, x)
+        category_compose_src(upper.src_functor.dst_cat, upper.component(x), lower.component(x))
+    }
+}
+
+/// Under composability, the src of the composition of upper and lower components in upper's dst_cat is lower's source functor obj_map.
+theorem vc_compose_src_eq[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.src(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = lower.src_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        vc_compose_src_step1(upper, lower, x)
+        upper.src_functor.dst_cat.src(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = upper.src_functor.dst_cat.src(lower.component(x))
+        vc_lower_component_src_in_upper_cat(upper, lower, x)
+        upper.src_functor.dst_cat.src(lower.component(x)) = lower.src_functor.obj_map(x)
+        upper.src_functor.dst_cat.src(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = lower.src_functor.obj_map(x)
+    }
+}
+
+/// Under composability, the src of the vertical composition's component is the source functor's image at that object.
+theorem vc_endpoint_src[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.src(vertical_compose_component(upper, lower, x)) = lower.src_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        vertical_compose_component(upper, lower, x) = upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))
+        vc_compose_src_eq(upper, lower, x)
+    }
+}
+
+/// Step: Under composability, the components of upper and lower are composable in upper's dst_cat (target side).
+theorem vc_compose_dst_step1[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.dst(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x)))
+            = upper.src_functor.dst_cat.dst(upper.component(x))
+} by {
+    if vertical_composable(upper, lower) {
+        vertical_compose_components_composable(upper, lower, x)
+        category_compose_dst(upper.src_functor.dst_cat, upper.component(x), lower.component(x))
+    }
+}
+
+/// Under composability, the dst of upper's component in upper's dst_cat is upper's target functor obj_map.
+theorem vc_upper_component_dst_in_upper_cat[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2], x: O1
+) {
+    upper.src_functor.dst_cat.dst(upper.component(x)) = upper.dst_functor.obj_map(x)
+} by {
+    nat_trans_component_dst(upper, x)
+}
+
+/// Under composability, the dst of the composition of upper and lower components in upper's dst_cat is upper's target functor obj_map.
+theorem vc_compose_dst_eq[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.dst(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = upper.dst_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        vc_compose_dst_step1(upper, lower, x)
+        upper.src_functor.dst_cat.dst(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = upper.src_functor.dst_cat.dst(upper.component(x))
+        vc_upper_component_dst_in_upper_cat(upper, x)
+        upper.src_functor.dst_cat.dst(upper.component(x)) = upper.dst_functor.obj_map(x)
+        upper.src_functor.dst_cat.dst(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = upper.dst_functor.obj_map(x)
+    }
+}
+
+/// Under composability, the dst of the vertical composition's component is the target functor's image at that object.
+theorem vc_endpoint_dst[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.dst(vertical_compose_component(upper, lower, x)) = upper.dst_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        vertical_compose_component(upper, lower, x) = upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))
+        vc_compose_dst_eq(upper, lower, x)
+    }
+}
+
+/// Under composability, the src/dst endpoints of the vertical composition's component lie in lower's source dst_cat.
+theorem vc_endpoint_src_lower_cat[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        lower.src_functor.dst_cat.src(vertical_compose_component(upper, lower, x)) = lower.src_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        vc_endpoint_src(upper, lower, x)
+        upper.src_functor.dst_cat.src(vertical_compose_component(upper, lower, x)) = lower.src_functor.obj_map(x)
+        vc_dst_cat_eq(upper, lower)
+        lower.src_functor.dst_cat = upper.src_functor.dst_cat
+        lower.src_functor.dst_cat.src = upper.src_functor.dst_cat.src
+        lower.src_functor.dst_cat.src(vertical_compose_component(upper, lower, x)) = upper.src_functor.dst_cat.src(vertical_compose_component(upper, lower, x))
+        lower.src_functor.dst_cat.src(vertical_compose_component(upper, lower, x)) = lower.src_functor.obj_map(x)
+    }
+}
+
+/// Under composability, the dst endpoint of the vertical composition's component lies in lower's source dst_cat.
+theorem vc_endpoint_dst_lower_cat[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    x: O1
+) {
+    vertical_composable(upper, lower) implies
+        lower.src_functor.dst_cat.dst(vertical_compose_component(upper, lower, x)) = upper.dst_functor.obj_map(x)
+} by {
+    if vertical_composable(upper, lower) {
+        vc_endpoint_dst(upper, lower, x)
+        upper.src_functor.dst_cat.dst(vertical_compose_component(upper, lower, x)) = upper.dst_functor.obj_map(x)
+        vc_dst_cat_eq(upper, lower)
+        lower.src_functor.dst_cat = upper.src_functor.dst_cat
+        lower.src_functor.dst_cat.dst = upper.src_functor.dst_cat.dst
+        lower.src_functor.dst_cat.dst(vertical_compose_component(upper, lower, x)) = upper.src_functor.dst_cat.dst(vertical_compose_component(upper, lower, x))
+        lower.src_functor.dst_cat.dst(vertical_compose_component(upper, lower, x)) = upper.dst_functor.obj_map(x)
+    }
+}
+
+/// Under composability, the vertical compose component map satisfies the endpoints axiom.
+theorem vc_endpoints_axiom[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2]
+) {
+    vertical_composable(upper, lower) implies
+        nat_trans_endpoints_axiom(lower.src_functor, upper.dst_functor, vertical_compose_component(upper, lower))
+} by {
+    if vertical_composable(upper, lower) {
+        forall(x: O1) {
+            vc_endpoint_src_lower_cat(upper, lower, x)
+            vc_endpoint_dst_lower_cat(upper, lower, x)
+            vertical_compose_component(upper, lower)(x) = vertical_compose_component(upper, lower, x)
+            lower.src_functor.dst_cat.src(vertical_compose_component(upper, lower)(x)) = lower.src_functor.obj_map(x)
+            lower.src_functor.dst_cat.dst(vertical_compose_component(upper, lower)(x)) = upper.dst_functor.obj_map(x)
+        }
+    }
+}
+
+/// Under composability of nat trans, lower's mor_map src in upper's dst_cat is the source functor's image.
+theorem vc_lower_mor_map_src[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    m: M1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.src(lower.src_functor.mor_map(m))
+            = lower.src_functor.obj_map(lower.src_functor.src_cat.src(m))
+} by {
+    if vertical_composable(upper, lower) {
+        functor_src(lower.src_functor, m)
+        lower.src_functor.dst_cat.src(lower.src_functor.mor_map(m)) = lower.src_functor.obj_map(lower.src_functor.src_cat.src(m))
+        vc_dst_cat_eq(upper, lower)
+        lower.src_functor.dst_cat = upper.src_functor.dst_cat
+        lower.src_functor.dst_cat.src = upper.src_functor.dst_cat.src
+        upper.src_functor.dst_cat.src(lower.src_functor.mor_map(m)) = lower.src_functor.dst_cat.src(lower.src_functor.mor_map(m))
+        upper.src_functor.dst_cat.src(lower.src_functor.mor_map(m)) = lower.src_functor.obj_map(lower.src_functor.src_cat.src(m))
+    }
+}
+
+/// Under composability of nat trans, lower's mor_map dst in upper's dst_cat is the source functor's image.
+theorem vc_lower_mor_map_dst[O1, M1, O2, M2](
+    upper: NaturalTransformation[O1, M1, O2, M2],
+    lower: NaturalTransformation[O1, M1, O2, M2],
+    m: M1
+) {
+    vertical_composable(upper, lower) implies
+        upper.src_functor.dst_cat.dst(lower.src_functor.mor_map(m))
+            = lower.src_functor.obj_map(lower.src_functor.src_cat.dst(m))
+} by {
+    if vertical_composable(upper, lower) {
+        functor_dst(lower.src_functor, m)
+        lower.src_functor.dst_cat.dst(lower.src_functor.mor_map(m)) = lower.src_functor.obj_map(lower.src_functor.src_cat.dst(m))
+        vc_dst_cat_eq(upper, lower)
+        lower.src_functor.dst_cat = upper.src_functor.dst_cat
+        lower.src_functor.dst_cat.dst = upper.src_functor.dst_cat.dst
+        upper.src_functor.dst_cat.dst(lower.src_functor.mor_map(m)) = lower.src_functor.dst_cat.dst(lower.src_functor.mor_map(m))
+        upper.src_functor.dst_cat.dst(lower.src_functor.mor_map(m)) = lower.src_functor.obj_map(lower.src_functor.src_cat.dst(m))
+    }
+}

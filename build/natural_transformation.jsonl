@@ -61,3 +61,72 @@
 {"goal":"upper.src_functor.src_cat = upper.dst_functor.src_cat","proof":[]}
 {"goal":"upper.dst_functor.src_cat = lower.src_functor.src_cat","proof":[]}
 {"goal":"vertical_composable_src_cat","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3]) { x0.dst_functor.src_cat = x0.src_functor.src_cat }[O1, M1, O2, M2](upper)"]}
+{"goal":"upper.src_functor = lower.dst_functor","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3], x1: NaturalTransformation[T0, T1, T2, T3]) { x0.src_functor = x1.dst_functor = vertical_composable[T0, T1, T2, T3](x0, x1) }[O1, M1, O2, M2](upper, lower)"]}
+{"goal":"vertical_compose_obj_map_eq","proof":[]}
+{"goal":"upper.src_functor = lower.dst_functor","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3], x1: NaturalTransformation[T0, T1, T2, T3]) { x0.src_functor = x1.dst_functor = vertical_composable[T0, T1, T2, T3](x0, x1) }[O1, M1, O2, M2](upper, lower)"]}
+{"goal":"vertical_compose_dst_cat_lower_dst_eq_upper_src","proof":[]}
+{"goal":"vc_lower_component_dst","proof":[]}
+{"goal":"lower.src_functor.dst_cat = lower.dst_functor.dst_cat","proof":[]}
+{"goal":"lower.dst_functor.dst_cat = upper.src_functor.dst_cat","proof":[]}
+{"goal":"vc_dst_cat_eq","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3]) { x0.dst_functor.dst_cat = x0.src_functor.dst_cat }[O1, M1, O2, M2](lower)"]}
+{"goal":"vc_dst_substitute","proof":[]}
+{"goal":"vc_src_substitute","proof":[]}
+{"goal":"cat_eq_dst_eq","proof":[]}
+{"goal":"vc_lower_dst_upper_cat","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3], x1: NaturalTransformation[T0, T1, T2, T3]) { not vertical_composable[T0, T1, T2, T3](x0, x1) or x0.src_functor.dst_cat = x1.src_functor.dst_cat }[O1, M1, O2, M2](upper, lower)","function[T0, T1, T2, T3](x0: NaturalTransformation[T2, T3, T0, T1], x1: T2) { x0.src_functor.dst_cat.dst(x0.component(x1)) = x0.dst_functor.obj_map(x1) }[O2, M2, O1, M1](lower, x)"]}
+{"goal":"vc_eq_chain","proof":[]}
+{"goal":"upper.src_functor = lower.dst_functor","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3], x1: NaturalTransformation[T0, T1, T2, T3]) { x0.src_functor = x1.dst_functor = vertical_composable[T0, T1, T2, T3](x0, x1) }[O1, M1, O2, M2](upper, lower)"]}
+{"goal":"vc_lower_dst_obj_map_eq_upper_src","proof":[]}
+{"goal":"upper.src_functor = lower.dst_functor","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3], x1: NaturalTransformation[T0, T1, T2, T3]) { x0.src_functor = x1.dst_functor = vertical_composable[T0, T1, T2, T3](x0, x1) }[O1, M1, O2, M2](upper, lower)"]}
+{"goal":"upper.src_functor.obj_map = lower.dst_functor.obj_map","proof":[]}
+{"goal":"upper.src_functor.obj_map(x) = lower.dst_functor.obj_map(x)","proof":[]}
+{"goal":"upper.src_functor.dst_cat.dst(lower.component(x)) = lower.dst_functor.obj_map(x)","proof":[]}
+{"goal":"upper.src_functor.dst_cat.dst(lower.component(x)) = upper.src_functor.obj_map(x)","proof":[]}
+{"goal":"vc_lower_component_dst_in_upper_cat","proof":[]}
+{"goal":"upper.src_functor.dst_cat.src(upper.component(x)) = upper.src_functor.obj_map(x)","proof":[]}
+{"goal":"upper.src_functor.dst_cat.dst(lower.component(x)) = upper.src_functor.obj_map(x)","proof":[]}
+{"goal":"vertical_compose_components_composable","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T2, T3, T0, T1], x1: T2) { x0.src_functor.dst_cat.src(x0.component(x1)) = x0.src_functor.obj_map(x1) }[O2, M2, O1, M1](upper, x)"]}
+{"goal":"cat_eq_src_eq","proof":[]}
+{"goal":"vc_lower_component_src_in_upper_cat","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3], x1: NaturalTransformation[T0, T1, T2, T3]) { not vertical_composable[T0, T1, T2, T3](x0, x1) or x0.src_functor.dst_cat = x1.src_functor.dst_cat }[O1, M1, O2, M2](upper, lower)","function[T0, T1, T2, T3](x0: NaturalTransformation[T2, T3, T0, T1], x1: T2) { x0.src_functor.dst_cat.src(x0.component(x1)) = x0.src_functor.obj_map(x1) }[O2, M2, O1, M1](lower, x)"]}
+{"goal":"vc_compose_src_step1","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3], x1: NaturalTransformation[T0, T1, T2, T3], x2: T0) { not vertical_composable[T0, T1, T2, T3](x0, x1) or x0.src_functor.dst_cat.dst(x1.component(x2)) = x0.src_functor.dst_cat.src(x0.component(x2)) }[O1, M1, O2, M2](upper, lower, x)"]}
+{"goal":"upper.src_functor.dst_cat.src(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = upper.src_functor.dst_cat.src(lower.component(x))","proof":[]}
+{"goal":"upper.src_functor.dst_cat.src(lower.component(x)) = lower.src_functor.obj_map(x)","proof":[]}
+{"goal":"upper.src_functor.dst_cat.src(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = lower.src_functor.obj_map(x)","proof":[]}
+{"goal":"vc_compose_src_eq","proof":[]}
+{"goal":"vertical_compose_component[O1, M1, O2, M2](upper, lower, x) = upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T2, T3, T0, T1], x1: T2, x2: NaturalTransformation[T2, T3, T0, T1]) { x0.src_functor.dst_cat.compose(x0.component(x1), x2.component(x1)) = vertical_compose_component[T2, T3, T0, T1](x0, x2, x1) }[O2, M2, O1, M1](upper, x, lower)"]}
+{"goal":"vc_endpoint_src","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T2, T3, T0, T1], x1: T2, x2: NaturalTransformation[T2, T3, T0, T1]) { x0.src_functor.dst_cat.compose(x0.component(x1), x2.component(x1)) = vertical_compose_component[T2, T3, T0, T1](x0, x2, x1) }[O2, M2, O1, M1](upper, x, lower)"]}
+{"goal":"vc_compose_dst_step1","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3], x1: NaturalTransformation[T0, T1, T2, T3], x2: T0) { not vertical_composable[T0, T1, T2, T3](x0, x1) or x0.src_functor.dst_cat.dst(x1.component(x2)) = x0.src_functor.dst_cat.src(x0.component(x2)) }[O1, M1, O2, M2](upper, lower, x)"]}
+{"goal":"vc_upper_component_dst_in_upper_cat","proof":[]}
+{"goal":"upper.src_functor.dst_cat.dst(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = upper.src_functor.dst_cat.dst(upper.component(x))","proof":[]}
+{"goal":"upper.src_functor.dst_cat.dst(upper.component(x)) = upper.dst_functor.obj_map(x)","proof":[]}
+{"goal":"upper.src_functor.dst_cat.dst(upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))) = upper.dst_functor.obj_map(x)","proof":[]}
+{"goal":"vc_compose_dst_eq","proof":[]}
+{"goal":"vertical_compose_component[O1, M1, O2, M2](upper, lower, x) = upper.src_functor.dst_cat.compose(upper.component(x), lower.component(x))","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T2, T3, T0, T1], x1: T2, x2: NaturalTransformation[T2, T3, T0, T1]) { x0.src_functor.dst_cat.compose(x0.component(x1), x2.component(x1)) = vertical_compose_component[T2, T3, T0, T1](x0, x2, x1) }[O2, M2, O1, M1](upper, x, lower)"]}
+{"goal":"vc_endpoint_dst","proof":["function[T0, T1, T2, T3](x0: NaturalTransformation[T2, T3, T0, T1], x1: T2, x2: NaturalTransformation[T2, T3, T0, T1]) { x0.src_functor.dst_cat.compose(x0.component(x1), x2.component(x1)) = vertical_compose_component[T2, T3, T0, T1](x0, x2, x1) }[O2, M2, O1, M1](upper, x, lower)"]}
+{"goal":"upper.src_functor.dst_cat.src(vertical_compose_component[O1, M1, O2, M2](upper, lower, x)) = lower.src_functor.obj_map(x)","proof":[]}
+{"goal":"lower.src_functor.dst_cat = upper.src_functor.dst_cat","proof":[]}
+{"goal":"lower.src_functor.dst_cat.src = upper.src_functor.dst_cat.src","proof":[]}
+{"goal":"lower.src_functor.dst_cat.src(vertical_compose_component[O1, M1, O2, M2](upper, lower, x)) = upper.src_functor.dst_cat.src(vertical_compose_component[O1, M1, O2, M2](upper, lower, x))","proof":[]}
+{"goal":"lower.src_functor.dst_cat.src(vertical_compose_component[O1, M1, O2, M2](upper, lower, x)) = lower.src_functor.obj_map(x)","proof":[]}
+{"goal":"vc_endpoint_src_lower_cat","proof":[]}
+{"goal":"upper.src_functor.dst_cat.dst(vertical_compose_component[O1, M1, O2, M2](upper, lower, x)) = upper.dst_functor.obj_map(x)","proof":[]}
+{"goal":"lower.src_functor.dst_cat = upper.src_functor.dst_cat","proof":[]}
+{"goal":"lower.src_functor.dst_cat.dst = upper.src_functor.dst_cat.dst","proof":[]}
+{"goal":"lower.src_functor.dst_cat.dst(vertical_compose_component[O1, M1, O2, M2](upper, lower, x)) = upper.src_functor.dst_cat.dst(vertical_compose_component[O1, M1, O2, M2](upper, lower, x))","proof":[]}
+{"goal":"lower.src_functor.dst_cat.dst(vertical_compose_component[O1, M1, O2, M2](upper, lower, x)) = upper.dst_functor.obj_map(x)","proof":[]}
+{"goal":"vc_endpoint_dst_lower_cat","proof":[]}
+{"goal":"vertical_compose_component[O1, M1, O2, M2](upper, lower)(x) = vertical_compose_component[O1, M1, O2, M2](upper, lower, x)","proof":[]}
+{"goal":"lower.src_functor.dst_cat.src(vertical_compose_component[O1, M1, O2, M2](upper, lower)(x)) = lower.src_functor.obj_map(x)","proof":[]}
+{"goal":"lower.src_functor.dst_cat.dst(vertical_compose_component[O1, M1, O2, M2](upper, lower)(x)) = upper.dst_functor.obj_map(x)","proof":[]}
+{"goal":"vc_endpoints_axiom","proof":["function[T0, T1, T2, T3](x0: Functor[T0, T2, T1, T3], x1: T0 -> T3, x2: Functor[T0, T2, T1, T3]) { forall(x3: T0) { x0.obj_map(x3) = x0.dst_cat.src(x1(x3)) and x2.obj_map(x3) = x0.dst_cat.dst(x1(x3)) } = nat_trans_endpoints_axiom[T0, T2, T1, T3](x0, x2, x1) }[O1, O2, M1, M2](lower.src_functor, vertical_compose_component[O1, M1, O2, M2](upper, lower), upper.dst_functor)","(forall(x0: O1) { upper.dst_functor.obj_map(x0) = lower.src_functor.dst_cat.dst(vertical_compose_component[O1, M1, O2, M2](upper, lower, x0)) } = true)","let w0: O1 satisfy { lower.src_functor.obj_map(w0) != lower.src_functor.dst_cat.src(vertical_compose_component[O1, M1, O2, M2](upper, lower, w0)) or upper.dst_functor.obj_map(w0) != lower.src_functor.dst_cat.dst(vertical_compose_component[O1, M1, O2, M2](upper, lower, w0)) }","function[T0, T1, T2, T3](x0: NaturalTransformation[T0, T1, T2, T3], x1: NaturalTransformation[T0, T1, T2, T3], x2: T0) { not vertical_composable[T0, T1, T2, T3](x0, x1) or x1.src_functor.dst_cat.src(vertical_compose_component[T0, T1, T2, T3](x0, x1, x2)) = x1.src_functor.obj_map(x2) }[O1, M1, O2, M2](upper, lower, w0)","function(x0: O1) { lower.src_functor.dst_cat.dst(vertical_compose_component[O1, M1, O2, M2](upper, lower, x0)) = upper.dst_functor.obj_map(x0) }(w0)"]}
+{"goal":"lower.src_functor.dst_cat.src(lower.src_functor.mor_map(m)) = lower.src_functor.obj_map(lower.src_functor.src_cat.src(m))","proof":[]}
+{"goal":"lower.src_functor.dst_cat = upper.src_functor.dst_cat","proof":["not vertical_composable[O1, M1, O2, M2](upper, lower)"]}
+{"goal":"lower.src_functor.dst_cat.src = upper.src_functor.dst_cat.src","proof":["lower.src_functor.dst_cat != upper.src_functor.dst_cat"]}
+{"goal":"upper.src_functor.dst_cat.src(lower.src_functor.mor_map(m)) = lower.src_functor.dst_cat.src(lower.src_functor.mor_map(m))","proof":["lower.src_functor.dst_cat != upper.src_functor.dst_cat"]}
+{"goal":"upper.src_functor.dst_cat.src(lower.src_functor.mor_map(m)) = lower.src_functor.obj_map(lower.src_functor.src_cat.src(m))","proof":["lower.src_functor.dst_cat = upper.src_functor.dst_cat","lower.src_functor.dst_cat.src(lower.src_functor.mor_map(m)) != lower.src_functor.obj_map(lower.src_functor.src_cat.src(m))"]}
+{"goal":"vc_lower_mor_map_src","proof":["not vertical_composable[O1, M1, O2, M2](upper, lower)"]}
+{"goal":"lower.src_functor.dst_cat.dst(lower.src_functor.mor_map(m)) = lower.src_functor.obj_map(lower.src_functor.src_cat.dst(m))","proof":[]}
+{"goal":"lower.src_functor.dst_cat = upper.src_functor.dst_cat","proof":["not vertical_composable[O1, M1, O2, M2](upper, lower)"]}
+{"goal":"lower.src_functor.dst_cat.dst = upper.src_functor.dst_cat.dst","proof":["lower.src_functor.dst_cat != upper.src_functor.dst_cat"]}
+{"goal":"upper.src_functor.dst_cat.dst(lower.src_functor.mor_map(m)) = lower.src_functor.dst_cat.dst(lower.src_functor.mor_map(m))","proof":["lower.src_functor.dst_cat != upper.src_functor.dst_cat"]}
+{"goal":"upper.src_functor.dst_cat.dst(lower.src_functor.mor_map(m)) = lower.src_functor.obj_map(lower.src_functor.src_cat.dst(m))","proof":["lower.src_functor.dst_cat = upper.src_functor.dst_cat","lower.src_functor.dst_cat.dst(lower.src_functor.mor_map(m)) != lower.src_functor.obj_map(lower.src_functor.src_cat.dst(m))"]}
+{"goal":"vc_lower_mor_map_dst","proof":["not vertical_composable[O1, M1, O2, M2](upper, lower)"]}
