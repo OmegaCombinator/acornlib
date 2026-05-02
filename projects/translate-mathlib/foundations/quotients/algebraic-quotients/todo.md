@@ -2,9 +2,12 @@
 
 Goal: build group, ring, and module quotient APIs on top of the foundational `Quotient` / `QuotientOver` family, starting from kernel-of-homomorphism congruences.
 
-- [ ] Decide whether the per-`qrel` kernel-quotient operations should be packaged into typeclass instances on `Quotient[A]` / `QuotientOver[A]`; deferred design question, since the operation depends on `qrel` which is value-level rather than type-level
-
 Status:
+
+- Decision (resolved): the per-`qrel` kernel-quotient operations stay as the load-bearing layer; do **not** add a generic typeclass instance on `Quotient[A]` / `QuotientOver[A]`. When a concrete quotient needs typeclass-level structure (so consumers can write `+` and reuse generic algebraic theorems), wrap it in a fresh struct parameterised by the type-level data that determines the qrel and put the typeclass instance on the wrapper. `Zmod[n]` already follows this shape and is the reference example. Why: the qrel is value-level, so a single instance on `QuotientOver[T]` cannot dispatch to the right group/ring structure for different qrels of the same `T`; per-qrel functions are uniformly available, but generic instances would have to commit to one quotient. How to apply: prefer wrapping per-quotient when typeclass ergonomics are needed; otherwise stay on the existing `<scope>_quotient_*` API.
+- Future option (not implemented): a phantom singleton encoding `QuotientOver[T, Q]` where `Q` is a zero-element type that recovers the qrel via its own typeclass instance would give one type family with automatic dispatch. Pursue only when a real consumer needs to be generic over an arbitrary qrel — at that point, the per-quotient wrapper boilerplate becomes the deciding pain.
+
+
 
 - `add_monoid_hom_kernel_respects_add` and `add_monoid_hom_kernel_is_add_congruence` in `src/quotient_algebra.ac` give the additive monoid bridge.
 - `add_group_hom_kernel_respects_add`, `add_group_hom_kernel_respects_neg`, and `add_group_hom_kernel_is_add_congruence` in `src/quotient_algebra.ac` give the additive group bridge.
