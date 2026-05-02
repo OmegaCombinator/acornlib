@@ -4,8 +4,9 @@ Goal: provide the categorical abstractions that Mathlib uses to organize large m
 
 ## Functors and Natural Transformations
 
-- [ ] Add horizontal composition of natural transformations
 - [ ] Support equivalences of categories
+- [ ] Add vertical composition of natural transformations (deferred: prover times out on `d.dst(d.compose(b, a)) = beta.dst_functor.obj_map(x)` chain; the symmetric `src` case verifies, but `dst` resists every factoring tried so far - needs further lemma decomposition)
+- [ ] Add horizontal composition of natural transformations
 
 ## Universal Constructions
 
